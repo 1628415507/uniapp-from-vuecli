@@ -1,21 +1,24 @@
 /*
- * @Author: Hongzf
- * @Date: 2022-10-13 16:30:02
- * @LastEditors: Hongzf
- * @LastEditTime: 2022-10-14 13:56:19
- * @Description: 
+ * @Description: 全局配置
+ * @Date: 2023-08-03 16:08:19
+ * @LastEditTime: 2023-08-03 17:24:11
  */
 import Vue from 'vue'
+// 组件
 import App from './App'
 import uView from "uview-ui";
-
-Vue.use(uView)
+// 工具库
+import store from './store/index.js' // 全局参数
+Vue.prototype.$store = store // 引入vuex
+// 样式
 uni.$u.config.unit = 'rpx'//默认单位配置
 
+Vue.use(uView)
 Vue.config.productionTip = false
-App.mpType = 'app'
 
+App.mpType = 'app'
 const app = new Vue({
-  ...App
+  ...App,
+  store
 })
 app.$mount()
