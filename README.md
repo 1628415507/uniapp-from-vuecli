@@ -1,3 +1,14 @@
+<!--
+ * @Date: 2022-10-13 16:31:42
+ * @LastEditTime: 2023-08-03 16:21:41
+ * @Description: 
+-->
+## 已有配置如下
+- 安装node-sass：`npm i node-sass -D`
+- 安装sass-loader：`npm i sass-loader -D`
+- 安装uview：`npm install uview-ui`(cli创建的需要用vue.config.js再次引入)
+
+
 # uniapp-from-vuecli
 
 ## Project setup

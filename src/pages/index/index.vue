@@ -4,6 +4,8 @@
 		<view>
 			<text class="title">{{title}}</text>
 		</view>
+		<!-- uView组件测试 -->
+		<u-button type="success" text="uView按钮"></u-button>
 	</view>
 </template>
 
@@ -29,6 +31,7 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+		padding: 20rpx;
 	}
 
 	.logo {
