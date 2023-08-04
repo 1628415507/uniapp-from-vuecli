@@ -1,3 +1,8 @@
+<!--
+ * @Description: 示例
+ * @Date: 2023-08-04 11:42:45
+ * @LastEditTime: 2023-08-04 17:07:54
+-->
 <template>
 	<view class="content">
 		<image class="logo" src="/static/logo.png"></image>
@@ -10,6 +15,8 @@
 		<text class="title">Vuex：{{ userName }}</text>
 		<!-- http测试 -->
 		<u-button type="primary" @click="handleLogin">http测试</u-button>
+		
+		<!-- 底部菜单栏 -->
 		<TabBar></TabBar>
 	</view>
 </template>
