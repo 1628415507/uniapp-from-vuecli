@@ -10,13 +10,18 @@
 		<text class="title">Vuex：{{ userName }}</text>
 		<!-- http测试 -->
 		<u-button type="primary" @click="handleLogin">http测试</u-button>
+		<TabBar></TabBar>
 	</view>
 </template>
 <script>
+	import TabBar from '@/components/TabBar'
 	import {
 		login
-	} from '@/api/login.js'
+	} from '@/apis/login.js'
 	export default {
+		components: {
+			TabBar,
+		},
 		data() {
 			return {
 				title: 'Hello',
@@ -24,10 +29,11 @@
 			};
 		},
 		computed: {},
-		onLoad() {},
+		onLoad() {
+      // uni.hideTabBar()
+		},
 		created() {
 			this.userName = this.$store.state.user.userName;
-			console.log('【 user 】-30', this.userName);
 		},
 		methods: {
 			handleLogin() {
@@ -36,6 +42,9 @@
 					pwd: '123456'
 				}).then(res => {
 					console.log('【 login-success 】-30', res);
+					// uni.redirectTo({
+          //   url: activeTabInfo.url
+          // });
 				}).catch((err) => {
 					console.log('【 login-fail 】-30', err);
 				})

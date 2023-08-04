@@ -12,7 +12,7 @@ const baseConfig = {
 	baseUrl: 'https://dhltms.gillion.com.cn/dhl',//路径前缀
 	timeout: 5 * 1000,
 	header: {
-		'Accept-Language': 'zh-CN' // store.state.Language === 0 ? 'zh-CN' : 'en-US',
+		'Accept-Language': 'zh-CN' // 'zh-CN' 、 'en-US',
 	}
 }
 const http = ({ method, url, data = {}, header }) => {
