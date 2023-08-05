@@ -1,0 +1,18 @@
+// 文件名带下划线:SASS会通过下划线来辨别哪些文件是SASS片段，并且不让片段内容直接生成为CSS文件，从而只是在使用@import指令的位置被导入
+
+/** 常用色值 **/
+$colorTheme:#009688; //主颜色
+$colorThemeDark:#007166; //主颜色-深色
+
+$colorRed:#C42B2C; //红色
+$colorRedLight:#E76465; //红色-浅色
+$colorRedDark:#AE191A; //红色-深色
+
+$colorFont:#242831; // 主文字色
+$colorBorder:#EBEDF2;//边框颜色
+
+/** 常用字体大小 **/
+$fontMax:20px; //菜单及一级标题中文默认使用 20px 号字。
+$fontMid:18px; //二级标题及重要数据使用 18px 号字。
+$fontSmall:16px; //三级标题、导航、按钮、正文使用 16px 号字。
+$fontMini:14px; //表格内数据、二级导航、提示文字使用 14px 号字

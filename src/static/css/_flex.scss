@@ -1,0 +1,14 @@
+// 文件名带下划线:SASS会通过下划线来辨别哪些文件是SASS片段，并且不让片段内容直接生成为CSS文件，从而只是在使用@import指令的位置被导入
+
+// flex布局
+.flex-sb {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+// 居中
+.flex-c{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

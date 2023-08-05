@@ -1,0 +1,87 @@
+@import './_vars.scss'; // 引入公共变量
+@import './_flex.scss'; // 引入flex布局
+
+/* CDN 服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
+// 线上
+// @font-face {
+//   font-family: "思源黑体 Normal";font-weight: 350;src: url("//at.alicdn.com/wf/webfont/NmEO4AutL8gE/At3M1cWZF3hLjMDdoaJlQ.woff2") format("woff2"),
+//   url("//at.alicdn.com/wf/webfont/NmEO4AutL8gE/KbNYrIvrEIYsL_WpdVDja.woff") format("woff");
+//   font-display: swap;
+// }
+
+// 本地
+@font-face {
+  font-family: "思源黑体 Normal";font-weight: 350;src: url("~@/static/font/Jky9mYSZqzqXq4oMr0NIL.woff2") format("woff2"),
+  url("~@/static/font/Jky9mYSZqzqXq4oMr0NIL.woff") format("woff");
+  font-display: swap;
+}
+// @font-face { font-family: test; font-weight: normal; font-style: normal; src: url("~@/static/test.ttf") format("truetype"); }
+
+// 设置宽度为100%（兼容APP）
+.w-full{
+	width: 100%;
+}
+// 底部按钮
+.footer-btn {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	height: 210rpx;
+  box-sizing: border-box;
+	background: #ffffff;
+	// padding: 60rpx 0rpx;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	button {
+		width: 90% !important;
+		// height: 96rpx;
+	}
+}
+
+// 步骤条样式修改（修改的样式在steps-wrap下才生效,避免污染原有样式）
+.steps-wrap{
+	// 覆盖原来的样式
+	 .u-steps-item {
+		.u-steps-item__content {
+			// display: flex;
+			// flex-direction: row;
+			flex: unset !important;
+		}
+
+		.u-steps-item__wrapper__dot {
+			width: 10rpx !important;
+			height: 10rpx !important;
+		}
+
+		.u-steps-item__content--column {
+			flex-direction: row !important;
+			justify-content: start;
+			margin-left: 6px;
+
+			.u-text {
+				// display: flex;
+				// flex-direction: row;
+				// align-items: center;
+				// flex-wrap: nowrap;
+				flex: unset !important;
+				// /* flex: 1; */
+				/* width: 100%; */
+			}
+
+			.u-text__value {
+				font-size: 25rpx !important;
+				color: #808080 !important;
+				min-width:160rpx !important;
+			}
+
+			.u-text__value--tips {
+				margin-left: 18rpx;
+				color: red !important;
+				font-size: 32rpx !important;
+				font-weight: 500 !important;
+			}
+		}
+	}
+}

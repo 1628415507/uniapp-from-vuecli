@@ -31,6 +31,7 @@ export default {
 		},
 		logout({ commit }){
 			commit('SET_USER_INFO', null);
+			uni.clearStorageSync()//清除所有缓存
 		}
 	},
 	// 模块的 getters 属性
