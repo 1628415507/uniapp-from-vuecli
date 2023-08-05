@@ -1,15 +1,18 @@
 <!--
  * @Description: 
  * @Date: 2023-08-04 09:26:48
- * @LastEditTime: 2023-08-05 11:13:00
+ * @LastEditTime: 2023-08-05 15:15:55
 -->
 <template>
 	<view>
 		<text>用户名：{{userName}}</text>
 		<view @click="goDetail"> 详情页跳转</view>
-		<u-action-sheet :actions="list" :title="title" :show="show"></u-action-sheet>
-		<u-button @click="show = true">打开ActionSheet</u-button>
-		<u-button type="error" @click="logout">退出登录</u-button>
+		<view class="footer-btn" >
+			<u-button type="error" @click="logout">退出登录</u-button>
+		</view>
+		<!-- 弹框 -->
+		<!-- <u-button @click="show = true">打开ActionSheet</u-button> -->
+		<!-- <u-action-sheet :actions="list" :title="title" :show="show"></u-action-sheet> -->
 		<!-- 底部菜单栏 -->
 		<TabBar></TabBar>
 	</view>
