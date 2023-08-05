@@ -1,21 +1,27 @@
 <!--
  * @Description: 示例
  * @Date: 2023-08-04 11:42:45
- * @LastEditTime: 2023-08-04 18:27:46
+ * @LastEditTime: 2023-08-05 10:36:00
 -->
 <template>
-	<view class="content">
-		<image class="logo" src="/static/logo.png"></image>
-		<view>
-			<text class="title">{{ title }}</text>
-		</view>
+	<view>
+		<!-- <image class="logo" src="/static/logo.png"></image> -->
 		<!-- uView组件测试 -->
 		<u-button type="success" text="uView组件"></u-button>
+		<u-line dashed margin="20rpx 0"></u-line>
 		<!-- vuex测试 -->
 		<text class="title">Vuex：{{ userName }}</text>
 		<!-- http测试 -->
-		<u-button type="primary" @click="handleLogin">http</u-button>
-
+		<u-line dashed margin="20rpx 0"></u-line>
+		<u-button type="primary" @click="handleApi">http</u-button>
+		<!-- 字典 -->
+		<u-line dashed margin="20rpx 0"></u-line>
+		方法：
+		<view style="width:100%">
+		  YES_OR_NO_EM.YES/NO: {{YES_OR_NO_EM.YES}},{{YES_OR_NO_EM.NO}}
+			<u-button @click="show = true">getDictOptions</u-button>
+		</view>
+		<u-picker :show="show" :columns="YES_OR_NO" keyName="name" @cancel="show=false"></u-picker>
 		<!-- 底部菜单栏 -->
 		<TabBar></TabBar>
 	</view>
@@ -31,27 +37,41 @@
 		},
 		data() {
 			return {
-				title: 'Hello',
-				userName: ''
+				userName: '',
+				show: false
 			};
 		},
-		computed: {},
-		onLoad() {
-      // uni.hideTabBar()
+		computed: {
+			// 获取字典列表
+			YES_OR_NO() {
+				return [this.$dict.getDictOptions('YES_OR_NO')]
+			},
+			// 获取字典枚举
+			YES_OR_NO_EM() {
+				return this.$dict.getDictsEnum('YES_OR_NO', {
+					type: 'number'
+				})
+			}
 		},
-		created() {
+		onLoad() {
+			// uni.hideTabBar()
+		},
+		mounted() {
+			console.log("获取字典列表", this.YES_OR_NO)
+			console.log("获取字典枚举", this.YES_OR_NO_EM)
+			console.log("获取字典名称", this.$dict.getDictNameByCode('YES_OR_NO', 'YES', 'nameEn'))
 			this.userName = this.$store.state.user.userName;
 		},
 		methods: {
-			handleLogin() {
+			handleApi() {
 				login({
 					name: 'admin',
 					pwd: '123456'
 				}).then(res => {
 					console.log('【 login-success 】-30', res);
 					// uni.redirectTo({
-          //   url: activeTabInfo.url
-          // });
+					//   url: activeTabInfo.url
+					// });
 				}).catch((err) => {
 					console.log('【 login-fail 】-30', err);
 				})
@@ -61,27 +81,9 @@
 </script>
 
 <style>
-	.content {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		padding: 20rpx;
-	}
-
 	.logo {
 		height: 200rpx;
 		width: 200rpx;
 		margin: 200rpx auto 50rpx auto;
-	}
-
-	.text-area {
-		display: flex;
-		justify-content: center;
-	}
-
-	.title {
-		font-size: 36rpx;
-		color: #8f8f94;
 	}
 </style>

@@ -101,7 +101,7 @@
 			getCommonInfo() {
       	this.$store.dispatch('user/setActiveTab', 'home'); //设置激活的tab，默认首页
 				this.$store.dispatch('user/setUserInfo',this.formData ); //设置激活的tab，默认首页
-        // ...获取保存其他信息
+        this.$store.dispatch('dictionary/setDicts') // 获取字典
 				// 跳转
 				uni.switchTab({
 					url: '/pages/home/index'

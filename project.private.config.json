@@ -3,5 +3,18 @@
     "projectname": "uniapp-from-vuecli",
     "setting": {
         "compileHotReLoad": true
+    },
+    "condition": {
+        "miniprogram": {
+            "list": [
+                {
+                    "name": "Demo",
+                    "pathName": "pages/demo/index",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                }
+            ]
+        }
     }
 }
