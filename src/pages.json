@@ -57,6 +57,13 @@
 						"navigationBarTitleText": "详情",
 						"enablePullDownRefresh": false
 					}
+				},
+				{
+					"path": "demo-detail",
+					"style": {
+						"navigationBarTitleText": "Demo详情",
+						"enablePullDownRefresh": false
+					}
 				}
 			]
 		}

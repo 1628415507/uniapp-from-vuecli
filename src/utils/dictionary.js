@@ -1,7 +1,7 @@
 /*
  * @Description:字典
  * @Date: 2022-12-05 16:00:44
- * @LastEditTime: 2023-08-05 10:06:42
+ * @LastEditTime: 2023-08-05 13:34:50
  */
 
 import { dictsConfig } from '@/store/modules/dictionary/config.js'// 获取字典字段配置
@@ -16,7 +16,7 @@ import { dictsConfig } from '@/store/modules/dictionary/config.js'// 获取字�
  */
 const getDictOptions = (dicName, type = '', config = {}) => {
   const dictsStorage = uni.getStorageSync('dicts')// 从缓存中获取字典数据
-  console.log('【 dictsStorage 】-19', dictsStorage)
+  // console.log('【 dictsStorage 】-19', dictsStorage)
   const dicts = JSON.parse(dictsStorage) || {}
   let list = dicts[dicName] || []
   // console.log('【 getDictOptions 】-17', dicName, list)

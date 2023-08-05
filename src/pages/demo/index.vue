@@ -1,19 +1,20 @@
 <!--
  * @Description: 示例
  * @Date: 2023-08-04 11:42:45
- * @LastEditTime: 2023-08-05 10:36:00
+ * @LastEditTime: 2023-08-05 13:53:47
 -->
 <template>
 	<view>
 		<!-- <image class="logo" src="/static/logo.png"></image> -->
 		<!-- uView组件测试 -->
-		<u-button type="success" text="uView组件"></u-button>
 		<u-line dashed margin="20rpx 0"></u-line>
 		<!-- vuex测试 -->
 		<text class="title">Vuex：{{ userName }}</text>
 		<!-- http测试 -->
 		<u-line dashed margin="20rpx 0"></u-line>
 		<u-button type="primary" @click="handleApi">http</u-button>
+		<!-- 公共组件示例 -->
+		<u-button type="success" @click="goDetail">Demo详情页</u-button>
 		<!-- 字典 -->
 		<u-line dashed margin="20rpx 0"></u-line>
 		方法：
@@ -63,6 +64,11 @@
 			this.userName = this.$store.state.user.userName;
 		},
 		methods: {
+			goDetail(){
+				uni.navigateTo({
+					url: `/pages/sub-packages/demo-detail`
+				})
+			},
 			handleApi() {
 				login({
 					name: 'admin',
