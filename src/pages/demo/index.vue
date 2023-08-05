@@ -1,7 +1,7 @@
 <!--
  * @Description: 示例
  * @Date: 2023-08-04 11:42:45
- * @LastEditTime: 2023-08-05 13:53:47
+ * @LastEditTime: 2023-08-05 16:51:14
 -->
 <template>
 	<view>
@@ -28,7 +28,7 @@
 	</view>
 </template>
 <script>
-	import TabBar from '@/components/TabBar'
+	import TabBar from '@/components/tab-bar'
 	import {
 		login
 	} from '@/apis/login.js'

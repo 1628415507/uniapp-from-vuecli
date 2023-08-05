@@ -1,7 +1,7 @@
 <!--
  * @Description: 
  * @Date: 2023-08-04 09:26:48
- * @LastEditTime: 2023-08-05 15:15:55
+ * @LastEditTime: 2023-08-05 16:51:51
 -->
 <template>
 	<view>
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-	import TabBar from '@/components/TabBar'
+	import TabBar from '@/components/tab-bar'
 	export default {
 		components: {
 			TabBar,
