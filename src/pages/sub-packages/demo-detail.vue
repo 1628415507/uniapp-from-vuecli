@@ -1,25 +1,32 @@
 <!--
  * @Description:公共组件示例
  * @Date: 2023-08-04 09:26:48
- * @LastEditTime: 2023-08-05 14:45:20
+ * @LastEditTime: 2023-08-05 15:59:56
 -->
 <template>
 	<view>
 		<!-- 联想控件 :defaultValue="associateDefaultValue" -->
+		<u-divider text="联想控件" lineColor="#2979ff"  textColor="#2979ff"></u-divider>
 		<u-button @click="showAssociatePopup = true">打开AssociatePopup</u-button>
 	  <associate-popup v-if="showAssociatePopup" :show.sync="showAssociatePopup" value-prop="addressCode"
 			label-prop="addressCode" :fieldList="associateFieldList" :query-method="queryAssociateMethod"
 			@getData="getAssociateData">
 		</associate-popup>
     <!-- 组合输入框 -->
-		<u-line dashed margin="20rpx 0"></u-line>
+		<u-divider text="组合输入框" lineColor="#2979ff"  textColor="#2979ff"></u-divider>
 		<input-group :source.sync="formData.sealNo" :scannable="true"
 			@handleDataChange="(val) => handleDataChange(val,'sealNo')" />
 		<associate-input-group :source.sync="formData.gcon" :scannable="true"
 			@handleDataChange="(val) => handleDataChange(val,'gcon')" />
 		<!-- 暂无数据 -->
-		<u-line dashed margin="20rpx 0"></u-line>
+		<u-divider text="暂无数据" lineColor="#2979ff"  textColor="#2979ff"></u-divider>
 		<Empty title="暂无数据"></Empty>
+		<!-- echarts -->
+		<u-divider text="echarts图表" lineColor="#2979ff"  textColor="#2979ff"></u-divider>
+    <!-- 折线图 -->
+		<view class="content-line">
+				<lineEcharts :linetitle="infoObj.linetitle" canvasId="publicReport" :dateList="lineData"></lineEcharts>
+		</view>
 	</view>
 </template>
 
@@ -28,12 +35,14 @@
 	import InputGroup from "@/components/input-group/input-group.vue";
 	import AssociateInputGroup from "@/components/input-group/associate-input-group.vue";
 	import Empty from "@/components/empty/index.vue";
+  import lineEcharts from './component/line-echarts.vue'
   export default {
 		components: {
   		AssociatePopup,
 	    InputGroup,
 		  AssociateInputGroup,
-			Empty
+			Empty,
+			lineEcharts
 		},
 		data() {
 			return {
@@ -104,3 +113,12 @@
 		}
 	}
 </script>
+<style scoped>
+.content-line {
+	width: 686rpx;
+	height: 366rpx;
+	margin: 0 auto;
+	position: relative;
+	top: 75rpx;
+}
+</style>
