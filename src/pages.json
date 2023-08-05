@@ -18,7 +18,7 @@
 			"text": "Demo"
 		},
 		{
-			"pagePath": "pages/my/index",
+			"pagePath": "pages/user/index",
 			"text": "我的"
 		}]
 	},
@@ -42,10 +42,23 @@
 			}
 		},
 		{
-			"path": "pages/my/index",
+			"path": "pages/user/index",
 			"style": {
 				"navigationBarTitleText": "我的"
 			}
+		}
+	],
+	"subPackages":[
+		{
+			"root": "pages/sub-packages",
+			"pages": [{
+					"path": "detail",
+					"style": {
+						"navigationBarTitleText": "详情",
+						"enablePullDownRefresh": false
+					}
+				}
+			]
 		}
 	],
 	"globalStyle": {

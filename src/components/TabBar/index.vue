@@ -39,7 +39,7 @@ export default {
                     text: '我的',
                     name: 'account',
                     icon: 'account',
-                    url: '/pages/my/index'
+                    url: '/pages/user/index'
                 }
             ]
         };
