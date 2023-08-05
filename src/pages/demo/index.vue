@@ -1,7 +1,7 @@
 <!--
  * @Description: 示例
  * @Date: 2023-08-04 11:42:45
- * @LastEditTime: 2023-08-04 17:07:54
+ * @LastEditTime: 2023-08-04 18:27:46
 -->
 <template>
 	<view class="content">
@@ -10,12 +10,12 @@
 			<text class="title">{{ title }}</text>
 		</view>
 		<!-- uView组件测试 -->
-		<u-button type="success" text="uView按钮"></u-button>
+		<u-button type="success" text="uView组件"></u-button>
 		<!-- vuex测试 -->
 		<text class="title">Vuex：{{ userName }}</text>
 		<!-- http测试 -->
-		<u-button type="primary" @click="handleLogin">http测试</u-button>
-		
+		<u-button type="primary" @click="handleLogin">http</u-button>
+
 		<!-- 底部菜单栏 -->
 		<TabBar></TabBar>
 	</view>

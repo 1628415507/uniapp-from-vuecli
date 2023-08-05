@@ -1,12 +1,14 @@
 <!--
  * @Description: 
  * @Date: 2023-08-04 09:26:48
- * @LastEditTime: 2023-08-04 16:46:12
+ * @LastEditTime: 2023-08-05 09:16:22
 -->
 <template>
 	<view>
+		<text> 用户名：{{userName}}</text>
 		<u-action-sheet :actions="list" :title="title" :show="show"></u-action-sheet>
 		<u-button @click="show = true">打开ActionSheet</u-button>
+		<u-button type="error" @click="logout">退出登录</u-button>
 		<!-- 底部菜单栏 -->
 		<TabBar></TabBar>
 	</view>
@@ -20,6 +22,7 @@
 		},
 		data() {
 			return {
+				userName:'',
 			  title:'标题',
 				list: [{
 					name:'选项一',
@@ -38,8 +41,19 @@
 				show: false
 			}
 		},
-		onLoad() {
-			// uni.hideTabBar()
+		created() {
+			this.userName = this.$store.state.user.userName;
 		},
+		onLoad() {
+		},
+		methods: {
+			logout() {
+				// uni.setStorageSync('Set-Cookie', '');
+				this.$store.dispatch('user/logout'); // 清除
+				uni.redirectTo({
+					url: `/pages/login/index`
+				})
+			},
+		}
 	}
 </script>

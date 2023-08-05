@@ -99,8 +99,9 @@
 			},
 			// 获取需要的公共信息
 			getCommonInfo() {
-				this.$store.dispatch('user/setActiveTab', 'home'); //设置激活的tab，默认首页
-				// ...获取保存其他信息
+      	this.$store.dispatch('user/setActiveTab', 'home'); //设置激活的tab，默认首页
+				this.$store.dispatch('user/setUserInfo',this.formData ); //设置激活的tab，默认首页
+        // ...获取保存其他信息
 				// 跳转
 				uni.switchTab({
 					url: '/pages/home/index'
