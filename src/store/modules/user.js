@@ -1,7 +1,7 @@
 /*
  * @Description:Vuex-用户模块
  * @Date: 2023-08-03 16:56:53
- * @LastEditTime: 2023-08-05 09:27:56
+ * @LastEditTime: 2023-08-07 16:47:25
  */
 export default {
 	namespaced: true, // 为当前模块开启命名空间
@@ -10,6 +10,7 @@ export default {
 		userName: 'admin',
 		userInfo: {}, // 用户信息,
 		activeTab: 'home', //当前激活的tab
+		amapKey:'21d1f020389645ee420d864b9c20b70d'//高德地图小程序key
 	},
 	// 模块的 mutations 方法
 	mutations: {

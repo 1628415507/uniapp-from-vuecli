@@ -59,6 +59,13 @@
 					}
 				},
 				{
+					"path": "amap",
+					"style": {
+						"navigationBarTitleText": "amap",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
 					"path": "demo-detail",
 					"style": {
 						"navigationBarTitleText": "Demo详情",

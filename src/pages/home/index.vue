@@ -1,7 +1,7 @@
 <!--
  * @Description: 首页
  * @Date: 2023-08-04 09:27:20
- * @LastEditTime: 2023-08-04 17:21:32
+ * @LastEditTime: 2023-08-07 16:19:52
 -->
 <template>
 	<view>
@@ -30,7 +30,7 @@
 			}
 		},
 		onLoad() {
-      // uni.hideTabBar()
+      uni.hideTabBar()
 		},
 		methods: {}
 	}

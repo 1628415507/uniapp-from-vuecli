@@ -1,7 +1,7 @@
 <!--
  * @Description: 示例
  * @Date: 2023-08-04 11:42:45
- * @LastEditTime: 2023-08-05 16:51:14
+ * @LastEditTime: 2023-08-07 16:19:43
 -->
 <template>
 	<view>
@@ -14,7 +14,8 @@
 		<u-line dashed margin="20rpx 0"></u-line>
 		<u-button type="primary" @click="handleApi">http</u-button>
 		<!-- 公共组件示例 -->
-		<u-button type="success" @click="goDetail">Demo详情页</u-button>
+		<u-button type="success" @click="goDetail('amap')">amap</u-button>
+		<u-button type="success" @click="goDetail('demo-detail')">Demo详情页</u-button>
 		<!-- 字典 -->
 		<u-line dashed margin="20rpx 0"></u-line>
 		方法：
@@ -55,7 +56,7 @@
 			}
 		},
 		onLoad() {
-			// uni.hideTabBar()
+			uni.hideTabBar()
 		},
 		mounted() {
 			console.log("获取字典列表", this.YES_OR_NO)
@@ -64,9 +65,9 @@
 			this.userName = this.$store.state.user.userName;
 		},
 		methods: {
-			goDetail(){
+			goDetail(path){
 				uni.navigateTo({
-					url: `/pages/sub-packages/demo-detail`
+					url: `/pages/sub-packages/${path}`
 				})
 			},
 			handleApi() {

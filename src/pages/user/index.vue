@@ -49,6 +49,7 @@
 			this.userName = this.$store.state.user.userName;
 		},
 		onLoad() {
+      uni.hideTabBar()
 		},
 		methods: {
 			goDetail(){

@@ -1,7 +1,7 @@
 <!--
  * @Description:公共组件示例
  * @Date: 2023-08-04 09:26:48
- * @LastEditTime: 2023-08-05 15:59:56
+ * @LastEditTime: 2023-08-05 17:20:11
 -->
 <template>
 	<view>
@@ -18,15 +18,15 @@
 			@handleDataChange="(val) => handleDataChange(val,'sealNo')" />
 		<associate-input-group :source.sync="formData.gcon" :scannable="true"
 			@handleDataChange="(val) => handleDataChange(val,'gcon')" />
-		<!-- 暂无数据 -->
-		<u-divider text="暂无数据" lineColor="#2979ff"  textColor="#2979ff"></u-divider>
-		<Empty title="暂无数据"></Empty>
 		<!-- echarts -->
 		<u-divider text="echarts图表" lineColor="#2979ff"  textColor="#2979ff"></u-divider>
     <!-- 折线图 -->
 		<view class="content-line">
 				<lineEcharts :linetitle="infoObj.linetitle" canvasId="publicReport" :dateList="lineData"></lineEcharts>
 		</view>
+	  <!-- 暂无数据 -->
+		<u-divider text="暂无数据" lineColor="#2979ff"  textColor="#2979ff"></u-divider>
+		<Empty title="暂无数据"></Empty>
 	</view>
 </template>
 
