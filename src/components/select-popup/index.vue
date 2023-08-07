@@ -188,8 +188,8 @@
 					pageSize: this.pageSize,
 					currentPage: this.currentPage
 				}).then(res => {
-					const newData = res.records
-					this.total = res.total
+					const newData = res.records||[]
+					this.total = res.total||0
 					this.dataList = this.dataList.concat(newData)
 					// 将查不到的值作为新增的数据项
 					if (this.createAble && !this.dataList.length) {

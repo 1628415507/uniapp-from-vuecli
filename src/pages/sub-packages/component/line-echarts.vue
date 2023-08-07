@@ -186,7 +186,7 @@
                         }
                     }
                 }
-                console.log('===', this.ec)
+                // console.log('===', this.ec)
                 this.$refs[this.canvasId] && this.$refs[this.canvasId].clear()
                 this.$refs[this.canvasId] && this.$refs[this.canvasId].init()
             }

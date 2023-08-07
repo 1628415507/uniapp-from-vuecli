@@ -1,7 +1,7 @@
 <!--
  * @Description: 首页
  * @Date: 2023-08-04 09:27:20
- * @LastEditTime: 2023-08-07 16:19:52
+ * @LastEditTime: 2023-08-07 17:03:41
 -->
 <template>
 	<view>
@@ -23,9 +23,9 @@
 			return {
 				keyword:'',
 				swiperList: [
-						'https://cdn.uviewui.com/uview/swiper/swiper1.png',
-						'https://cdn.uviewui.com/uview/swiper/swiper2.png',
-						'https://cdn.uviewui.com/uview/swiper/swiper3.png',
+						require('@/static/image/demo/swiper1.png'),
+						require('@/static/image/demo/swiper2.png'),
+						require('@/static/image/demo/swiper3.png'),
 				]
 			}
 		},

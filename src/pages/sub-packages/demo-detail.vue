@@ -1,7 +1,7 @@
 <!--
  * @Description:公共组件示例
  * @Date: 2023-08-04 09:26:48
- * @LastEditTime: 2023-08-05 17:20:11
+ * @LastEditTime: 2023-08-07 16:53:05
 -->
 <template>
 	<view>
@@ -22,7 +22,7 @@
 		<u-divider text="echarts图表" lineColor="#2979ff"  textColor="#2979ff"></u-divider>
     <!-- 折线图 -->
 		<view class="content-line">
-				<lineEcharts :linetitle="infoObj.linetitle" canvasId="publicReport" :dateList="lineData"></lineEcharts>
+				<lineEcharts canvasId="publicReport" :dateList="lineData"></lineEcharts>
 		</view>
 	  <!-- 暂无数据 -->
 		<u-divider text="暂无数据" lineColor="#2979ff"  textColor="#2979ff"></u-divider>
@@ -64,7 +64,9 @@
 				formData:{
 					sealNo: [1235678, 1234575], //封条号
 					gcon: [], //G-CON//gcon
-				}
+				},
+				// 图表
+				lineData:[]
       }
 		},
 		created() {
