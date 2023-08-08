@@ -6,7 +6,7 @@
 <template>
 	<view>
 		<u-swiper :list="swiperList"></u-swiper>
-	  <u-search placeholder="请输入" v-model="keyword"></u-search>
+		<u-search placeholder="请输入" v-model="keyword"></u-search>
 		<!-- <u-icon name="photo" color="#2979ff" size="28"></u-icon> -->
 		<!-- 底部菜单栏 -->
 		<TabBar></TabBar>
@@ -21,16 +21,15 @@
 		},
 		data() {
 			return {
-				keyword:'',
+				keyword: '',
 				swiperList: [
-						require('@/static/image/demo/swiper1.png'),
-						require('@/static/image/demo/swiper2.png'),
-						require('@/static/image/demo/swiper3.png'),
+					require('@/static/image/demo/swiper1.png'),
+					require('@/static/image/demo/swiper2.png'),
 				]
 			}
 		},
 		onLoad() {
-      uni.hideTabBar()
+			uni.hideTabBar()
 		},
 		methods: {}
 	}

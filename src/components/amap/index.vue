@@ -62,7 +62,7 @@
 			// 检索周边的POI
 			getPoiAround(){
 				this.AMap.getPoiAround({
-					// iconPathSelected: require('@/static/image/icons/base-permission.png'), //如：..­/..­/img/marker_checked.png
+					// iconPathSelected: require('@/static/image/icons/point.png'), //如：..­/..­/img/marker_checked.png
 					// iconPath: require('@/static/image/icons/point.png'), //如：..­/..­/img/marker_checked.png
 					success: (data) => {
 						console.log('【 getPoiAround 】-40', data)
@@ -117,7 +117,7 @@
 				for (let j = 0; j < data.length; j++) {
 					if (j == i) {
 						data[j].iconPath = require(
-						'@/static/image/icons/base-permission.png'); //如：..­/..­/img/marker_checked.png
+						'@/static/image/icons/point.png'); //如：..­/..­/img/marker_checked.png
 					} else {
 						data[j].iconPath = require('@/static/image/icons/point.png'); //如：..­/..­/img/marker.png
 					}
