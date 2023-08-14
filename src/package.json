@@ -1,0 +1,15 @@
+{
+    "id": "International-sortPickerList",
+    "name": "国际区号和国旗索引列表",
+    "version": "1.1.0",
+    "description": "一个可以在国际手机号注册时选择国际区号和国旗的一个索引列表，支持h5和APP",
+    "keywords": [
+        "国际区号，国旗选择，索引列表，手机号注册，国际，区号国旗"
+    ],
+    "dcloudext": {
+        "category": [
+            "前端组件",
+            "通用组件"
+        ]
+    }
+}

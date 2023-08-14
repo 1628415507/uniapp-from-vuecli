@@ -28,6 +28,13 @@
                     "query": "",
                     "launchMode": "default",
                     "scene": null
+                },
+                {
+                    "name": "电话区号",
+                    "pathName": "pages/common/tel-codes",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
                 }
             ]
         }

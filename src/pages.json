@@ -50,6 +50,17 @@
 	],
 	"subPackages":[
 		{
+			"root": "pages/common",
+			"pages": [{
+					"path": "tel-codes",
+					"style": {
+						"navigationBarTitleText": " ",
+						"enablePullDownRefresh": false
+					}
+				}
+			]
+		},
+		{
 			"root": "pages/sub-packages",
 			"pages": [{
 					"path": "detail",

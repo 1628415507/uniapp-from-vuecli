@@ -1,7 +1,11 @@
 // 文件名带下划线:SASS会通过下划线来辨别哪些文件是SASS片段，并且不让片段内容直接生成为CSS文件，从而只是在使用@import指令的位置被导入
 
+// uView变量
+$u-primary: #008474; //覆盖uview主题色
+
+
 /** 常用色值 **/
-$colorTheme:#009688; //主颜色
+$colorTheme:#008474; //主颜色
 $colorThemeDark:#007166; //主颜色-深色
 
 $colorRed:#C42B2C; //红色
