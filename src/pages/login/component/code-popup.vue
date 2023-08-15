@@ -1,3 +1,8 @@
+<!--
+ * @Description: 输入验证码-弹框
+ * @Date: 2023-08-11 16:05:08
+ * @LastEditTime: 2023-08-14 17:23:46
+-->
 <template>
 	<u-popup :show="visible" mode="bottom" :round="50" :closeOnClickOverlay="true" @close="handlePopupClose"
 		duration="400" overlay zIndex="1000000">
@@ -9,14 +14,14 @@
 			<view class="search-wrap">
 				<u-input v-model="code" placeholder=" ">
 					<template slot="suffix">
-						<u-code ref="uCode" @change="codeChange" @end="codeEnd" @start="codeStart" seconds="10"
-							changeText="X秒重新发送" endText="重新发送"></u-code>
+						<u-code ref="uCode" @change="codeChange" @end="codeEnd" @start="codeStart" :seconds="seconds"
+							changeText="X秒重新发送" :startText="seconds+'秒重新发送'" endText="重新发送"></u-code>
 						<!-- <u-button @click="getCode" :text="tips" type="primary" :plain="true" size="mini"></u-button> -->
 						<text @click="getCode" :class="disabled?'code-txt disabled-txt':'code-txt'">{{tips}}</text>
 					</template>
 				</u-input>
 				<view style="margin:42rpx auto">
-					<u-button @click="login" type="primary">登录/注册</u-button>
+					<u-button :disabled="!code" @click="login" type="primary">登录/注册</u-button>
 				</view>
 			</view>
 		</view>
@@ -36,9 +41,9 @@
 				// 当前组件
 				visible: false,
 				tips: '',
-				value: '',
 				disabled: false,
-				code: ''
+				code: '',
+				seconds: 10
 			}
 		},
 		watch: {
@@ -63,7 +68,6 @@
 					})
 					setTimeout(() => {
 						this.disabled = true
-						// this.disabled=false
 						uni.hideLoading();
 						// 这里此提示会被this.start()方法中的提示覆盖
 						uni.$u.toast('验证码已发送');
@@ -71,11 +75,8 @@
 						this.$refs.uCode.start();
 					}, 2000);
 				} else {
-					uni.$u.toast('倒计时结束后再发送');
+					return //倒计时还没有结束
 				}
-			},
-			change(e) {
-				console.log('change', e);
 			},
 			// 倒计时结束
 			codeEnd() {
@@ -87,31 +88,27 @@
 				// uni.$u.toast('倒计时开始');
 			},
 			login() {
-				if (!this.code) {
-					uni.$u.toast('验证码不能为空');
-					return
-				}
 				// 验证失败
 				if (this.code === '0000') {
 					uni.$u.toast('验证码错误');
 					return
 				}
-				this.$emit('login')
+				this.$emit('confirm', this.code)
 			},
 			// 当前弹框-关闭
 			handlePopupClose() {
 				this.visible = false;
 			},
 		},
-		onReady() {
-
-		},
+		onReady() {},
 		onLoad() {},
 		onShow() {},
 		mounted() {
 			this.visible = this.show;
-			this.disabled = true
-			this.$refs.uCode.start();
+			this.$nextTick(() => {
+				this.disabled = true
+				this.$refs.uCode?.start(); //开始倒计时
+			})
 		}
 	};
 </script>
@@ -124,16 +121,12 @@
 
 	.select-popup {
 		padding: 33rpx 0;
-		height: 64vh;
+		height: 70vh;
 
 		.top-wrap {
 			display: flex;
 			padding: 0 24rpx;
 			position: relative;
-
-			// .close {
-			// 	margin-right: 30rpx;
-			// }
 
 			.title {
 				margin-left: 20rpx;
@@ -161,12 +154,6 @@
 				color: #86909C;
 			}
 
-			// display: flex;
-			// justify-content: space-between;
-			// flex-direction: column;
-			// .u-button {
-			// 	border-color: #fff !important;
-			// }
 
 		}
 

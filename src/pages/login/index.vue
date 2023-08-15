@@ -1,24 +1,44 @@
 <template>
 	<!-- 账号登录 -->
-	<view class="login-wrap">
+	<view class="login-page">
 		<u-swiper :list="swiperList" height="422rpx" indicator indicatorStyle="bottom:70rpx"
-			indicatorActiveColor="#008474" indicatorMode="dot"></u-swiper>
+			:indicatorActiveColor="colorTheme" indicatorMode="dot"></u-swiper>
 		<view class="login-content">
 			<view class="title"> 欢迎登录 </view>
 			<view class="tabs-wrap">
 				<u-tabs :list="tabsList" itemStyle="font-size: 32px;color: #1D2129; height:50rpx" @click="tabClick"
-					:current="currentTab"></u-tabs>
+					:lineColor="colorTheme" :current="currentTab"></u-tabs>
 			</view>
-			<!-- 密码登录 -->
-			<u-form :ref="formRef" :model="formData" :rules="rules" labelPosition="left" labelWidth="0">
-				<view v-if="loginMethod==='pwd'" class="account-content">
-					<view class="form-wrap">
+			<!-- 登录方式 -->
+			<u-form :ref="formRef" :model="formData" :rules="formRules" labelPosition="left" labelWidth="0">
+				<!-- 手机号登录 -->
+				<view v-if="loginMethod==='phone'" class="phone-method">
+					<u-form-item label=" " border="none">
+						<u-input v-model="formData.phoneNumber" placeholder="请输入手机号">
+							<template slot="prefix">
+								<view class="phone-prefix" @click="showTelCodesPopup = true">
+									<text class="num">+{{telCode}}</text>
+									<u-icon name="arrow-down"></u-icon>
+									<text class="line">|</text>
+								</view>
+							</template>
+						</u-input>
+					</u-form-item>
+					<view class="code-wrap">
+						<u-button :loading="codeLoading" loadingText="获取验证码" @click="setVerificationCode"
+							:disabled="!formData.phoneNumber" type="primary">获取验证码</u-button>
+					</view>
+				</view>
+
+				<!-- 密码登录 -->
+				<view v-if="loginMethod==='pwd'" class="pwd-method">
+					<view class="pwd-method-form">
 						<u-form-item label=" " prop="username">
 							<u-input v-model="formData.username" placeholder-class="placeholder-tips"
 								placeholder="请输入账号">
 							</u-input>
 						</u-form-item>
-						<u-form-item label=" " prop="password" border="none">
+						<u-form-item label=" " prop="password">
 							<u-input v-model="formData.password" :password="!pwdVisible"
 								placeholder-class="placeholder-tips" placeholder="请输入密码">
 								<template slot="suffix">
@@ -27,93 +47,84 @@
 								</template>
 							</u-input>
 						</u-form-item>
-						<u-form-item label=" " border="none">
-							<u-checkbox-group v-model="formData.isRemember" placement="row" @change="checkboxChange">
-								<u-checkbox label="记住我" activeColor="#008474" name="remember" labelSize="28rpx">
+						<u-form-item label=" ">
+							<u-checkbox-group v-model="formData.isRemember" placement="row">
+								<u-checkbox label="记住我" :activeColor="colorTheme" name="remember" labelSize="28rpx">
 								</u-checkbox>
 							</u-checkbox-group>
 						</u-form-item>
 					</view>
-					<u-button type="primary" @click="loginByAccount">登录</u-button>
-					<!-- 	<view class="tips">
-					使用手机号快速注册
-				</view> -->
+					<u-button type="primary" @click="loginByPwd">登录</u-button>
 				</view>
 
-				<!-- 手机号 -->
-				<view v-if="loginMethod==='phone'" class="title">
-					<!-- 注意：由于兼容性差异，如果需要使用前后插槽，nvue下需使用u--input，非nvue下需使用u-input -->
-					<u-form-item label=" " border="none">
-						<u-input v-model="formData.phoneNumber" placeholder="请输入手机号">
-							<template slot="prefix">
-								<view class="phone-prefix" @click="handleTelClick">
-									<text class="num">+{{telCode}}</text>
-									<u-icon name="arrow-down"></u-icon>
-									<text class="line">|</text>
-								</view>
-							</template>
-						</u-input>
-					</u-form-item>
-					<!-- <u-toast ref="uToast"></u-toast> -->
-					<view class="code-wrap">
-						<!-- 					<u-code :seconds="15" @end="codeEnd" @start="codeStart" ref="uCode" @change="codeChange"></u-code>
-					<u-button :loading="codeLoading" loadingText="获取验证码" @tap="getCode" type="primary"
-						:disabled="codeDisabled">获取验证码</u-button> -->
-						<u-button :loading="codeLoading" loadingText="获取验证码" @click="getCode"
-							type="primary">获取验证码</u-button>
-					</view>
-				</view>
 				<!-- 同意协议 -->
 				<view class="protocol-wrap">
 					<view style="margin-top: 9rpx;">
-						<u-checkbox-group v-model="formData.isAgree" placement="row" @change="checkboxChange">
-							<u-checkbox label=" " activeColor="#008474" :name="true" labelSize="28rpx">
+						<u-checkbox-group v-model="formData.isAgree" placement="row">
+							<u-checkbox label=" " :activeColor="colorTheme" :name="true" labelSize="28rpx">
 							</u-checkbox>
 						</u-checkbox-group>
 					</view>
 					<view class="protocol-txt">
-						未注册的手机号，登录时将自动注册，且代表您已 同意<text class="hightlight">《某某注册协议》</text>和 <text
-							class="hightlight">《某某隐私政策》</text>
+						未注册的手机号，登录时将自动注册，且代表您已 同意<text class="highlight">《某某注册协议》</text>和 <text
+							class="highlight">《某某隐私政策》</text>
 					</view>
 				</view>
 			</u-form>
 			<!-- 更多登录方式 -->
 			<view class="more-methods">
 				<u-divider text="更多登录方式" lineColor="#E5E6EB" textColor="#86909C" textSize="28rpx"></u-divider>
+				<!-- APP登录 -->
+				<!-- #ifdef APP-PLUS  -->
 				<view class="flex-sb">
 					<view class="btn-item-wrap flex-c">
-						<view class="btn-item flex-sb">
-							<!-- <u--image :src="require('@/static/image/icons/dingding.png')" width="80px" height="80px" @click="click"></u--image> -->
+						<view class="btn-item flex-c" @click="loginOnAppByWechat">
 							<u-icon name="weixin-fill" color="#09BB07" size="48"></u-icon>
-							微信登录
+							<text class="label">微信登录</text>
 						</view>
 					</view>
-					<view class="btn-item-wrap flex-c">
-						<view class="btn-item flex-sb">
+					<view class="btn-item-wrap flex-sb">
+						<view class="btn-item flex-c" @click="loginOnAppByDDing">
 							<u--image :src="require('@/static/image/icons/dingding.png')" width="48rpx"
 								height="48rpx"></u--image>
-							钉钉登录
+							<text class="label">钉钉登录</text>
 						</view>
 					</view>
 				</view>
+				<!-- #endif  -->
+				<!-- 微信 -->
+				<!-- #ifdef MP-WEIXIN  -->
+				<view class="weixin-btn flex-c">
+					<!-- 			<view v-if="!formData.isAgree[0]" class="btn-item-wrap flex-c" style="width: 100%;">
+						<view class="btn-item flex-c" @click="loginByWeChat">
+							<u-icon name="weixin-fill" color="#09BB07" size="48"></u-icon>
+							<text class="label">微信授权登录</text>
+						</view>
+					</view> -->
+					<u-button v-if="!formData.isAgree[0]" icon="weixin-fill" iconColor="#09BB07" class="custom-style"
+						@click="loginByWeChat">微信授权登录
+					</u-button>
+					<u-button v-else open-type="getPhoneNumber" icon="weixin-fill" iconColor="#09BB07"
+						class="custom-style" @getphonenumber="getPhoneNumber">微信授权登录
+					</u-button>
+				</view>
+				<!-- #endif  -->
 			</view>
 		</view>
 
-		<!-- 微信手机号快捷登录 -->
-		<!-- <u-button type="primary" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">微信手机号快捷登录
-		</u-button> -->
+		<!-- 电话区码弹框 -->
 		<TelCodesPopup v-if="showTelCodesPopup" :show.sync="showTelCodesPopup" @getInfo="getTelCodesInfo">
 		</TelCodesPopup>
 		<!-- 输入验证码 -->
-		<SetCodesPopup v-if="setCodesPopup" :show.sync="setCodesPopup" @login="loginByCode">
+		<SetCodesPopup v-if="setCodesPopup" :show.sync="setCodesPopup" @confirm="getVerificationCode">
 		</SetCodesPopup>
 		<!-- 同意协议提示框 -->
 		<u-modal :show="showAgreeModal" title="提示" @confirm="handleAgree" ref="uModal" width="600rpx"
-			:showCancelButton="true" confirmText="同意" confirmColor="#008474" @cancel="showAgreeModal=false">
+			:showCancelButton="true" confirmText="同意" :confirmColor="colorTheme" @cancel="showAgreeModal=false">
 			<view class="slot-content">
-				<rich-text :nodes="content"></rich-text>
+				<!-- <rich-text :nodes="content"></rich-text> -->
 				<view class="protocol-txt">
-					请先同意<text class="hightlight">《某某注册协议》</text>和 <text class="hightlight">《某某隐私政策》</text>
+					请先同意<text class="highlight">《某某注册协议》</text>和 <text class="highlight">《某某隐私政策》</text>
 				</view>
 			</view>
 		</u-modal>
@@ -134,12 +145,15 @@
 		data() {
 			return {
 				// 公共
+				colorTheme: '#008474',
 				showAgreeModal: false,
 				swiperList: [
 					require('@/static/image/demo/swiper1.png'),
 					require('@/static/image/demo/swiper2.png'),
 					require('@/static/image/demo/swiper1.png'),
 				],
+				loginMethod: 'phone',
+				currentTab: '0',
 				tabsList: [{
 					name: '手机号',
 					value: 'phone'
@@ -147,26 +161,26 @@
 					name: '密码登录',
 					value: 'pwd'
 				}],
+				// 手机号登录
+				telCode: "86",
 				// 验证码
 				codeTips: '',
 				codeDisabled: false,
 				codeLoading: false,
 				showTelCodesPopup: false,
 				setCodesPopup: false,
-				telCode: "86",
-				loginMethod: 'phone',
-				currentTab: '0',
+				// 密码登录
 				pwdVisible: false,
 				formRef: 'loginFormRef',
 				formData: {
 					username: 'admin',
 					password: '123456',
-					isRemember: '', //记住我
-					phoneNumber: '',
+					isRemember: [], //记住我
+					phoneNumber: '13960081319',
 					isAgree: [], //同意协议
 					// wechatCode: '',
 				},
-				rules: {
+				formRules: {
 					username: {
 						type: 'string',
 						required: true,
@@ -179,100 +193,85 @@
 						message: '请输入密码',
 						trigger: 'blur'
 					},
-					phoneNumber: {
-						type: 'string',
-						required: true,
-						message: '请输入密码',
-						trigger: 'blur'
-					}
+					// phoneNumber: [{
+					// 		required: true,
+					// 		message: '请输入手机号',
+					// 		trigger: ['change', 'blur'],
+					// 	},
+					// 	{
+					// 		validator: (rule, value, callback) => {
+					// 			// 上面有说，返回true表示校验通过，返回false表示不通过
+					// 			// uni.$u.test.mobile()就是返回true或者false的
+					// 			return uni.$u.test.mobile(value);
+					// 		},
+					// 		message: '手机号格式不正确',
+					// 		trigger: ['change', 'blur'],
+					// 	}
+					// ],
 				}
 			};
 		},
+		mounted() {},
 		onReady() {
-			//onReady 为uni-app支持的生命周期之一
-			this.$refs[this.formRef]?.setRules(this.rules);
-			// this.$refs["sortPickerList"]?.initPage();
+			this.$nextTick(() => {
+				// 需要兼容微信小程序，并且校验规则中含有方法等，只能通过setRules方法设置规则。
+				this.$refs[this.formRef]?.setRules(this.formRules);
+			})
 		},
 		onLoad() {},
 		methods: {
-			// 同意
-			handleAgree() {
-				this.formData.isAgree[0] = true
-				this.showAgreeModal = false
-			},
-			// codeChange(text) {
-			// 	this.codeTips = text;
-			// },
-			// 手机号-获取验证码
-			getCode() {
-				if (!this.formData.phoneNumber) {
-					// this.$refs[this.formRef]?.validateField('formData.phoneNumber');
-					uni.$u.toast('手机号不能为空');
-					return
-				}
-				if (!this.formData.isAgree[0]) {
-					this.showAgreeModal = true
-					return
-				}
-				// if (this.$refs.uCode.canGetCode) {
-				// 模拟向后端请求验证码
-				// uni.showLoading({
-				// 	title: '正在获取验证码'
-				// })
-				this.codeLoading = true
-				setTimeout(() => {
-					this.codeLoading = false
-					// this.codeDisabled = true
-					this.setCodesPopup = true
-					// this.$refs.uCode.start();
-					// uni.hideLoading();
-					// 这里此提示会被this.start()方法中的提示覆盖
-					// uni.$u.toast('验证码已发送');
-					// 通知验证码组件内部开始倒计时
-				}, 2000);
-				// } else {
-				// 	return
-				// 	// uni.$u.toast('倒计时结束后再发送');
-				// }
-			},
-			// // 倒计时结束
-			// codeEnd() {
-			// 	// uni.$u.toast('倒计时结束');
-			// 	this.codeDisabled = false
-			// },
-			// // 倒计时开始
-			// codeStart() {
-			// 	// uni.$u.toast('倒计时开始');
-			// },
-			handleTelClick() {
-				console.log('handleTelClick', );
-				// uni.navigateTo({
-				// 	url:'/pages/common/tel-codes'
-				// })
-				// uni.navigateTo({
-				// 	url: `/pages/sub-packages/${path}`
-				// })
-				this.showTelCodesPopup = true
-			},
-			checkboxChange() {
-				console.log('checkboxChange', );
-			},
+			// 公共-登录方式切换
 			tabClick(item) {
 				this.loginMethod = item.value
 				this.currentTab = item.index
 				console.log('item', item);
 			},
+			// 公共-验证是否同意授权
+			validAgree() {
+				if (!this.formData.isAgree[0]) {
+					this.showAgreeModal = true
+					return false
+				} else {
+					return true
+				}
+			},
+			// 公共-同意
+			handleAgree() {
+				// console.log('handleAgree', this.formData.isAgree[0]);
+				this.formData.isAgree = [true]
+				this.showAgreeModal = false
+			},
+			// 手机号登录-获取手机号区码
 			getTelCodesInfo(info) {
 				this.telCode = info.value
 			},
+			// 手机号登录-发送验证码
+			setVerificationCode() {
+				if (!uni.$u.test.mobile(this.formData.phoneNumber)) {
+					uni.$u.toast('手机号格式不正确');
+					return
+				}
+				if (!this.validAgree()) {
+					return
+				}
+				this.codeLoading = true
+				// 模拟调接口
+				setTimeout(() => {
+					this.codeLoading = false
+					this.setCodesPopup = true
+				}, 2000);
+			},
+			// 手机号登录-获取验证码
+			getVerificationCode(code) {
+				this.getCommonInfo()
+			},
 			// 密码登录
-			loginByAccount() {
-				// 调接口
-				this.$refs[this.formRef].validate().then(res => {
-					if (!this.formData.isAgree[0]) {
-						this.showAgreeModal = true
+			loginByPwd() {
+				this.$refs[this.formRef]?.validate().then(res => {
+					if (!this.validAgree()) {
 						return
 					}
+					// 调接口
 					//   login(this.formData).then(res => {
 					//     console.log('【 login-success 】-30', res);
 					this.getCommonInfo()
@@ -285,31 +284,73 @@
 					//   })
 				});
 			},
-			// 手机授权登录
+			// APP端-微信登录
+			loginOnAppByWechat() {
+				if (!this.validAgree()) {
+					return
+				}
+				uni.login({
+					"provider": "weixin",
+					"onlyAuthorize": true, // 微信登录仅请求授权认证
+					success: function(event) {
+						const {
+							code
+						} = event
+						console.log('登录成功，获取登录凭证', code);
+					},
+					fail: function(err) {
+						console.log('登录授权失败', err);
+						// 登录授权失败  
+						// err.code是错误码
+					}
+				})
+			},
+			// APP端-钉钉登录
+			loginOnAppByDDing() {
+				uni.login({
+					provider: 'dingtalk',
+					success: function(res) {
+						var code = res.code;
+						console.log('钉钉-登录成功，获取登录凭证', code);
+						// 登录成功，获取登录凭证 res.code
+						// 发起请求将 code 发送到服务器进行登录验证，获取用户信息等操作
+					},
+					fail: function(err) {
+						console.log('钉钉-登录授权失败', err);
+					}
+				});
+			},
+			// 小程序-微信授权登录
+			loginByWeChat() {
+				if (!this.validAgree()) {
+					return
+				}
+			},
+			// 小程序-手机授权登录
 			getPhoneNumber(e) {
+				console.log('手机授权登录')
+				if (!this.validAgree()) {
+					return
+				}
 				if (e.detail.errMsg === 'getPhoneNumber:ok') {
-					// console.log(e.detail, '手机授权')
-					login({
-						...this.formData,
-						wechatCode: e.detail.code // 授权码
-					}).then(res => {
-						console.log('【 login-success 】-30', res);
-						this.getCommonInfo()
-					}).catch((err) => {
-						uni.showToast({
-							icon: 'none',
-							title: err.message || '登录失败',
-							duration: 2000
-						})
-					})
+					console.log(e.detail, '手机授权')
+					// login({
+					// 	...this.formData,
+					// 	wechatCode: e.detail.code // 授权码
+					// }).then(res => {
+					// 	console.log('【 login-success 】-30', res);
+					this.getCommonInfo()
+					// }).catch((err) => {
+					// 	uni.showToast({
+					// 		icon: 'none',
+					// 		title: err.message || '登录失败',
+					// 		duration: 2000
+					// 	})
+					// })
 				}
 				// console.log('getPhoneNumber', e)
 			},
-			// 验证码登录
-			loginByCode() {
-				this.getCommonInfo()
-			},
-			// 获取需要的公共信息
+			// 公共-获取需要的公共信息
 			getCommonInfo() {
 				this.$store.dispatch('user/setActiveTab', 'home'); //设置激活的tab，默认首页
 				this.$store.dispatch('user/setUserInfo', this.formData); //设置激活的tab，默认首页
@@ -323,9 +364,9 @@
 	};
 </script>
 <style lang="scss" scoped>
-	// page {
-	// 	font-family: PingFang SC-Regular, PingFang SC;
-	// }
+	::v-deep .weixin-btn .u-icon__icon {
+		font-size: 48rpx !important;
+	}
 
 	::v-deep .u-form-item__body__left {
 		width: 0rpx !important;
@@ -345,25 +386,13 @@
 		height: 32rpx !important;
 	}
 
-	.phone-prefix {
-		display: flex;
-		font-size: 32rpx;
-		font-weight: 400;
-		color: #1D2129;
-		line-height: 48rpx;
-
-		.num {
-			width: 110rpx;
-		}
-
-		.line {
-			color: #D9DCE1;
-			padding: 0 10rpx;
-		}
-	}
-
-	.login-wrap {
+	// 
+	.login-page {
 		position: relative;
+
+		.highlight {
+			color: $colorTheme;
+		}
 
 		.login-content {
 			position: relative;
@@ -371,7 +400,8 @@
 			margin-top: -40rpx;
 			box-sizing: border-box;
 			width: 100%;
-			padding: 70rpx 40rpx;
+			// height: 80vh;
+			padding: 70rpx 40rpx 30rpx 40rpx;
 			border-radius: 50rpx 50rpx 0 0;
 			background: #FFFFFF;
 			overflow: hidden;
@@ -383,36 +413,12 @@
 				font-weight: 500;
 				color: #1D2129;
 			}
-		}
 
-		.tabs-wrap {
-			margin: 35rpx auto;
-		}
-
-		.code-wrap {
-			margin: 48rpx auto;
-		}
-
-		.account-content {
-			.form-wrap {
-				margin-bottom: 30rpx;
-				// height: 340rpx;
-			}
-
-			.tips {
-				margin-top: 32rpx;
-				font-size: 28rpx;
-				font-family: PingFang SC-Regular, PingFang SC;
-				font-weight: 400;
-				color: $colorTheme;
-				line-height: 40rpx;
-				text-align: center;
+			.tabs-wrap {
+				margin: 20rpx auto;
 			}
 		}
 
-		.hightlight {
-			color: $colorTheme;
-		}
 
 		// 协议
 		.protocol-wrap {
@@ -423,23 +429,73 @@
 			font-weight: 400;
 			color: #4E5969;
 			line-height: 44rpx;
-
 		}
 
+		// 更多方式
 		.more-methods {
-			margin-top: 180rpx;
+			margin-top: 150rpx;
 
 			.btn-item-wrap {
 				width: 48%;
-				height: 96rpx;
+				height: 90rpx;
 				border-radius: 12rpx;
 				border: 2rpx solid #D9DCE1;
 
 				.btn-item {
-					width: 180rpx;
-					line-height: 96rpx;
+					width: 100%;
+					line-height: 90rpx;
+					text-align: center;
+
+					.label {
+						display: inline-block;
+						padding: 0 10rpx;
+						min-width: 125rpx;
+					}
 				}
 			}
+		}
+	}
+
+	// 手机号登录
+	.phone-method {
+
+		// 手机号前缀
+		.phone-prefix {
+			display: flex;
+			font-size: 32rpx;
+			font-weight: 400;
+			color: #1D2129;
+			line-height: 48rpx;
+
+			.num {
+				width: 110rpx;
+			}
+
+			.line {
+				color: #D9DCE1;
+				padding: 0 10rpx;
+			}
+		}
+
+		.code-wrap {
+			margin: 48rpx auto;
+		}
+
+	}
+
+	// 密码登录
+	.pwd-method {
+		.pwd-method-form {
+			margin-bottom: 30rpx;
+		}
+
+		.tips {
+			margin-top: 32rpx;
+			font-size: 28rpx;
+			font-weight: 400;
+			color: $colorTheme;
+			line-height: 40rpx;
+			text-align: center;
 		}
 	}
 </style>

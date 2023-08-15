@@ -1,7 +1,7 @@
 <template>
 	<view>
-		<scroll-view v-if="searchFinish===true" class="wxaSortPickerList" scroll-y="true"
-			:style="{height: scrollHeight + 'px'}" :scroll-into-view="wxaSortPickerData.wxaSortPickertoView">
+		<scroll-view class="wxaSortPickerList" scroll-y="true" :style="{height: scrollHeight + 'px'}"
+			:scroll-into-view="wxaSortPickerData.wxaSortPickertoView">
 			<block v-for="(item,index) in wxaSortPickerData.textData" :key="index">
 				<!-- 首字母标签 -->
 				<view v-if="!keyword" :id="item.tag" class="wxaSortPickerTag">{{item.tag}}</view>
@@ -446,29 +446,30 @@
 			//#ifdef APP-PLUS
 			this.scrollHeight = windowHeight - 56
 			//#endif
+			this.initPage()
 		},
 		methods: {
+			// 初始化列表
 			initPage() {
 				const data = countryList.list;
 				this.init(data)
 			},
 			// 初始化数据
-			init: function(array, callback) {
-				var that = this
+			init(array, callback) {
 				if (array.length <= 0) {
 					return false;
 				}
-				var temData = that.wxaSortPickerData;
+				var temData = this.wxaSortPickerData;
 				if (typeof temData == 'undefined') {
 					temData = {};
 				}
-				/* that.wxaSortPickerUpper = wxaSortPickerUpper;
-				that.wxaSortPickerLower = wxaSortPickerLower;
-				that.wxaSortPickerScroll = wxaSortPickerScroll;
-				that.wxaSortPickerTemTagTap = wxaSortPickerTemTagTap; */
+				/* this.wxaSortPickerUpper = wxaSortPickerUpper;
+				this.wxaSortPickerLower = wxaSortPickerLower;
+				this.wxaSortPickerScroll = wxaSortPickerScroll;
+				this.wxaSortPickerTemTagTap = wxaSortPickerTemTagTap; */
 
-				that.setViewWH(that);
-				that.buildTextData(that, array);
+				this.setViewWH(this);
+				this.buildTextData(this, array);
 			},
 			wxaSortPickerItemTap: function(flag, tel) {
 				var that = this;
@@ -478,11 +479,10 @@
 				}
 				that.$emit('clickItem', data)
 			},
-			wxaSortPickerTemTagTap: function(e) {
-				var that = this;
-				var temData = that.wxaSortPickerData;
+			wxaSortPickerTemTagTap(e) {
+				var temData = this.wxaSortPickerData;
 				temData.wxaSortPickertoView = e.target.dataset.tag;
-				that.wxaSortPickerData = temData
+				this.wxaSortPickerData = temData
 			},
 			makePy: function(str) {
 				var that = this;
@@ -564,7 +564,7 @@
 			},
 			buildTextData(that, arr) {
 				if (typeof arr[0] === 'object') {
-					that.dataType = 'object'
+					this.dataType = 'object'
 				}
 				const textData = [{
 						tag: "A",
@@ -676,20 +676,68 @@
 					}
 				];
 
-				var temABC = that.charsABC;
-				if (that.dataType == 'object') {
-					this.searchFinish = false
+
+				const temABC = this.charsABC;
+				if (this.dataType == 'object') {
 					for (let i = 0; i < arr.length; i++) {
 						var text = arr[i];
 						var firstChar = text.name.substr(0, 1);
 						firstChar = firstChar.toUpperCase();
-						var reg = that.query(firstChar)[0];
+						var reg = this.query(firstChar)[0];
 						var temIndex = temABC.indexOf(reg);
 						if (temIndex == -1) {
 							temIndex = 26;
 						}
-						if (that.keyword) {
+						if (this.keyword) {
 							if (text.name.indexOf(this.keyword) > -1) {
+								textData[temIndex].textArray.push(text);
+							}
+						} else {
+							textData[temIndex].textArray.push(text);
+						}
+						if (i === arr.length - 1) {
+							const frequentArr = [{
+								"name": "中国大陆",
+								"tel": "86"
+							}, {
+								"name": "中国香港",
+								"tel": "852"
+							}, {
+								"name": "中国澳门",
+								"tel": "853"
+							}, {
+								"name": "中国台湾",
+								"tel": "886"
+							}]
+
+							const frequentObj = {
+								tag: "常用地区",
+								textArray: []
+							}
+							if (this.keyword) {
+								for (let i = 0; i < frequentArr.length; i++) {
+									var text = frequentArr[i];
+									if (text.name.indexOf(this.keyword) > -1) {
+										frequentObj.textArray.push(text);
+									}
+								}
+							} else {
+								frequentObj.textArray = frequentArr
+							}
+							// 插入常用地区
+							textData.unshift(frequentObj)
+						}
+					}
+				} else {
+					this.searchFinish = false
+					for (let i = 0; i < arr.length; i++) {
+						var text = arr[i];
+						var firstChar = text.substr(0, 1);
+						var reg = this.query(firstChar)[0];
+						var temIndex = temABC.indexOf(reg);
+						if (this.keyword) {
+							// console.log('【查询  】-690', text.name)
+							if (text.indexOf(this.keyword) > -1) {
 								textData[temIndex].textArray.push(text);
 							}
 						} else {
@@ -699,29 +747,9 @@
 							this.searchFinish = true
 						}
 					}
-					
-				} else {
-					that.searchFinish = false
-					for (let i = 0; i < arr.length; i++) {
-						var text = arr[i];
-						var firstChar = text.substr(0, 1);
-						var reg = that.query(firstChar)[0];
-						var temIndex = temABC.indexOf(reg);
-						if (that.keyword) {
-							// console.log('【查询  】-690', text.name)
-							if (text.indexOf(that.keyword) > -1) {
-								textData[temIndex].textArray.push(text);
-							}
-						} else {
-							textData[temIndex].textArray.push(text);
-						}
-						if (i === arr.length - 1) {
-							that.searchFinish = true
-						}
-					}
 				}
 
-				var temData = that.wxaSortPickerData;
+				let temData = this.wxaSortPickerData;
 				if (typeof temData == 'undefined') {
 					temData = {};
 				}
@@ -757,11 +785,7 @@
 	}
 </script>
 
-<style lang="scss">
-	.pl-20 {
-		padding-left: 20rpx;
-	}
-
+<style lang="scss" scoped>
 	// 右侧导航栏
 	.wxaSortPickerTemTags {
 		position: fixed;
@@ -793,7 +817,7 @@
 
 	.wxaSortPickerItem-box {
 		background-color: #fff;
-		padding: 0 30rpx;
+		padding: 0 40rpx 0 30rpx;
 
 		.wxaSortPickerItem {
 			height: 96rpx;
