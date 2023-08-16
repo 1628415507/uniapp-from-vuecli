@@ -1,6 +1,6 @@
 <!--
  * @Date: 2022-10-13 16:31:42
- * @LastEditTime: 2023-08-05 14:13:57
+ * @LastEditTime: 2023-08-16 11:03:47
  * @Description: 
 -->
 ## 已有配置如下
@@ -9,7 +9,9 @@
 - 安装uview：`npm install uview-ui`(cli创建的需要用vue.config.js再次引入)
 - 已配置vuex、vuex-persistedstate
 - 已配置http
-
+- 引入echarts包：src\uni_modules\lime-echart
+  - 避免包太大，echarts.min.js放分包中，且目前只引入了常用的直线图、柱状图、饼图，如需要其他图表需重新定制引入
+  - 定制地址：https://echarts.apache.org/zh/builder.html（当前版本5.4.3）
 
 # uniapp-from-vuecli
 
