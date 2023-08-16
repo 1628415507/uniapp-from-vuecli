@@ -10,29 +10,36 @@ export default {
 		userName: 'admin',
 		userInfo: {}, // 用户信息,
 		activeTab: 'home', //当前激活的tab
-		amapKey:'21d1f020389645ee420d864b9c20b70d'//高德地图小程序key
+		amapKey: '21d1f020389645ee420d864b9c20b70d', //高德地图小程序key
+		colorTheme: '#008474' //主题颜色
 	},
 	// 模块的 mutations 方法
 	mutations: {
 		SET_ACTIVE_TAB(state, val) {
 			state.activeTab = val;
 		},
-		SET_USER_INFO(state, info={}) {
+		SET_USER_INFO(state, info = {}) {
 			state.userInfo = info;
-			state.userName = info?.username||'';
+			state.userName = info?.username || '';
 		},
 	},
 	// 模块的 actions 方法
 	actions: {
-		setActiveTab({ commit }, val) {
+		setActiveTab({
+			commit
+		}, val) {
 			commit('SET_ACTIVE_TAB', val);
 		},
-		setUserInfo({ commit }, obj) {
+		setUserInfo({
+			commit
+		}, obj) {
 			commit('SET_USER_INFO', obj);
 		},
-		logout({ commit }){
+		logout({
+			commit
+		}) {
 			commit('SET_USER_INFO', null);
-			uni.clearStorageSync()//清除所有缓存
+			uni.clearStorageSync() //清除所有缓存
 		}
 	},
 	// 模块的 getters 属性

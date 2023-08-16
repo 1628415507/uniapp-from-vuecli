@@ -1,3 +1,8 @@
+<!--
+ * @Description: 登录页
+ * @Date: 2023-08-04 17:34:31
+ * @LastEditTime: 2023-08-16 11:30:06
+-->
 <template>
 	<!-- 账号登录 -->
 	<view class="login-page">
@@ -386,13 +391,13 @@
 		height: 32rpx !important;
 	}
 
-	// 
+	.highlight {
+		color: $colorTheme;
+	}
+
+	//
 	.login-page {
 		position: relative;
-
-		.highlight {
-			color: $colorTheme;
-		}
 
 		.login-content {
 			position: relative;
@@ -418,7 +423,6 @@
 				margin: 20rpx auto;
 			}
 		}
-
 
 		// 协议
 		.protocol-wrap {

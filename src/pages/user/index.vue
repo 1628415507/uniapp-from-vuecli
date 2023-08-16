@@ -14,7 +14,7 @@
 		<!-- <u-button @click="show = true">打开ActionSheet</u-button> -->
 		<!-- <u-action-sheet :actions="list" :title="title" :show="show"></u-action-sheet> -->
 		<!-- 底部菜单栏 -->
-		<TabBar></TabBar>
+		<TabBar class="tabbar-wrap"></TabBar>
 	</view>
 </template>
 
@@ -67,4 +67,18 @@
 		}
 	}
 </script>
-<style scoped></style>
+<style scoped lang="scss">
+	::v-deep .tabbar-wrap {
+		.u-tabbar__content {
+			box-shadow: 0rpx 0rpx 20rpx 0rpx rgba(0, 0, 0, 0.15) !important;
+		}
+
+		.u-icon__icon {
+			font-size: 43rpx !important;
+		}
+
+		.u-tabbar-item__text {
+			font-size: 24rpx !important;
+		}
+	}
+</style>

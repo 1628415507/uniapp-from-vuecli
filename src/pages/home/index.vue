@@ -9,7 +9,7 @@
 		<u-search placeholder="请输入" v-model="keyword"></u-search>
 		<!-- <u-icon name="photo" color="#2979ff" size="28"></u-icon> -->
 		<!-- 底部菜单栏 -->
-		<TabBar></TabBar>
+		<TabBar class="tabbar-wrap"></TabBar>
 	</view>
 </template>
 
@@ -35,5 +35,18 @@
 	}
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+	::v-deep .tabbar-wrap {
+		.u-tabbar__content {
+			box-shadow: 0rpx 0rpx 20rpx 0rpx rgba(0, 0, 0, 0.15) !important;
+		}
+
+		.u-icon__icon {
+			font-size: 43rpx !important;
+		}
+
+		.u-tabbar-item__text {
+			font-size: 24rpx !important;
+		}
+	}
 </style>
