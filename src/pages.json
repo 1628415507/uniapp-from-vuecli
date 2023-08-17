@@ -69,17 +69,17 @@
 				}
 			]
 		},
-		// {
-		// 	"root": "pages/sub-packages/sign-in",
-		// 	"pages": [{
-		// 			"path": "index",
-		// 			"style": {
-		// 				"navigationBarTitleText": "签收",
-		// 				"enablePullDownRefresh": false
-		// 			}
-		// 		}
-		// 	]
-		// },
+		{
+			"root": "pages/sub-packages/sign-in",
+			"pages": [{
+					"path": "index",
+					"style": {
+						"navigationBarTitleText": "签收",
+						"enablePullDownRefresh": false
+					}
+				}
+			]
+		},
 		{
 			"root": "pages/sub-packages/example",
 			"pages": [{

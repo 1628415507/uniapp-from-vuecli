@@ -1,13 +1,13 @@
 <!--
  * @Description: 底部菜单栏
  * @Date: 2023-08-04 09:27:20
- * @LastEditTime: 2023-08-16 14:39:56
+ * @LastEditTime: 2023-08-17 18:42:16
 -->
 <template>
 	<u-tabbar :border="false" :value="activeTab" :fixed="true" :placeholder="false" :safeAreaInsetBottom="false"
 		:activeColor="colorTheme" inactiveColor="#666666" @change="handleTabChange">
 		<u-tabbar-item text="首页" icon="grid-fill" name="home"> </u-tabbar-item>
-		<view class="scan-wrap flex-c">
+		<view class="scan-wrap flex-c" @click="goUrl">
 			<u-icon name="scan" size="50rpx" color="#fff"></u-icon>
 		</view>
 		<u-tabbar-item text="我的" icon="account" name="account"> </u-tabbar-item>
@@ -51,6 +51,11 @@
 				console.log('handleTabChange', val, activeTabInfo, activeTabInfo.url);
 				uni.switchTab({
 					url: activeTabInfo.url
+				});
+			},
+			goUrl() {
+				uni.navigateTo({
+					url: `/pages/sub-packages/sign-in/index`
 				});
 			}
 		}
