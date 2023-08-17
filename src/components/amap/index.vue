@@ -1,7 +1,7 @@
 <!--
  * @Description: 高德地图DEMO
  * @Date: 2023-08-05 17:16:32
- * @LastEditTime: 2023-08-07 16:41:52
+ * @LastEditTime: 2023-08-17 18:37:10
 -->
 <template>
 	<view>
@@ -30,14 +30,14 @@
 				markersData: [],
 				// 打点
 				markers: [{
-					iconPath: require('@/static/image/icons/point.png'),
+					iconPath: require('@/static/image/icons/plane.png'),
 					id: 0,
 					latitude: 24.445676,
 					longitude:  118.082745,
 					width: 33,
 					height: 33
 				},{
-					iconPath: require('@/static/image/icons/point.png'),
+					iconPath: require('@/static/image/icons/plane.png'),
 					id: 0,
 					latitude: 30.445676,
 					longitude:  118.082745,
@@ -62,8 +62,8 @@
 			// 检索周边的POI
 			getPoiAround(){
 				this.AMap.getPoiAround({
-					// iconPathSelected: require('@/static/image/icons/point.png'), //如：..­/..­/img/marker_checked.png
-					// iconPath: require('@/static/image/icons/point.png'), //如：..­/..­/img/marker_checked.png
+					// iconPathSelected: require('@/static/image/icons/plane.png'), //如：..­/..­/img/marker_checked.png
+					// iconPath: require('@/static/image/icons/plane.png'), //如：..­/..­/img/marker_checked.png
 					success: (data) => {
 						console.log('【 getPoiAround 】-40', data)
 						this.markersData = data.markers;
@@ -117,9 +117,9 @@
 				for (let j = 0; j < data.length; j++) {
 					if (j == i) {
 						data[j].iconPath = require(
-						'@/static/image/icons/point.png'); //如：..­/..­/img/marker_checked.png
+						'@/static/image/icons/plane.png'); //如：..­/..­/img/marker_checked.png
 					} else {
-						data[j].iconPath = require('@/static/image/icons/point.png'); //如：..­/..­/img/marker.png
+						data[j].iconPath = require('@/static/image/icons/plane.png'); //如：..­/..­/img/marker.png
 					}
 					markers.push(data[j]);
 				}

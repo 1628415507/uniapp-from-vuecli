@@ -32,7 +32,9 @@
 	 {
 			"path": "pages/home/index",
 			"style": {
-				"navigationBarTitleText": "首页"
+				"navigationBarTitleText": "首页",
+				"navigationBarBackgroundColor": "#e8f3f4" //标题栏背景色(纯色)
+				// "navigationStyle": "custom"
 			}
 		},
 		{
@@ -49,17 +51,35 @@
 		}
 	],
 	"subPackages":[
-		// {
-		// 	"root": "pages/common",
-		// 	"pages": [{
-		// 			"path": "tel-codes",
-		// 			"style": {
-		// 				"navigationBarTitleText": " ",
-		// 				"enablePullDownRefresh": false
-		// 			}
-		// 		}
-		// 	]
-		// },
+		{
+			"root": "pages/sub-packages/loading-detail",
+			"pages": [{
+					"path": "index",
+					"style": {
+						"navigationBarTitleText": "装车详情",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "detail",
+					"style": {
+						"navigationBarTitleText": "任务详情",
+						"enablePullDownRefresh": false
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/sub-packages/sign-in",
+			"pages": [{
+					"path": "index",
+					"style": {
+						"navigationBarTitleText": "签收",
+						"enablePullDownRefresh": false
+					}
+				}
+			]
+		},
 		{
 			"root": "pages/sub-packages/example",
 			"pages": [{
@@ -89,7 +109,7 @@
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
+		"navigationBarBackgroundColor": "#e8f3f4",
 		"backgroundColor": "#F8F8F8"
 	}
 }

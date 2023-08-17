@@ -1,31 +1,23 @@
 <!--
- * @Description: 首页
- * @Date: 2023-08-04 09:27:20
- * @LastEditTime: 2023-08-17 18:22:05
+ * @Description: 装车详情
+ * @Date: 2023-08-17 09:45:35
+ * @LastEditTime: 2023-08-17 10:28:52
 -->
+
 <template>
-	<view class="home-page">
-		<!-- 状态栏 -->
-		<view class="subsection-wrap">
-			<u-subsection :current="current" :list="subsectionList" mode="button" @change="sectionChange"
-				activeColor="#fff" fontSize="28rpx"></u-subsection>
-		</view>
+	<view class="loading-detail-page">
 		<!-- 列表 -->
-		<scroll-view scroll-y="" :style="{height: 'calc(100vh - 265rpx)'}">
+		<scroll-view scroll-y="" :style="{height: 'calc(100vh - 50rpx)'}">
 			<view class="list-wrap">
 				<view class="list-item" v-for="(item,index) in dataList" :key="index">
 					<view class="list-item__content">
 						<view class="content-top">
 							<view class="content-top__value flex-sb">
-								<text>装车单：{{item.carNum+index}}</text>
-								<view class="content-top__value--right flex-sb">
-									<u-icon name="car" :color="colorTheme" size="33"></u-icon>
-									<text>整车调度</text>
-								</view>
+								<text>任务单：{{item.carNum+index}}</text>
 							</view>
-							<view class="content-top__tips flex">
-								<u-icon name="calendar" color="#86909C" size="33"></u-icon>
-								{{item.date||'-'}}
+							<view class="content-top__tips flex-sb">
+								<u-icon name="car" color="#86909C" size="33"></u-icon>
+								提货任务
 							</view>
 						</view>
 						<view class="content-middle">
@@ -37,9 +29,9 @@
 											{{stepsIndex>0?'卸':'装'}}
 										</text>
 									</u-steps-item>
-									<view class="map-icon">
+									<!-- 	<view class="map-icon">
 										<u-icon name="map" color="#2572CC" size="32"></u-icon>
-									</view>
+									</view> -->
 								</view>
 							</u-steps>
 						</view>
@@ -49,7 +41,7 @@
 								<text class="content-bottom__value--txt">体积：{{item.num ||'-'}}</text>
 								<text class="content-bottom__value--txt">件数：{{item.num ||'-'}}</text>
 							</view>
-							<view class="content-bottom__tips flex-c">
+							<!-- <view class="content-bottom__tips flex-c">
 								<view v-if="item.isExpand" class="content-bottom__tips-item flex-sb">
 									<view class="arrow-icon">
 										<u-icon name="arrow-left-double" color="#86909C" size="32"></u-icon>
@@ -62,11 +54,12 @@
 									</view>
 									展开
 								</view>
-							</view>
+							</view> -->
 						</view>
 					</view>
 					<view class="list-item__footer flex-sb">
-						<view class="btn-item" @click="goDetail(item,'loading')">装车详情</view>
+						<view class="btn-item" @click="reportAbnormal(item)">异常上报</view>
+						<view class="btn-item" @click="goDetail(item)">任务详情</view>
 						<view class="btn-item highlight">装车完成</view>
 					</view>
 				</view>
@@ -74,16 +67,20 @@
 			</view>
 		</scroll-view>
 
-		<!-- 底部菜单栏 -->
-		<TabBar class="tabbar-wrap"></TabBar>
+		<!-- 异常上报 -->
+		<ReportPopup v-if="reportPopupShow" :show.sync="reportPopupShow" @confirm="confirmReportPopup">
+		</ReportPopup>
+
 	</view>
 </template>
 
 <script>
+	import ReportPopup from "./component/report-popup.vue";
 	import TabBar from '@/components/tab-bar'
 	export default {
 		components: {
 			TabBar,
+			ReportPopup
 		},
 		data() {
 			return {
@@ -91,13 +88,8 @@
 				colorTheme: this.$store.getters.colorTheme,
 				s_top: '', //胶囊距离顶部距离
 				s_height: '', //胶囊行高	
-				// 状态栏
-				current: 0,
-				subsectionList: [{
-					name: '未完成',
-				}, {
-					name: '已完成',
-				}],
+				// 异常上报
+				reportPopupShow: false,
 				// 列表
 				dataList: [{
 					id: '1',
@@ -150,20 +142,18 @@
 				}],
 			}
 		},
-		onLoad() {
-			uni.hideTabBar()
-		},
+		onLoad() {},
 		methods: {
-			sectionChange(index) {
-				this.current = index;
+			reportAbnormal() {
+				this.reportPopupShow = true
 			},
-			goDetail(item, type) {
-				if (type === 'loading') {
-					uni.navigateTo({
-						url: `/pages/sub-packages/loading-detail/index?id=${item.id}`
-					});
-				}
-			}
+			confirmReportPopup() {},
+			goDetail(item) {
+				console.log('item', item)
+				uni.navigateTo({
+					url: `/pages/sub-packages/loading-detail/detail?id=${item.id}`
+				});
+			},
 		}
 	}
 </script>
@@ -173,12 +163,12 @@
 		background: linear-gradient(to bottom, #e8f3f5, #e6eff6) !important;
 	}
 
-	.home-page {
+	.loading-detail-page {
 		padding: 0 32rpx;
 	}
 
 	.list-wrap {
-		padding-bottom: 50rpx;
+		// padding-bottom: 50rpx;
 
 		.list-item {
 			margin-bottom: 24rpx;
@@ -195,16 +185,9 @@
 					border-bottom: 2rpx solid $colorBorder;
 					padding-bottom: 24rpx;
 
-					.content-top__value {
-						.content-top__value--right {
-							width: 140rpx;
-							font-size: 24rpx;
-							color: $colorTheme;
-							line-height: 34rpx;
-						}
-					}
 
 					.content-top__tips {
+						width: 140rpx;
 						margin-top: 16rpx;
 						font-size: 24rpx;
 						color: #86909C;
@@ -276,16 +259,17 @@
 				height: 96rpx;
 				line-height: 96rpx;
 				border-top: 2rpx solid $colorBorder;
-				color: #1D2129;
+				color: $colorFontTitle;
 
 				.btn-item {
 					text-align: center;
-					width: 50%;
+					width: 100%;
 					font-size: 34rpx;
 					font-weight: 400;
+					border-right: 2rpx solid $colorBorder;
 
-					&:first-child {
-						border-right: 2rpx solid $colorBorder;
+					&:last-child {
+						border-right: none;
 					}
 				}
 			}
@@ -325,34 +309,6 @@
 			color: #86909C !important;
 		}
 	}
-
-	// 分段器-默认样式修改
-	::v-deep .subsection-wrap {
-		margin: 32rpx auto;
-		box-sizing: border-box;
-		background: linear-gradient(90deg, rgba(0, 132, 116, 1), rgba(255, 255, 255, 0.3));
-		border-radius: 72rpx;
-		padding: 2rpx;
-
-		.u-subsection {
-			background-color: rgba(255, 255, 255, 0.8) !important;
-			border-radius: 72rpx !important;
-
-			.u-subsection__item {
-				border-radius: 72rpx !important;
-			}
-
-			.u-subsection__item__text {
-				font-weight: normal !important;
-			}
-
-			.u-subsection--button__bar {
-				background-color: #008474 !important;
-				border-radius: 72px !important;
-			}
-		}
-	}
-
 
 	// 底部菜单栏-默认样式修改
 	::v-deep .tabbar-wrap {
