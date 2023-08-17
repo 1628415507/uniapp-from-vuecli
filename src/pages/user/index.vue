@@ -1,13 +1,13 @@
 <!--
  * @Description: 
  * @Date: 2023-08-04 09:26:48
- * @LastEditTime: 2023-08-05 16:51:51
+ * @LastEditTime: 2023-08-17 18:37:58
 -->
 <template>
 	<view>
 		<text>用户名：{{userName}}</text>
 		<view @click="goDetail"> 详情页跳转</view>
-		<view class="footer-btn">
+		<view class="com-footer-btn flex-c">
 			<u-button type="error" @click="logout">退出登录</u-button>
 		</view>
 		<!-- 弹框 -->
@@ -55,7 +55,7 @@
 		methods: {
 			goDetail() {
 				uni.navigateTo({
-					url: `/pages/sub-packages/detail`
+					url: `/pages/sub-packages/example/detail`
 				})
 			},
 			logout() {

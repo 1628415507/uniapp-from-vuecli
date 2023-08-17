@@ -6,7 +6,7 @@
 <template>
 	<u-popup :show="visible" mode="bottom" :round="50" :closeOnClickOverlay="true" @close="handlePopupClose"
 		duration="400" overlay zIndex="1000000">
-		<view class="select-popup">
+		<view class="code-popup">
 			<view class="top-wrap">
 				<u-icon name="arrow-left" class="close" color="#1D2129" size="31" @click="handlePopupClose"></u-icon>
 				<view class="title"> 输入验证码 </view>
@@ -119,7 +119,7 @@
 		border-color: #fff !important;
 	}
 
-	.select-popup {
+	.code-popup {
 		padding: 33rpx 0;
 		height: 70vh;
 

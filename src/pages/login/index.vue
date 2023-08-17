@@ -1,7 +1,7 @@
 <!--
  * @Description: 登录页
  * @Date: 2023-08-04 17:34:31
- * @LastEditTime: 2023-08-16 11:30:06
+ * @LastEditTime: 2023-08-17 18:39:50
 -->
 <template>
 	<!-- 账号登录 -->
@@ -15,7 +15,8 @@
 					:lineColor="colorTheme" :current="currentTab"></u-tabs>
 			</view>
 			<!-- 登录方式 -->
-			<u-form :ref="formRef" :model="formData" :rules="formRules" labelPosition="left" labelWidth="0">
+			<!-- APP支持 :rules="formRules" -->
+			<u-form :ref="formRef" :model="formData" labelPosition="left" labelWidth="0">
 				<!-- 手机号登录 -->
 				<view v-if="loginMethod==='phone'" class="phone-method">
 					<u-form-item label=" " border="none">
@@ -53,7 +54,8 @@
 							</u-input>
 						</u-form-item>
 						<u-form-item label=" ">
-							<u-checkbox-group v-model="formData.isRemember" placement="row">
+							<u-checkbox-group v-model="formData.isRemember" placement="row" size="28rpx" iconSize="13px"
+								activeColor="#008474">
 								<u-checkbox label="记住我" :activeColor="colorTheme" name="remember" labelSize="28rpx">
 								</u-checkbox>
 							</u-checkbox-group>
@@ -65,7 +67,8 @@
 				<!-- 同意协议 -->
 				<view class="protocol-wrap">
 					<view style="margin-top: 9rpx;">
-						<u-checkbox-group v-model="formData.isAgree" placement="row">
+						<u-checkbox-group v-model="formData.isAgree" placement="row" size="28rpx" iconSize="13px"
+							activeColor="#008474">
 							<u-checkbox label=" " :activeColor="colorTheme" :name="true" labelSize="28rpx">
 							</u-checkbox>
 						</u-checkbox-group>
@@ -381,19 +384,16 @@
 		width: 170rpx !important;
 	}
 
-	::v-deep .u-checkbox {
-		min-width: 32rpx !important;
-		height: 32rpx !important;
-	}
+	// ::v-deep .u-checkbox {
+	// 	min-width: 32rpx !important;
+	// 	height: 32rpx !important;
+	// }
 
-	::v-deep .u-checkbox__icon-wrap {
-		width: 32rpx !important;
-		height: 32rpx !important;
-	}
+	// ::v-deep .u-checkbox__icon-wrap {
+	// 	width: 32rpx !important;
+	// 	height: 32rpx !important;
+	// }
 
-	.highlight {
-		color: $colorTheme;
-	}
 
 	//
 	.login-page {
