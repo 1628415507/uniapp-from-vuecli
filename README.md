@@ -1,8 +1,9 @@
 <!--
  * @Date: 2022-10-13 16:31:42
- * @LastEditTime: 2023-08-16 11:03:47
+ * @LastEditTime: 2023-08-17 17:52:58
  * @Description: 
 -->
+# uniapp-from-vuecli
 ## 已有配置如下
 - 安装node-sass：`npm i node-sass -D`
 - 安装sass-loader：`npm i sass-loader -D`
@@ -13,8 +14,9 @@
   - 避免包太大，echarts.min.js放分包中，且目前只引入了常用的直线图、柱状图、饼图，如需要其他图表需重新定制引入
   - 定制地址：https://echarts.apache.org/zh/builder.html（当前版本5.4.3）
 
-# uniapp-from-vuecli
-
+## 各分支说明
+- init：初始化分支
+- develop：开发分支
 ## Project setup
 ```
 npm install

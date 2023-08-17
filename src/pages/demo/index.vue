@@ -1,7 +1,7 @@
 <!--
  * @Description: 示例
  * @Date: 2023-08-04 11:42:45
- * @LastEditTime: 2023-08-07 16:19:43
+ * @LastEditTime: 2023-08-17 10:32:49
 -->
 <template>
 	<view>
@@ -67,7 +67,7 @@
 		methods: {
 			goDetail(path){
 				uni.navigateTo({
-					url: `/pages/sub-packages/${path}`
+					url: `/pages/sub-packages/example/${path}`
 				})
 			},
 			handleApi() {

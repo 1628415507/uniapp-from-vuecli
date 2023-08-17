@@ -61,7 +61,7 @@
 		// 	]
 		// },
 		{
-			"root": "pages/sub-packages",
+			"root": "pages/sub-packages/example",
 			"pages": [{
 					"path": "detail",
 					"style": {
