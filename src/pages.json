@@ -59,14 +59,14 @@
 						"navigationBarTitleText": "装车详情",
 						"enablePullDownRefresh": false
 					}
+				},
+				{
+					"path": "detail",
+					"style": {
+						"navigationBarTitleText": "任务详情",
+						"enablePullDownRefresh": false
+					}
 				}
-				// {
-				// 	"path": "detail",
-				// 	"style": {
-				// 		"navigationBarTitleText": "任务详情",
-				// 		"enablePullDownRefresh": false
-				// 	}
-				// }
 			]
 		},
 		// {
