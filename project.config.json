@@ -13,7 +13,8 @@
             "disablePlugins": [],
             "outputPath": ""
         },
-        "ignoreUploadUnusedFiles": true
+        "ignoreUploadUnusedFiles": true,
+        "condition": false
     },
     "condition": {},
     "editorSetting": {
@@ -27,5 +28,6 @@
         "include": []
     },
     "miniprogramRoot": "dist/dev/mp-weixin/",
-    "srcMiniprogramRoot": "dist/dev/mp-weixin/"
+    "srcMiniprogramRoot": "dist/dev/mp-weixin/",
+    "projectname": "uniapp-from-vuecli"
 }
