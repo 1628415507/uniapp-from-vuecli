@@ -30,6 +30,13 @@
                     "query": "id=1",
                     "launchMode": "default",
                     "scene": null
+                },
+                {
+                    "name": "Demo详情",
+                    "pathName": "pages/sub-packages/example/demo-detail",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
                 }
             ]
         }
