@@ -1,5 +1,5 @@
 <!--
- * @Description: 签收
+ * @Description: 首页-签收
  * @Date: 2023-08-17 10:26:18
  * @LastEditTime: 2023-08-17 18:44:47
 -->
@@ -18,30 +18,29 @@
 			<view class="status-wrap flex-c">
 				未签收
 			</view>
-			<u-form labelPosition="left" :model="model1" ref="formRef">
-				<u-form-item label="订单号:" prop="userInfo.name" :labelWidth="labelWidth" :labelStyle="labelStyle">
+			<u-form labelPosition="left" :model="formData" ref="formRef" :labelStyle="labelStyle">
+				<u-form-item label="订单号:" :labelWidth="labelWidth" :labelStyle="labelStyle">
 					<view class="txt">CN091231231</view>
 				</u-form-item>
-				<u-form-item label="客户委托号:" prop="userInfo.name" :labelWidth="labelWidth" :labelStyle="labelStyle">
+				<u-form-item label="客户委托号:" :labelWidth="labelWidth" :labelStyle="labelStyle">
 					<view class="txt">CN091231231</view>
 				</u-form-item>
-				<u-form-item label="签收图片:" prop="userInfo.name" :labelWidth="labelWidth" :labelStyle="labelStyle">
-					<u-upload :fileList="fileList3" @afterRead="afterRead" @delete="deletePic" name="3" multiple
+				<u-form-item label="签收图片:" prop="fileList" :labelWidth="labelWidth" :labelStyle="labelStyle">
+					<u-upload :fileList="formData.fileList" @afterRead="afterRead" @delete="deletePic" name="3" multiple
 						:maxCount="10" :previewFullImage="true" width="128rpx" height="128rpx"></u-upload>
 				</u-form-item>
-				<u-form-item label="签收方式:" prop="userInfo.name" :labelWidth="labelWidth" :labelStyle="labelStyle">
-					<u-radio-group v-model="model1.userInfo.reason" placement="row" size="28rpx" iconSize="13px"
+				<u-form-item label="签收方式:" prop="method" :labelWidth="labelWidth" :labelStyle="labelStyle">
+					<u-radio-group v-model="formData.method" placement="row" size="28rpx" iconSize="13px"
 						activeColor="#008474">
 						<view class="reason-wrap flex-sb-wrap">
-							<u-radio v-for="(item, index) in radiolist1" :key="index" :label="item.name"
+							<u-radio v-for="(item, index) in radioList" :key="index" :label="item.name"
 								labelSize="28rpx" :name="item.name" @change="radioChange"
 								:customStyle="{marginRight: '30rpx'}">
 							</u-radio>
 						</view>
 					</u-radio-group>
 				</u-form-item>
-				<u-form-item label="异常说明:" prop="userInfo.name" borderBottom :labelWidth="labelWidth"
-					:labelStyle="labelStyle">
+				<u-form-item label="异常说明:" borderBottom :labelWidth="labelWidth" :labelStyle="labelStyle">
 					报价说明报价说明，报价说明报价说明报价说明报价说明
 				</u-form-item>
 			</u-form>
@@ -51,35 +50,27 @@
 				<u-button text="取消" @click="cancel"></u-button>
 			</view>
 			<view class="btn-item">
-				<u-button type="primary" text="提交"></u-button>
+				<u-button type="primary" text="提交" @click="submit"></u-button>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
-	import TabBar from '@/components/tab-bar'
 	export default {
-		components: {
-			TabBar,
-		},
+		components: {},
 		data() {
 			return {
 				// 公共
 				colorTheme: this.$store.getters.colorTheme,
-				s_top: '', //胶囊距离顶部距离
-				s_height: '', //胶囊行高	
 				// 搜索栏
 				keyword: '',
 				// 表单
-				labelStyle: {
-					color: 'red !important'
-				},
 				labelWidth: '200rpx',
-				fileList3: [{
-					url: 'https://cdn.uviewui.com/uview/swiper/1.jpg',
-				}],
-				radiolist1: [{
+				labelStyle: {
+					color: '#4E5969 !important'
+				},
+				radioList: [{
 						name: '签收',
 						disabled: false
 					},
@@ -88,54 +79,30 @@
 						disabled: false
 					}
 				],
-				model1: {
-					userInfo: {
-						name: 'uView UI',
-						sex: '',
-						reason: '',
-					},
+				formData: {
+					fileList: [{
+						url: 'https://cdn.uviewui.com/uview/swiper/1.jpg',
+					}],
+					method: "签收"
 				},
-				actions: [{
-						name: '男',
-					},
-					{
-						name: '女',
-					},
-					{
-						name: '保密',
-					},
-				],
 				rules: {
-					'userInfo.name': {
-						type: 'string',
-						required: true,
-						message: '请填写姓名',
-						trigger: ['blur', 'change']
-					},
-					'userInfo.sex': {
-						type: 'string',
-						max: 1,
-						required: true,
-						message: '请选择男或女',
-						trigger: ['blur', 'change']
-					},
+					// 'method': {
+					// 	type: 'string',
+					// 	required: true,
+					// 	message: '选择签收方式',
+					// 	trigger: ['blur', 'change']
+					// }
 				},
-				radio: '',
-				switchVal: false
 			}
 		},
-		onLoad() {
-			uni.hideTabBar()
-		},
+		onLoad() {},
 		methods: {
 			cancel() {
 				uni.navigateBack({
 					delta: 1
 				})
 			},
-			blurSearch(val) {
-				console.log('blurSearch', val)
-			},
+			submit() {},
 			// 删除图片
 			deletePic(event) {
 				this[`fileList${event.name}`].splice(event.index, 1)
@@ -180,6 +147,9 @@
 					// });
 					resolve()
 				})
+			},
+			blurSearch(val) {
+				console.log('blurSearch', val)
 			},
 		}
 	}

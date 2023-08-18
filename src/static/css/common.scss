@@ -36,51 +36,38 @@
 	left: 0;
 	bottom: 70rpx;
 	padding: 0 32rpx;
-} 
+}
 
-// 步骤条样式修改（修改的样式在steps-wrap下才生效,避免污染原有样式）
-.steps-wrap {
+// 全局步骤条样式修改（修改的样式在steps-wrap下才生效,避免污染原有样式）
+.g-steps-wrap .u-steps {
 
-  // 覆盖原来的样式
-  .u-steps-item {
-    .u-steps-item__content {
-      // display: flex;
-      // flex-direction: row;
-      flex: unset !important;
-    }
+  // 左侧-图标
+  .u-steps-item__wrapper {
+    width: 32px !important;
+    height: 32px;
+  }
 
-    .u-steps-item__wrapper__dot {
-      width: 10rpx !important;
-      height: 10rpx !important;
-    }
+  // 左侧-步骤线
+  .u-steps-item__line--column {
+    left: 32rpx !important;
+    background-color: $colorBorder !important;
+  }
 
-    .u-steps-item__content--column {
-      flex-direction: row !important;
-      justify-content: start;
-      margin-left: 6px;
+  .u-steps-item--column {
+    padding-bottom: 13px !important;
+  }
 
-      .u-text {
-        // display: flex;
-        // flex-direction: row;
-        // align-items: center;
-        // flex-wrap: nowrap;
-        flex: unset !important;
-        // /* flex: 1; */
-        /* width: 100%; */
-      }
+  .u-steps-item__content--column {
+    margin-top: 0rpx !important;
+  }
 
-      .u-text__value {
-        font-size: 25rpx !important;
-        color: #808080 !important;
-        min-width: 160rpx !important;
-      }
+  // 右侧-文字、描述
+  .u-text__value {
+    font-size: 28rpx !important;
+  }
 
-      .u-text__value--tips {
-        margin-left: 18rpx;
-        color: red !important;
-        font-size: 32rpx !important;
-        font-weight: 500 !important;
-      }
-    }
+  .u-text__value--tips {
+    font-size: 24rpx !important;
+    color: #86909C !important;
   }
 }

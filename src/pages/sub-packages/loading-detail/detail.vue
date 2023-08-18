@@ -4,7 +4,7 @@
  * @LastEditTime: 2023-08-17 18:32:07
 -->
 <template>
-	<view class="list-page">
+	<view class="task-detail-page">
 		<!-- 搜索栏 -->
 		<!-- <view class="search-wrap flex-sb">
 			<u-search v-model="keyword" :showAction="false" height="64rpx" shape="square" bgColor="#fff"
@@ -18,7 +18,7 @@
 		<!-- 表单信息 -->
 		<view class="info-wrap">
 			<view class="title">订单信息</view>
-			<u--form labelPosition="left" :model="model1" ref="formRef">
+			<u--form labelPosition="left" :model="info" ref="formRef">
 				<u-form-item label="订单号:" :labelWidth="labelWidth" :labelStyle="labelStyle">
 					<view class="txt">CN091231231</view>
 				</u-form-item>
@@ -84,76 +84,27 @@
 		data() {
 			return {
 				// 公共
-				colorTheme: this.$store.getters.colorTheme,
-				s_top: '', //胶囊距离顶部距离
-				s_height: '', //胶囊行高	
 				// 搜索栏
 				keyword: '',
 				// 表单
-				labelStyle: {
-					color: 'red !important'
-				},
 				labelWidth: '180rpx',
-				fileList3: [{
-					url: 'https://cdn.uviewui.com/uview/swiper/1.jpg',
-				}],
-				radiolist1: [{
-						name: '签收',
-						disabled: false
-					},
-					{
-						name: '拒收',
-						disabled: false
-					}
-				],
-				model1: {
+				labelStyle: {
+					fontSize: '28rpx !important;'
+				},
+				info: {
 					userInfo: {
 						name: 'uView UI',
 						sex: '',
 						reason: '',
 					},
 				},
-				actions: [{
-						name: '男',
-					},
-					{
-						name: '女',
-					},
-					{
-						name: '保密',
-					},
-				],
-				rules: {
-					'userInfo.name': {
-						type: 'string',
-						required: true,
-						message: '请填写姓名',
-						trigger: ['blur', 'change']
-					},
-					'userInfo.sex': {
-						type: 'string',
-						max: 1,
-						required: true,
-						message: '请选择男或女',
-						trigger: ['blur', 'change']
-					},
-				},
-				radio: '',
-				switchVal: false
 			}
 		},
-		onLoad() {
-			uni.hideTabBar()
-		},
+		onLoad() {},
 		methods: {
-			cancel() {
-				uni.navigateBack({
-					delta: 1
-				})
-			},
-			blurSearch(val) {
-				console.log('blurSearch', val)
-			},
+			// blurSearch(val) {
+			// 	console.log('blurSearch', val)
+			// },
 		}
 	}
 </script>
@@ -163,18 +114,7 @@
 		background: linear-gradient(to bottom, #e8f3f5, #e6eff6) !important;
 	}
 
-	.slot-icon {
-		width: 21px;
-		height: 21px;
-		background-color: $u-warning;
-		border-radius: 100px;
-		font-size: 12px;
-		color: #fff;
-		line-height: 21px;
-		text-align: center;
-	}
-
-	::v-deep .list-page .u-form-item__body {
+	::v-deep .task-detail-page .u-form-item__body {
 		padding: 10rpx 0 !important;
 		font-size: 28rpx !important;
 		font-weight: 400;
@@ -185,7 +125,7 @@
 		}
 	}
 
-	::v-deep .list-page .u-steps {
+	::v-deep .task-detail-page .u-steps {
 
 		// 右侧-文字、描述
 		.u-text__value {
@@ -193,45 +133,44 @@
 		}
 	}
 
-	.list-page {
+	.task-detail-page {
 		position: relative;
-		padding: 38rpx 32rpx;
+		padding: 20rpx 32rpx;
 		background-color: #fff;
 		height: 100vh;
 		box-sizing: border-box;
 		border-radius: 30rpx 30rpx 0 0;
 		font-size: 28rpx;
-	}
 
-	.search-wrap {
-		.scan-icon {
-			margin-left: 30rpx;
+		.search-wrap {
+			.scan-icon {
+				margin-left: 30rpx;
+			}
+		}
+
+		.info-wrap {
+			padding: 24rpx 0;
+			border-bottom: 2rpx solid #E5E6EB;
+
+			&:last-child {
+				border-bottom: none;
+			}
+
+			.title {
+				margin-bottom: 24rpx;
+				box-sizing: border-box;
+				width: 100%;
+				padding-left: 16rpx;
+				border-left: 4rpx solid $colorTheme;
+				font-size: 32rpx;
+				font-weight: 500;
+				color: #1D2129;
+			}
 		}
 	}
+
 
 	.txt {
 		font-size: 28rpx;
-	}
-
-	.info-wrap {
-		padding: 24rpx 0;
-		border-bottom: 2rpx solid #E5E6EB;
-
-		&:last-child {
-			border-bottom: none;
-		}
-
-		.title {
-			margin-bottom: 24rpx;
-			box-sizing: border-box;
-			width: 100%;
-			padding-left: 16rpx;
-			border-left: 4rpx solid $colorTheme;
-			font-size: 32rpx;
-			font-weight: 500;
-			color: #1D2129;
-		}
-
-
 	}
 </style>

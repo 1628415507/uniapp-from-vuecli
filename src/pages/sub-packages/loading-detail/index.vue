@@ -1,7 +1,7 @@
 <!--
  * @Description: 装车详情
  * @Date: 2023-08-17 09:45:35
- * @LastEditTime: 2023-08-17 10:28:52
+ * @LastEditTime: 2023-08-18 11:23:35
 -->
 
 <template>
@@ -20,7 +20,7 @@
 								提货任务
 							</view>
 						</view>
-						<view class="content-middle">
+						<view class="content-middle g-steps-wrap">
 							<u-steps :current="0" direction="column">
 								<view v-for="(stepsItem,stepsIndex) in item.stepsList" :key="stepsIndex"
 									class="steps-item-wrap">
@@ -77,6 +77,46 @@
 <script>
 	import ReportPopup from "./component/report-popup.vue";
 	import TabBar from '@/components/tab-bar'
+	const tempData = [{
+		id: '1',
+		carNum: 'CN091231231',
+		date: '2023-12-12',
+		num: '0.00 CDM',
+		isExpand: true,
+		stepsList: [{
+			address: '深圳龙湖分拨中心',
+			time: '2023-12-12 12:12:12'
+		}, {
+			address: '厦门吉联分拨中心',
+			time: '2023-12-12 12:12:12'
+		}]
+	}, {
+		id: '2',
+		carNum: 'CN091231231',
+		date: '2023-12-12',
+		num: '0.00 CDM',
+		isExpand: false,
+		stepsList: [{
+			address: '深圳龙湖分拨中心',
+			time: '2023-12-12 12:12:12'
+		}, {
+			address: '厦门吉联分拨中心',
+			time: '2023-12-12 12:12:12'
+		}]
+	}, {
+		id: '3',
+		carNum: 'CN091231231',
+		date: '2023-12-12',
+		num: '0.00 CDM',
+		isExpand: false,
+		stepsList: [{
+			address: '深圳龙湖分拨中心',
+			time: '2023-12-12 12:12:12'
+		}, {
+			address: '厦门吉联分拨中心',
+			time: '2023-12-12 12:12:12'
+		}]
+	}]
 	export default {
 		components: {
 			TabBar,
@@ -85,65 +125,19 @@
 		data() {
 			return {
 				// 公共
-				colorTheme: this.$store.getters.colorTheme,
-				s_top: '', //胶囊距离顶部距离
-				s_height: '', //胶囊行高	
 				// 异常上报
 				reportPopupShow: false,
 				// 列表
-				dataList: [{
-					id: '1',
-					carNum: 'CN091231231',
-					date: '2023-12-12',
-					num: '0.00 CDM',
-					isExpand: true,
-					stepsList: [{
-						address: '深圳龙湖分拨中心',
-						time: '2023-12-12 12:12:12'
-					}, {
-						address: '厦门吉联分拨中心',
-						time: '2023-12-12 12:12:12'
-					}, {
-						address: '厦门吉联分拨中心',
-						time: '2023-12-12 12:12:12'
-					}]
-				}, {
-					id: '2',
-					carNum: 'CN091231231',
-					date: '2023-12-12',
-					num: '0.00 CDM',
-					isExpand: false,
-					stepsList: [{
-						address: '深圳龙湖分拨中心',
-						time: '2023-12-12 12:12:12'
-					}, {
-						address: '厦门吉联分拨中心',
-						time: '2023-12-12 12:12:12'
-					}, {
-						address: '厦门吉联分拨中心',
-						time: '2023-12-12 12:12:12'
-					}]
-				}, {
-					id: '3',
-					carNum: 'CN091231231',
-					date: '2023-12-12',
-					num: '0.00 CDM',
-					isExpand: false,
-					stepsList: [{
-						address: '深圳龙湖分拨中心',
-						time: '2023-12-12 12:12:12'
-					}, {
-						address: '厦门吉联分拨中心',
-						time: '2023-12-12 12:12:12'
-					}, {
-						address: '厦门吉联分拨中心',
-						time: '2023-12-12 12:12:12'
-					}]
-				}],
+				dataList: [],
 			}
 		},
-		onLoad() {},
+		onLoad() {
+			this.getDataList()
+		},
 		methods: {
+			getDataList() {
+				this.dataList = tempData
+			},
 			reportAbnormal() {
 				this.reportPopupShow = true
 			},
@@ -202,7 +196,7 @@
 					.steps-item-wrap {
 						position: relative;
 						height: 76rpx;
-						margin-bottom: 15rpx;
+						margin-bottom: 20rpx;
 
 						.map-icon {
 							position: absolute;
@@ -273,40 +267,6 @@
 					}
 				}
 			}
-		}
-	}
-
-	//步骤条-默认样式修改
-	::v-deep .content-middle .u-steps {
-
-		// 左侧-图标
-		.u-steps-item__wrapper {
-			width: 32px !important;
-			height: 32px;
-		}
-
-		// 左侧-步骤线
-		.u-steps-item__line--column {
-			left: 32rpx !important;
-			background-color: $colorBorder !important;
-		}
-
-		.u-steps-item--column {
-			padding-bottom: 13px !important;
-		}
-
-		.u-steps-item__content--column {
-			margin-top: 0rpx !important;
-		}
-
-		// 右侧-文字、描述
-		.u-text__value {
-			font-size: 28rpx !important;
-		}
-
-		.u-text__value--tips {
-			font-size: 24rpx !important;
-			color: #86909C !important;
 		}
 	}
 

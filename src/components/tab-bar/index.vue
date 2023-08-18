@@ -1,13 +1,13 @@
 <!--
  * @Description: 底部菜单栏
  * @Date: 2023-08-04 09:27:20
- * @LastEditTime: 2023-08-17 18:42:16
+ * @LastEditTime: 2023-08-18 09:30:36
 -->
 <template>
 	<u-tabbar :border="false" :value="activeTab" :fixed="true" :placeholder="false" :safeAreaInsetBottom="false"
 		:activeColor="colorTheme" inactiveColor="#666666" @change="handleTabChange">
 		<u-tabbar-item text="首页" icon="grid-fill" name="home"> </u-tabbar-item>
-		<view class="scan-wrap flex-c" @click="goUrl">
+		<view class="scan-wrap flex-c" @click="getScanVal">
 			<u-icon name="scan" size="50rpx" color="#fff"></u-icon>
 		</view>
 		<u-tabbar-item text="我的" icon="account" name="account"> </u-tabbar-item>
@@ -53,10 +53,31 @@
 					url: activeTabInfo.url
 				});
 			},
-			goUrl() {
+			// 扫描
+			getScanVal() {
 				uni.navigateTo({
 					url: `/pages/sub-packages/sign-in/index`
 				});
+				console.log('getScanVal')
+				// 调用uni扫一扫的方法，允许从相机和相册扫码
+				// uni.scanCode({
+				// 	scanType: ['qrCode'], //条形码
+				// 	success: (res) => {
+
+				// 		// console.log('scanCode', res)
+				// 		// TODO:取值
+				// 		// if (res.errMsg == "scanCode:ok") {
+				// 		// 	const val = res.result
+				// 		// 	//  this.$set(原数组, 索引值, 需要赋的值)
+				// 		// 	uni.navigateTo({
+				// 		// 		url: `/pages/sub-packages/sign-in/index`
+				// 		// 	});
+				// 		// } else {
+				// 		// 	console.log("未识别到二维码，请重新尝试！")
+				// 		// 	uni.$u.toast('未识别到二维码，请重新尝试！')
+				// 		// }
+				// 	}
+				// });
 			}
 		}
 	};

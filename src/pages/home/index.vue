@@ -1,7 +1,7 @@
 <!--
  * @Description: 首页
  * @Date: 2023-08-04 09:27:20
- * @LastEditTime: 2023-08-17 18:22:05
+ * @LastEditTime: 2023-08-18 09:46:36
 -->
 <template>
 	<view class="home-page">
@@ -19,37 +19,40 @@
 							<view class="content-top__value flex-sb">
 								<text>装车单：{{item.carNum+index}}</text>
 								<view class="content-top__value--right flex-sb">
-									<u-icon name="car" :color="colorTheme" size="33"></u-icon>
+									<u-icon name="car" :color="colorTheme" size="40"></u-icon>
 									<text>整车调度</text>
 								</view>
 							</view>
-							<view class="content-top__tips flex">
-								<u-icon name="calendar" color="#86909C" size="33"></u-icon>
+							<view class="content-top__tips flex-sb">
+								<u-icon name="calendar" color="#86909C" size="40"></u-icon>
 								{{item.date||'-'}}
 							</view>
 						</view>
-						<view class="content-middle">
+						<view class="content-middle g-steps-wrap">
 							<u-steps :current="0" direction="column">
-								<view v-for="(stepsItem,stepsIndex) in item.stepsList" :key="stepsIndex"
-									class="steps-item-wrap">
-									<u-steps-item :title="stepsItem.address" :desc="'计划发车时间：'+stepsItem.time">
-										<text :class="stepsIndex>0?'steps-icon':'steps-icon blue'" slot="icon">
-											{{stepsIndex>0?'卸':'装'}}
-										</text>
-									</u-steps-item>
-									<view class="map-icon">
-										<u-icon name="map" color="#2572CC" size="32"></u-icon>
+								<template v-for="(stepsItem,stepsIndex) in item.stepsList">
+									<!-- 展开：展示全部； 收起：只展示前两条 -->
+									<view v-show="item.isExpand?stepsIndex>=0:stepsIndex<2" :key="stepsIndex"
+										class="steps-item-wrap" :class="!item.isExpand&&stepsIndex>=1?'hiddenLine':''">
+										<u-steps-item :title="stepsItem.address" :desc="'计划发车时间：'+stepsItem.time">
+											<text class="steps-icon" :class="stepsIndex>0?'':'blue'" slot="icon">
+												{{stepsIndex>0?'卸':'装'}}
+											</text>
+										</u-steps-item>
+										<view class="map-icon">
+											<u-icon name="map" color="#2572CC" size="32"></u-icon>
+										</view>
 									</view>
-								</view>
+								</template>
 							</u-steps>
 						</view>
 						<view class="content-bottom">
 							<view class="content-bottom__value flex-sb">
-								<text class="content-bottom__value--txt">重量：{{item.num ||'-'}}</text>
-								<text class="content-bottom__value--txt">体积：{{item.num ||'-'}}</text>
-								<text class="content-bottom__value--txt">件数：{{item.num ||'-'}}</text>
+								<text class="txt">重量：{{item.num ||'-'}}</text>
+								<text class="txt">体积：{{item.num ||'-'}}</text>
+								<text class="txt">件数：{{item.num ||'-'}}</text>
 							</view>
-							<view class="content-bottom__tips flex-c">
+							<view class="content-bottom__tips flex-c" @click="handleExpand(item,index)">
 								<view v-if="item.isExpand" class="content-bottom__tips-item flex-sb">
 									<view class="arrow-icon">
 										<u-icon name="arrow-left-double" color="#86909C" size="32"></u-icon>
@@ -66,7 +69,7 @@
 						</view>
 					</view>
 					<view class="list-item__footer flex-sb">
-						<view class="btn-item" @click="goDetail(item,'loading')">装车详情</view>
+						<view class="btn-item" @click="goDetail(item)">装车详情</view>
 						<view class="btn-item highlight">装车完成</view>
 					</view>
 				</view>
@@ -81,6 +84,55 @@
 
 <script>
 	import TabBar from '@/components/tab-bar'
+	const tempData = [{
+		id: '1',
+		carNum: 'CN091231231',
+		date: '2023-12-12',
+		num: '0.00 CDM',
+		isExpand: false,
+		stepsList: [{
+			address: '深圳龙湖分拨中心',
+			time: '2023-12-12 12:12:12'
+		}, {
+			address: '厦门吉联分拨中心',
+			time: '2023-12-12 12:12:12'
+		}, {
+			address: '厦门吉联分拨中心',
+			time: '2023-12-12 12:12:12'
+		}]
+	}, {
+		id: '2',
+		carNum: 'CN091231231',
+		date: '2023-12-12',
+		num: '0.00 CDM',
+		isExpand: false,
+		stepsList: [{
+			address: '深圳龙湖分拨中心',
+			time: '2023-12-12 12:12:12'
+		}, {
+			address: '厦门吉联分拨中心',
+			time: '2023-12-12 12:12:12'
+		}, {
+			address: '厦门吉联分拨中心',
+			time: '2023-12-12 12:12:12'
+		}]
+	}, {
+		id: '3',
+		carNum: 'CN091231231',
+		date: '2023-12-12',
+		num: '0.00 CDM',
+		isExpand: false,
+		stepsList: [{
+			address: '深圳龙湖分拨中心',
+			time: '2023-12-12 12:12:12'
+		}, {
+			address: '厦门吉联分拨中心',
+			time: '2023-12-12 12:12:12'
+		}, {
+			address: '厦门吉联分拨中心',
+			time: '2023-12-12 12:12:12'
+		}]
+	}]
 	export default {
 		components: {
 			TabBar,
@@ -89,8 +141,6 @@
 			return {
 				// 公共
 				colorTheme: this.$store.getters.colorTheme,
-				s_top: '', //胶囊距离顶部距离
-				s_height: '', //胶囊行高	
 				// 状态栏
 				current: 0,
 				subsectionList: [{
@@ -99,70 +149,30 @@
 					name: '已完成',
 				}],
 				// 列表
-				dataList: [{
-					id: '1',
-					carNum: 'CN091231231',
-					date: '2023-12-12',
-					num: '0.00 CDM',
-					isExpand: true,
-					stepsList: [{
-						address: '深圳龙湖分拨中心',
-						time: '2023-12-12 12:12:12'
-					}, {
-						address: '厦门吉联分拨中心',
-						time: '2023-12-12 12:12:12'
-					}, {
-						address: '厦门吉联分拨中心',
-						time: '2023-12-12 12:12:12'
-					}]
-				}, {
-					id: '2',
-					carNum: 'CN091231231',
-					date: '2023-12-12',
-					num: '0.00 CDM',
-					isExpand: false,
-					stepsList: [{
-						address: '深圳龙湖分拨中心',
-						time: '2023-12-12 12:12:12'
-					}, {
-						address: '厦门吉联分拨中心',
-						time: '2023-12-12 12:12:12'
-					}, {
-						address: '厦门吉联分拨中心',
-						time: '2023-12-12 12:12:12'
-					}]
-				}, {
-					id: '3',
-					carNum: 'CN091231231',
-					date: '2023-12-12',
-					num: '0.00 CDM',
-					isExpand: false,
-					stepsList: [{
-						address: '深圳龙湖分拨中心',
-						time: '2023-12-12 12:12:12'
-					}, {
-						address: '厦门吉联分拨中心',
-						time: '2023-12-12 12:12:12'
-					}, {
-						address: '厦门吉联分拨中心',
-						time: '2023-12-12 12:12:12'
-					}]
-				}],
+				dataList: [],
 			}
 		},
 		onLoad() {
-			uni.hideTabBar()
+			// uni.hideTabBar()
+			this.getDataList()
 		},
 		methods: {
+			getDataList() {
+				this.dataList = tempData
+			},
 			sectionChange(index) {
 				this.current = index;
 			},
-			goDetail(item, type) {
-				if (type === 'loading') {
-					uni.navigateTo({
-						url: `/pages/sub-packages/loading-detail/index?id=${item.id}`
-					});
-				}
+			// 装车详情
+			goDetail(item) {
+				uni.navigateTo({
+					url: `/pages/sub-packages/loading-detail/index?id=${item.id}`
+				});
+			},
+			// 展开收起
+			handleExpand(item, index) {
+				console.log('【 item 】-168', item)
+				this.$set(item, 'isExpand', !item.isExpand)
 			}
 		}
 	}
@@ -205,6 +215,7 @@
 					}
 
 					.content-top__tips {
+						width: 175rpx;
 						margin-top: 16rpx;
 						font-size: 24rpx;
 						color: #86909C;
@@ -215,11 +226,12 @@
 				.content-middle {
 					// padding: 24rpx 0;
 					margin-top: 24rpx;
+					margin-bottom: 14rpx;
 
 					.steps-item-wrap {
 						position: relative;
 						height: 76rpx;
-						margin-bottom: 15rpx;
+						margin-bottom: 20rpx;
 
 						.map-icon {
 							position: absolute;
@@ -245,12 +257,13 @@
 
 				}
 
+				// 信息
 				.content-bottom {
 					font-size: 24rpx;
 
 					.content-bottom__value {
 
-						.content-bottom__value--txt {
+						.txt {
 							width: 30%;
 							color: #4E5969;
 						}
@@ -292,37 +305,14 @@
 		}
 	}
 
-	//步骤条-默认样式修改
+	// //步骤条-默认样式修改
 	::v-deep .content-middle .u-steps {
 
-		// 左侧-图标
-		.u-steps-item__wrapper {
-			width: 32px !important;
-			height: 32px;
-		}
-
-		// 左侧-步骤线
-		.u-steps-item__line--column {
-			left: 32rpx !important;
-			background-color: $colorBorder !important;
-		}
-
-		.u-steps-item--column {
-			padding-bottom: 13px !important;
-		}
-
-		.u-steps-item__content--column {
-			margin-top: 0rpx !important;
-		}
-
-		// 右侧-文字、描述
-		.u-text__value {
-			font-size: 28rpx !important;
-		}
-
-		.u-text__value--tips {
-			font-size: 24rpx !important;
-			color: #86909C !important;
+		// 收起状态下第二竖条线隐藏
+		.hiddenLine {
+			.u-steps-item__line--column {
+				display: none !important;
+			}
 		}
 	}
 
