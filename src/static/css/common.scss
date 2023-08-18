@@ -22,24 +22,24 @@
   font-display: swap;
 }
 // @font-face { font-family: test; font-weight: normal; font-style: normal; src: url("~@/static/test.ttf") format("truetype"); }
-
+// 全局global样式
 // 设置宽度为100%（兼容APP）
-.w-full {
+.g-w-full {
   width: 100%;
 }
 
 // 底部按钮
-.com-footer-btn {
+.g-footer-btn {
 	position: fixed;
 	width: 100%;
 	box-sizing: border-box;
 	left: 0;
 	bottom: 70rpx;
 	padding: 0 32rpx;
-} 
+}
 
 // 步骤条样式修改（修改的样式在steps-wrap下才生效,避免污染原有样式）
-.steps-wrap {
+.g-steps-wrap {
 
   // 覆盖原来的样式
   .u-steps-item {
