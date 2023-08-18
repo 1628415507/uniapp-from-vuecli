@@ -1,7 +1,7 @@
 <!--
  * @Description:公共组件示例
  * @Date: 2023-08-04 09:26:48
- * @LastEditTime: 2023-08-07 16:53:05
+ * @LastEditTime: 2023-08-18 14:45:56
 -->
 <template>
 	<view>
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-	import AssociatePopup from "@/components/select-popup/index.vue";
+	import AssociatePopup from "@/components/associate-popup/index.vue";
 	import InputGroup from "@/components/input-group/input-group.vue";
 	import AssociateInputGroup from "@/components/input-group/associate-input-group.vue";
 	import Empty from "@/components/empty/index.vue";
