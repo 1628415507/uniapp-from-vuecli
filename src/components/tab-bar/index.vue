@@ -41,9 +41,7 @@
 				]
 			};
 		},
-		onLoad() {
-			// uni.hideTabBar();//隐藏 tabBar
-		},
+		onLoad() {},
 		methods: {
 			handleTabChange(val) {
 				this.$store.dispatch('user/setActiveTab', val);

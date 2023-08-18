@@ -5,7 +5,7 @@
 -->
 <template>
 	<u-popup :show="visible" mode="bottom" :closeOnClickOverlay="true" @close="closePopup" duration="400" overlay
-		zIndex="1000000">
+		zIndex="1000000" :mask-custom-style="{background: 'rgba(0, 0, 0, 0.8)'}">
 		<view class="select-popup">
 			<view class="title-wrap">
 				<u-icon name="close" class="close" color="#1D2129" size="31" @click="closePopup"></u-icon>

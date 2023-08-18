@@ -1,7 +1,7 @@
 <!--
  * @Description: 首页-签收
  * @Date: 2023-08-17 10:26:18
- * @LastEditTime: 2023-08-18 11:26:57
+ * @LastEditTime: 2023-08-18 11:29:22
 -->
 
 <template>
@@ -45,7 +45,7 @@
 				</u-form-item>
 			</u-form>
 		</view>
-		<view class="com-footer-btn flex-sb">
+		<view class="g-footer-btn flex-sb">
 			<view class="btn-item">
 				<u-button text="取消" @click="cancel"></u-button>
 			</view>

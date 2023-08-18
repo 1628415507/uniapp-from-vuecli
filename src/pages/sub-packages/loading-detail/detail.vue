@@ -18,12 +18,12 @@
 		<!-- 表单信息 -->
 		<view class="info-wrap">
 			<view class="title">订单信息</view>
-			<u--form labelPosition="left" :model="info" ref="formRef">
+			<u-form labelPosition="left" :model="info" ref="formRef">
 				<u-form-item label="订单号:" :labelWidth="labelWidth" :labelStyle="labelStyle">
 					<view class="txt">CN091231231</view>
 				</u-form-item>
 				<u-form-item label="电话：" :labelWidth="labelWidth" :labelStyle="labelStyle">
-					<view class="txt">
+					<view class="txt" @click="call">
 						<u--text mode="phone" text="12345678900" color="#2572CC" size="28rpx" suffixIcon="phone"
 							:iconStyle="{color:'#2572CC'}"></u--text>
 					</view>
@@ -51,7 +51,7 @@
 				<u-form-item label="服务时限：" :labelWidth="labelWidth" :labelStyle="labelStyle">
 					<view class="txt">64</view>
 				</u-form-item>
-			</u--form>
+			</u-form>
 		</view>
 		<!-- 物流信息 -->
 		<view class="info-wrap">
@@ -87,7 +87,7 @@
 				// 搜索栏
 				keyword: '',
 				// 表单
-				labelWidth: '180rpx',
+				labelWidth: '160rpx',
 				labelStyle: {
 					fontSize: '28rpx !important;'
 				},
@@ -102,6 +102,11 @@
 		},
 		onLoad() {},
 		methods: {
+			call() {
+				uni.makePhoneCall({
+					phoneNumber: 114
+				});
+			}
 			// blurSearch(val) {
 			// 	console.log('blurSearch', val)
 			// },

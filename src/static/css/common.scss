@@ -21,6 +21,7 @@
     url("~@/static/font/Jky9mYSZqzqXq4oMr0NIL.woff") format("woff");
   font-display: swap;
 }
+
 // @font-face { font-family: test; font-weight: normal; font-style: normal; src: url("~@/static/test.ttf") format("truetype"); }
 // 全局global样式
 // 设置宽度为100%（兼容APP）
@@ -30,12 +31,12 @@
 
 // 底部按钮
 .g-footer-btn {
-	position: fixed;
-	width: 100%;
-	box-sizing: border-box;
-	left: 0;
-	bottom: 70rpx;
-	padding: 0 32rpx;
+  position: fixed;
+  width: 100%;
+  box-sizing: border-box;
+  left: 0;
+  bottom: 70rpx;
+  padding: 0 32rpx;
 }
 
 // 全局步骤条样式修改（修改的样式在steps-wrap下才生效,避免污染原有样式）
@@ -69,5 +70,20 @@
   .u-text__value--tips {
     font-size: 24rpx !important;
     color: #86909C !important;
+  }
+}
+
+// 底部菜单栏-默认样式修改
+.g-tabbar-wrap {
+  .u-tabbar__content {
+    box-shadow: 0rpx 0rpx 20rpx 0rpx rgba(0, 0, 0, 0.15) !important;
+  }
+
+  .u-icon__icon {
+    font-size: 43rpx !important;
+  }
+
+  .u-tabbar-item__text {
+    font-size: 24rpx !important;
   }
 }

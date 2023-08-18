@@ -432,8 +432,7 @@
 					textData: null,
 					dataType: 'dataType'
 				},
-				scrollHeight: 0,
-				searchFinish: false,
+				scrollHeight: 0
 			}
 		},
 		mounted() {
@@ -711,7 +710,7 @@
 							}]
 
 							const frequentObj = {
-								tag: "常用地区",
+								tag: " ", //常用地区
 								textArray: []
 							}
 							if (this.keyword) {
@@ -729,7 +728,6 @@
 						}
 					}
 				} else {
-					this.searchFinish = false
 					for (let i = 0; i < arr.length; i++) {
 						var text = arr[i];
 						var firstChar = text.substr(0, 1);
@@ -742,9 +740,6 @@
 							}
 						} else {
 							textData[temIndex].textArray.push(text);
-						}
-						if (i === arr.length - 1) {
-							this.searchFinish = true
 						}
 					}
 				}

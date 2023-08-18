@@ -16,7 +16,7 @@
 								<text>任务单：{{item.carNum+index}}</text>
 							</view>
 							<view class="content-top__tips flex-sb">
-								<u-icon name="car" color="#86909C" size="33"></u-icon>
+								<u-icon name="car" color="#86909C" size="40"></u-icon>
 								提货任务
 							</view>
 						</view>
@@ -267,21 +267,6 @@
 					}
 				}
 			}
-		}
-	}
-
-	// 底部菜单栏-默认样式修改
-	::v-deep .tabbar-wrap {
-		.u-tabbar__content {
-			box-shadow: 0rpx 0rpx 20rpx 0rpx rgba(0, 0, 0, 0.15) !important;
-		}
-
-		.u-icon__icon {
-			font-size: 43rpx !important;
-		}
-
-		.u-tabbar-item__text {
-			font-size: 24rpx !important;
 		}
 	}
 </style>

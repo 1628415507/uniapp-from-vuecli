@@ -1,7 +1,7 @@
 <!--
  * @Description: 首页
  * @Date: 2023-08-04 09:27:20
- * @LastEditTime: 2023-08-18 09:46:36
+ * @LastEditTime: 2023-08-18 11:36:35
 -->
 <template>
 	<view class="home-page">
@@ -78,7 +78,7 @@
 		</scroll-view>
 
 		<!-- 底部菜单栏 -->
-		<TabBar class="tabbar-wrap"></TabBar>
+		<TabBar class="g-tabbar-wrap"></TabBar>
 	</view>
 </template>
 
@@ -153,7 +153,7 @@
 			}
 		},
 		onLoad() {
-			// uni.hideTabBar()
+			uni.hideTabBar() //隐藏原生的导航栏
 			this.getDataList()
 		},
 		methods: {
@@ -318,7 +318,7 @@
 
 	// 分段器-默认样式修改
 	::v-deep .subsection-wrap {
-		margin: 32rpx auto;
+		margin: 20rpx auto 32rpx auto;
 		box-sizing: border-box;
 		background: linear-gradient(90deg, rgba(0, 132, 116, 1), rgba(255, 255, 255, 0.3));
 		border-radius: 72rpx;
@@ -340,22 +340,6 @@
 				background-color: #008474 !important;
 				border-radius: 72px !important;
 			}
-		}
-	}
-
-
-	// 底部菜单栏-默认样式修改
-	::v-deep .tabbar-wrap {
-		.u-tabbar__content {
-			box-shadow: 0rpx 0rpx 20rpx 0rpx rgba(0, 0, 0, 0.15) !important;
-		}
-
-		.u-icon__icon {
-			font-size: 43rpx !important;
-		}
-
-		.u-tabbar-item__text {
-			font-size: 24rpx !important;
 		}
 	}
 </style>

@@ -1,7 +1,7 @@
 <!--
  * @Description: 登录页
  * @Date: 2023-08-04 17:34:31
- * @LastEditTime: 2023-08-17 18:39:50
+ * @LastEditTime: 2023-08-18 13:30:47
 -->
 <template>
 	<!-- 账号登录 -->
@@ -156,8 +156,6 @@
 				colorTheme: '#008474',
 				showAgreeModal: false,
 				swiperList: [
-					require('@/static/image/demo/swiper1.png'),
-					require('@/static/image/demo/swiper2.png'),
 					require('@/static/image/demo/swiper1.png'),
 				],
 				loginMethod: 'phone',
