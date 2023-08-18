@@ -1,7 +1,7 @@
 <!--
  * @Description:公共组件示例
  * @Date: 2023-08-04 09:26:48
- * @LastEditTime: 2023-08-18 14:45:56
+ * @LastEditTime: 2023-08-18 15:06:08
 -->
 <template>
 	<view>
@@ -12,6 +12,15 @@
 			label-prop="addressCode" :fieldList="associateFieldList" :query-method="queryAssociateMethod"
 			@getData="getAssociateData">
 		</associate-popup>
+
+		<!-- 下拉 :defaultValue="associateDefaultValue" -->
+		<u-divider text="下拉" lineColor="#2979ff" textColor="#2979ff"></u-divider>
+		<u-button @click="showSelectPopup = true">打开下拉</u-button>
+		<select-popup v-if="showSelectPopup" :show.sync="showSelectPopup" value-prop="value" label-prop="label"
+			:defaultValue="selectDefaultValue" :multiple="true" @confirm="getSelectVal" @getInfo="getSelectInfo"
+			:list="tempData">
+		</select-popup>
+
 		<!-- 组合输入框 -->
 		<u-divider text="组合输入框" lineColor="#2979ff" textColor="#2979ff"></u-divider>
 		<input-group :source.sync="formData.sealNo" :scannable="true"
@@ -22,7 +31,7 @@
 		<u-divider text="echarts图表" lineColor="#2979ff" textColor="#2979ff"></u-divider>
 		<!-- 折线图 -->
 		<view class="content-line">
-			<lineEcharts canvasId="publicReport" :dateList="lineData"></lineEcharts>
+			<!-- <lineEcharts canvasId="publicReport" :dateList="lineData"></lineEcharts> -->
 		</view>
 		<!-- 暂无数据 -->
 		<u-divider text="暂无数据" lineColor="#2979ff" textColor="#2979ff"></u-divider>
@@ -32,6 +41,7 @@
 
 <script>
 	import AssociatePopup from "@/components/associate-popup/index.vue";
+	import SelectPopup from "@/components/select-popup/index.vue";
 	import InputGroup from "@/components/input-group/input-group.vue";
 	import AssociateInputGroup from "@/components/input-group/associate-input-group.vue";
 	import Empty from "@/components/empty/index.vue";
@@ -39,6 +49,7 @@
 	export default {
 		components: {
 			AssociatePopup,
+			SelectPopup,
 			InputGroup,
 			AssociateInputGroup,
 			Empty,
@@ -46,6 +57,41 @@
 		},
 		data() {
 			return {
+				// 测试数据
+				tempData: [{
+						label: '选项一',
+						value: 1
+					},
+					{
+						label: '选项二',
+						value: 2
+					},
+					{
+						label: '选项三',
+						value: 3
+					}, {
+						label: '禁用选项',
+						value: 4,
+						disabled: true,
+					},
+					{
+						label: '选项五',
+						value: 5
+					}, {
+						label: '选项六',
+						value: 6
+					}, {
+						label: '选项七',
+						value: 7
+					},
+					{
+						label: '选项八',
+						value: 8
+					}, {
+						label: '选项六',
+						value: 9
+					}
+				],
 				// 联想控件
 				showAssociatePopup: false,
 				associateDefaultValue: '',
@@ -60,6 +106,9 @@
 						width: '55%',
 					},
 				],
+				// 下拉
+				showSelectPopup: true,
+				selectDefaultValue: [1, 2],
 				// 组合输入框
 				formData: {
 					sealNo: [1235678, 1234575], //封条号
@@ -81,7 +130,17 @@
 				} = params
 				// console.log(keyword, pageSize, currentPage);
 				return new Promise((resolve, reject) => {
-					resolve({});
+					const records = [{
+						addressCode: '11',
+						addressName: '22'
+					}, {
+						addressCode: '11',
+						addressName: '22'
+					}]
+					resolve({
+						records,
+						total: records.length
+					});
 					// // 调取接口
 					// this.$http('get', this.$apis.common_associateAddress, {
 					// 	key: keyword,
@@ -110,6 +169,14 @@
 				// this.formData(field) = val
 				console.log('=handleDataChange==', field, val)
 			},
+			// 下拉控件
+			getSelectVal(val) {
+				console.log('=下拉getSelectVal==', val)
+				this.selectDefaultValue = val
+			},
+			getSelectInfo(info) {
+				console.log('=下拉getSelectInfo==', info)
+			}
 		}
 	}
 </script>

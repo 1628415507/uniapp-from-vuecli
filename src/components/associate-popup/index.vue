@@ -1,19 +1,18 @@
 <!--
  * @Description: 联想控件
  * @Date: 2023-08-18 14:38:42
- * @LastEditTime: 2023-08-18 14:40:13
+ * @LastEditTime: 2023-08-18 14:52:29
 -->
 <template>
-	<u-popup :show="visible" mode="bottom" :closeOnClickOverlay="true" @close="handlePopupClose" duration="400" overlay
+	<u-popup :show="visible" mode="bottom" :closeOnClickOverlay="true" @close="handlePopupClose" overlay
 		zIndex="1000000">
-		<view class="select-popup">
+		<view class="associate-popup">
 			<u-search v-model="keyword" :showAction="true" actionText="取消" :animation="false" height="60rpx"
 				@custom="handleSearchCancel" @change="handleSearchChange">
 			</u-search>
 			<!-- 头部 -->
 			<view v-if="fieldList&&fieldList.length" class="list-head">
-				<view v-for="(fieldItem) in fieldList" :key="fieldItem.prop"
-					:style="{width:(fieldItem.width||'100%')}">
+				<view v-for="(fieldItem) in fieldList" :key="fieldItem.prop" :style="{width:(fieldItem.width||'100%')}">
 					{{fieldItem.label}}
 				</view>
 			</view>
@@ -26,8 +25,8 @@
 						<view v-if="fieldList&&fieldList.length" class="field-list"
 							@click="handleItemChange(dataList[index])">
 							<!-- 列 -->
-							<view v-for="(fieldItem) in fieldList" :key="fieldItem.prop"
-								class="field-item" :style="{width:(fieldItem.width||'100%')}">
+							<view v-for="(fieldItem) in fieldList" :key="fieldItem.prop" class="field-item"
+								:style="{width:(fieldItem.width||'100%')}">
 								{{item[fieldItem.prop]||'-'}}
 							</view>
 						</view>
@@ -193,8 +192,8 @@
 					pageSize: this.pageSize,
 					currentPage: this.currentPage
 				}).then(res => {
-					const newData = res.records||[]
-					this.total = res.total||0
+					const newData = res.records || []
+					this.total = res.total || 0
 					this.dataList = this.dataList.concat(newData)
 					// 将查不到的值作为新增的数据项
 					if (this.createAble && !this.dataList.length) {
@@ -237,7 +236,7 @@
 </script>
 
 <style lang="scss">
-	.select-popup {
+	.associate-popup {
 		padding: 33rpx 26rpx 40rpx 26rpx;
 		height: 91vh;
 

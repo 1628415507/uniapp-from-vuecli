@@ -16,15 +16,15 @@
                     "scene": null
                 },
                 {
-                    "name": "Demo详情",
-                    "pathName": "pages/sub-packages/demo-detail",
+                    "name": "amap",
+                    "pathName": "pages/sub-packages/amap",
                     "query": "",
                     "launchMode": "default",
                     "scene": null
                 },
                 {
-                    "name": "amap",
-                    "pathName": "pages/sub-packages/amap",
+                    "name": "Demo详情",
+                    "pathName": "pages/sub-packages/example/demo-detail",
                     "query": "",
                     "launchMode": "default",
                     "scene": null
