@@ -22,14 +22,14 @@
   font-display: swap;
 }
 // @font-face { font-family: test; font-weight: normal; font-style: normal; src: url("~@/static/test.ttf") format("truetype"); }
-
+// 全局global样式
 // 设置宽度为100%（兼容APP）
-.w-full {
+.g-w-full {
   width: 100%;
 }
 
 // 底部按钮
-.com-footer-btn {
+.g-footer-btn {
 	position: fixed;
 	width: 100%;
 	box-sizing: border-box;
