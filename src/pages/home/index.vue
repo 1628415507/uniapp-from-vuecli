@@ -1,7 +1,7 @@
 <!--
  * @Description: 首页
  * @Date: 2023-08-04 09:27:20
- * @LastEditTime: 2023-08-21 09:06:11
+ * @LastEditTime: 2023-08-21 14:47:01
 -->
 <template>
 	<view class="home-page">
@@ -17,7 +17,7 @@
 					<view class="list-item__content">
 						<view class="content-top">
 							<view class="content-top__value flex-sb">
-								<text>装车单：{{item.carNum+index}}</text>
+								<text class="txt ellipsis">装车单：{{item.dispatchNo||'-'}}</text>
 								<view class="content-top__value--right flex-sb">
 									<u-icon name="car" :color="colorTheme" size="40"></u-icon>
 									<text>整车调度</text>
@@ -25,18 +25,20 @@
 							</view>
 							<view class="content-top__tips flex-sb">
 								<u-icon name="calendar" color="#86909C" size="40"></u-icon>
-								{{item.date||'-'}}
+								{{item.createTime||'-'}}
 							</view>
 						</view>
 						<view class="content-middle g-steps-wrap">
 							<u-steps :current="0" direction="column">
-								<template v-for="(stepsItem,stepsIndex) in item.stepsList">
+								<template v-for="(stepsItem,stepsIndex) in item.taskStationList">
 									<!-- 展开：展示全部； 收起：只展示前两条 -->
 									<view v-show="item.isExpand?stepsIndex>=0:stepsIndex<2" :key="stepsIndex"
 										class="steps-item-wrap" :class="!item.isExpand&&stepsIndex>=1?'hiddenLine':''">
-										<u-steps-item :title="stepsItem.address" :desc="'计划发车时间：'+stepsItem.time">
-											<text class="steps-icon" :class="stepsIndex>0?'':'blue'" slot="icon">
-												{{stepsIndex>0?'卸':'装'}}
+										<u-steps-item :title="stepsItem.stationName"
+											:desc="'计划发车时间：'+stepsItem.stationDatetime">
+											<text class="steps-icon" :class="stepsItem.stationType==='LOAD'?'blue':''"
+												slot="icon">
+												{{STATION_TYPE[stepsItem.stationType]}}
 											</text>
 										</u-steps-item>
 										<view class="map-icon" @click="goDetail(item,'map')">
@@ -48,11 +50,12 @@
 						</view>
 						<view class="content-bottom">
 							<view class="content-bottom__value flex-sb">
-								<text class="txt">重量：{{item.num ||'-'}}</text>
-								<text class="txt">体积：{{item.num ||'-'}}</text>
-								<text class="txt">件数：{{item.num ||'-'}}</text>
+								<text class="txt">重量：{{item.planTotalWeight ||'-'}} KG</text>
+								<text class="txt">体积：{{item.planTotalVolume ||'-'}} CDM</text>
+								<text class="txt">件数：{{item.planTotalQty ||'-'}} CT</text>
 							</view>
-							<view class="content-bottom__tips flex-c" @click="handleExpand(item,index)">
+							<view v-if="item.taskStationList.length>2" class="content-bottom__tips flex-c"
+								@click="handleExpand(item,index)">
 								<view v-if="item.isExpand" class="content-bottom__tips-item flex-sb">
 									<view class="arrow-icon">
 										<u-icon name="arrow-left-double" color="#86909C" size="32"></u-icon>
@@ -83,54 +86,57 @@
 </template>
 
 <script>
+	import {
+		getList
+	} from '@/apis/loading-detail.js'
 	import TabBar from '@/components/tab-bar'
 	const tempData = [{
-		id: '1',
-		carNum: 'CN091231231',
-		date: '2023-12-12',
+		mtsDispatchId: '1',
+		dispatchNo: 'CN091231231',
+		stationDatetime: '2023-12-12',
 		num: '0.00 CDM',
 		isExpand: false,
-		stepsList: [{
-			address: '深圳龙湖分拨中心',
-			time: '2023-12-12 12:12:12'
+		taskStationList: [{
+			stationName: '深圳龙湖分拨中心',
+			stationDatetime: '2023-12-12 12:12:12'
 		}, {
-			address: '厦门吉联分拨中心',
-			time: '2023-12-12 12:12:12'
+			stationName: '厦门吉联分拨中心',
+			stationDatetime: '2023-12-12 12:12:12'
 		}, {
-			address: '厦门吉联分拨中心',
-			time: '2023-12-12 12:12:12'
+			stationName: '厦门吉联分拨中心',
+			stationDatetime: '2023-12-12 12:12:12'
 		}]
 	}, {
-		id: '2',
-		carNum: 'CN091231231',
-		date: '2023-12-12',
+		mtsDispatchId: '2',
+		dispatchNo: 'CN091231231',
+		stationDatetime: '2023-12-12',
 		num: '0.00 CDM',
 		isExpand: false,
-		stepsList: [{
-			address: '深圳龙湖分拨中心',
-			time: '2023-12-12 12:12:12'
+		taskStationList: [{
+			stationName: '深圳龙湖分拨中心',
+			stationDatetime: '2023-12-12 12:12:12'
 		}, {
-			address: '厦门吉联分拨中心',
-			time: '2023-12-12 12:12:12'
+			stationName: '厦门吉联分拨中心',
+			stationDatetime: '2023-12-12 12:12:12'
 		}, {
-			address: '厦门吉联分拨中心',
-			time: '2023-12-12 12:12:12'
+			stationName: '厦门吉联分拨中心',
+			stationDatetime: '2023-12-12 12:12:12'
 		}]
 	}, {
-		id: '3',
-		carNum: 'CN091231231',
-		date: '2023-12-12',
+		mtsDispatchId: '3',
+		dispatchNo: 'CN091231231',
+		stationDatetime: '2023-12-12',
 		num: '0.00 CDM',
 		isExpand: false,
-		stepsList: [{
-			address: '深圳龙湖分拨中心',
-			time: '2023-12-12 12:12:12'
+		taskStationList: [{
+			stationName: '深圳龙湖分拨中心',
+			stationDatetime: '2023-12-12 12:12:12'
 		}, {
-			address: '厦门吉联分拨中心',
-			time: '2023-12-12 12:12:12'
+			stationName: '厦门吉联分拨中心',
+			stationDatetime: '2023-12-12 12:12:12'
 		}, {
-			address: '厦门吉联分拨中心',
-			time: '2023-12-12 12:12:12'
+			stationName: '厦门吉联分拨中心',
+			stationDatetime: '2023-12-12 12:12:12'
 		}]
 	}]
 	export default {
@@ -143,13 +149,20 @@
 				colorTheme: this.$store.getters.colorTheme,
 				// 状态栏
 				current: 0,
+				dispatchStatus: 'EXECUTING',
 				subsectionList: [{
 					name: '未完成',
+					value: 'EXECUTING',
 				}, {
 					name: '已完成',
+					value: 'COMPLETED',
 				}],
 				// 列表
 				dataList: [],
+				STATION_TYPE: {
+					UNLOAD: '卸',
+					LOAD: '装'
+				}
 			}
 		},
 		onLoad() {
@@ -158,10 +171,26 @@
 		},
 		methods: {
 			getDataList() {
-				this.dataList = tempData
+				// this.dataList = tempData
+				getList({
+					dispatchStatus: this.dispatchStatus
+				}).then(res => {
+					this.dataList = res.data.map(item => {
+						return {
+							...item,
+							createTime: item.createTime.substring(0, 10),
+							planTotalWeight: item.planTotalWeight.toFixed(2),
+							planTotalVolume: item.planTotalVolume.toFixed(2),
+							planTotalQty: item.planTotalQty.toFixed(2),
+							isExpand: false, //默认收起
+						}
+					})
+				})
 			},
 			sectionChange(index) {
 				this.current = index;
+				this.dispatchStatus = this.subsectionList[index].value
+				this.getDataList()
 			},
 			// 装车详情
 			goDetail(item, type) {
@@ -172,9 +201,9 @@
 					});
 				}
 				if (type === 'map') {
-					// uni.navigateTo({
-					// 	url: `/pages/sub-packages/example/amap`
-					// })
+					uni.navigateTo({
+						url: `/pages/sub-packages/example/amap`
+					})
 				}
 			},
 			// 展开收起
@@ -214,8 +243,12 @@
 					padding-bottom: 24rpx;
 
 					.content-top__value {
+						.txt {
+							width: calc(100% - 150rpx);
+						}
+
 						.content-top__value--right {
-							width: 140rpx;
+							width: 150rpx;
 							font-size: 24rpx;
 							color: $colorTheme;
 							line-height: 34rpx;
@@ -272,7 +305,7 @@
 					.content-bottom__value {
 
 						.txt {
-							width: 30%;
+							min-width: 25%;
 							color: #4E5969;
 						}
 					}
@@ -325,7 +358,7 @@
 	}
 
 	// 分段器-默认样式修改
-	::v-deep .subsection-wrap {
+	::v-deep .home-page .subsection-wrap {
 		margin: 20rpx auto 32rpx auto;
 		box-sizing: border-box;
 		background: linear-gradient(90deg, rgba(0, 132, 116, 1), rgba(255, 255, 255, 0.3));

@@ -8,10 +8,12 @@ import Vue from 'vue'
 import App from './App'
 import uView from "uview-ui";
 // 样式
-uni.$u.config.unit = 'rpx'//默认单位配置
+uni.$u.config.unit = 'rpx' //默认单位配置
 // 工具库
 import store from './store/index.js' // 全局参数
 Vue.prototype.$store = store // 引入vuex
+// import mock from './mock/index.js'
+import './mock/index.js';
 // 方法
 import dictionary from './utils/dictionary' // 字典方法
 Vue.prototype.$dict = dictionary;
@@ -21,7 +23,7 @@ Vue.config.productionTip = false
 
 App.mpType = 'app'
 const app = new Vue({
-  ...App,
-  store
+	...App,
+	store
 })
 app.$mount()
