@@ -20,7 +20,7 @@
                 {
                     "name": "装车详情",
                     "pathName": "pages/sub-packages/loading-detail/index",
-                    "query": "id=1",
+                    "query": "id=80828441",
                     "launchMode": "default",
                     "scene": null
                 },

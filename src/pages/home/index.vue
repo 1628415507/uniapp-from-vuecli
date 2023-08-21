@@ -1,7 +1,7 @@
 <!--
  * @Description: 首页
  * @Date: 2023-08-04 09:27:20
- * @LastEditTime: 2023-08-21 14:47:01
+ * @LastEditTime: 2023-08-21 16:47:40
 -->
 <template>
 	<view class="home-page">
@@ -50,9 +50,9 @@
 						</view>
 						<view class="content-bottom">
 							<view class="content-bottom__value flex-sb">
-								<text class="txt">重量：{{item.planTotalWeight ||'-'}} KG</text>
-								<text class="txt">体积：{{item.planTotalVolume ||'-'}} CDM</text>
-								<text class="txt">件数：{{item.planTotalQty ||'-'}} CT</text>
+								<text class="txt ellipsis">重量：{{item.planTotalWeight ||'-'}} KG</text>
+								<text class="txt ellipsis">体积：{{item.planTotalVolume ||'-'}} CDM</text>
+								<text class="txt ellipsis">件数：{{item.planTotalQty ||'-'}} CT</text>
 							</view>
 							<view v-if="item.taskStationList.length>2" class="content-bottom__tips flex-c"
 								@click="handleExpand(item,index)">
@@ -197,7 +197,7 @@
 				console.log('【 goDetail 】-168', type)
 				if (type === 'loading') {
 					uni.navigateTo({
-						url: `/pages/sub-packages/loading-detail/index?id=${item.id}`
+						url: `/pages/sub-packages/loading-detail/index?id=${item.mtsDispatchId}`
 					});
 				}
 				if (type === 'map') {

@@ -7,3 +7,11 @@ export function getList(data) {
 		data
 	})
 }
+// 装车详情-列表
+export function getDetailList(data) {
+	return request({
+		url: '/dispatch/detail',
+		method: 'get',
+		data
+	})
+}

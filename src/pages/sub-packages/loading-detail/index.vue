@@ -1,7 +1,7 @@
 <!--
  * @Description: 装车详情
  * @Date: 2023-08-17 09:45:35
- * @LastEditTime: 2023-08-18 11:23:35
+ * @LastEditTime: 2023-08-21 16:44:18
 -->
 
 <template>
@@ -12,8 +12,8 @@
 				<view class="list-item" v-for="(item,index) in dataList" :key="index">
 					<view class="list-item__content">
 						<view class="content-top">
-							<view class="content-top__value flex-sb">
-								<text>任务单：{{item.carNum+index}}</text>
+							<view class="content-top__value ellipsis">
+								任务单：{{item.taskNo}}
 							</view>
 							<view class="content-top__tips flex-sb">
 								<u-icon name="car" color="#86909C" size="40"></u-icon>
@@ -24,37 +24,22 @@
 							<u-steps :current="0" direction="column">
 								<view v-for="(stepsItem,stepsIndex) in item.stepsList" :key="stepsIndex"
 									class="steps-item-wrap">
-									<u-steps-item :title="stepsItem.address" :desc="'计划发车时间：'+stepsItem.time">
-										<text :class="stepsIndex>0?'steps-icon':'steps-icon blue'" slot="icon">
-											{{stepsIndex>0?'卸':'装'}}
+									<u-steps-item :title="stepsItem.stationName"
+										:desc="'计划发车时间：'+stepsItem.stationTime">
+										<text class="steps-icon" :class="stepsItem.stationType==='LOAD'?'blue':''"
+											slot="icon">
+											{{STATION_TYPE[stepsItem.stationType]}}
 										</text>
 									</u-steps-item>
-									<!-- 	<view class="map-icon">
-										<u-icon name="map" color="#2572CC" size="32"></u-icon>
-									</view> -->
 								</view>
 							</u-steps>
 						</view>
 						<view class="content-bottom">
 							<view class="content-bottom__value flex-sb">
-								<text class="content-bottom__value--txt">重量：{{item.num ||'-'}}</text>
-								<text class="content-bottom__value--txt">体积：{{item.num ||'-'}}</text>
-								<text class="content-bottom__value--txt">件数：{{item.num ||'-'}}</text>
+								<text class="txt ellipsis">重量：{{item.planTotalWeight ||'-'}}</text>
+								<text class="txt ellipsis">体积：{{item.planTotalVolume ||'-'}}</text>
+								<text class="txt ellipsis">件数：{{item.planTotalQty ||'-'}}</text>
 							</view>
-							<!-- <view class="content-bottom__tips flex-c">
-								<view v-if="item.isExpand" class="content-bottom__tips-item flex-sb">
-									<view class="arrow-icon">
-										<u-icon name="arrow-left-double" color="#86909C" size="32"></u-icon>
-									</view>
-									收起
-								</view>
-								<view v-else class="content-bottom__tips-item flex-sb">
-									<view class="arrow-icon">
-										<u-icon name="arrow-right-double" color="#86909C" size="32"></u-icon>
-									</view>
-									展开
-								</view>
-							</view> -->
 						</view>
 					</view>
 					<view class="list-item__footer flex-sb">
@@ -75,6 +60,9 @@
 </template>
 
 <script>
+	import {
+		getDetailList
+	} from '@/apis/loading-detail.js'
 	import ReportPopup from "./component/report-popup.vue";
 	import TabBar from '@/components/tab-bar'
 	const tempData = [{
@@ -129,14 +117,44 @@
 				reportPopupShow: false,
 				// 列表
 				dataList: [],
+				STATION_TYPE: {
+					UNLOAD: '卸',
+					LOAD: '装'
+				}
 			}
 		},
-		onLoad() {
-			this.getDataList()
+		onLoad(opt) {
+			console.log('opt', opt)
+			this.getDataList(opt.id)
 		},
 		methods: {
-			getDataList() {
-				this.dataList = tempData
+			getDataList(id) {
+				// this.dataList = tempData
+				getDetailList({
+					mtsDispatchId: id
+				}).then(res => {
+					this.dataList = res.data.taskList.map(item => {
+						return {
+							...item,
+							planTotalWeight: item.planTotalWeight?.toFixed(2),
+							planTotalVolume: item.planTotalVolume?.toFixed(2),
+							planTotalQty: item.planTotalQty?.toFixed(2),
+							stepsList: [{
+									stationName: item.originStationName,
+									stationAddress: item.originStationAddress,
+									stationTime: item.reqPickupTime,
+									stationType: 'LOAD'
+								},
+								{
+									stationName: item.destStationName,
+									stationAddress: item.destStationAddr,
+									stationTime: item.reqArrivalTime,
+									stationType: 'UNLOAD'
+								}
+							]
+						}
+					})
+				})
 			},
 			reportAbnormal() {
 				this.reportPopupShow = true
@@ -227,8 +245,8 @@
 
 					.content-bottom__value {
 
-						.content-bottom__value--txt {
-							width: 30%;
+						.txt {
+							min-width: 25%;
 							color: #4E5969;
 						}
 					}

@@ -1,7 +1,7 @@
 <!--
  * @Description: 装车详情-任务详情
  * @Date: 2023-08-17 18:29:58
- * @LastEditTime: 2023-08-17 18:32:07
+ * @LastEditTime: 2023-08-21 16:52:33
 -->
 <template>
 	<view class="task-detail-page">
@@ -19,19 +19,19 @@
 		<view class="info-wrap">
 			<view class="title">订单信息</view>
 			<u-form labelPosition="left" :model="info" ref="formRef">
-				<u-form-item label="订单号:" :labelWidth="labelWidth" :labelStyle="labelStyle">
+				<u-form-item label="任务单号:" :labelWidth="labelWidth" :labelStyle="labelStyle">
 					<view class="txt">CN091231231</view>
 				</u-form-item>
-				<u-form-item label="电话：" :labelWidth="labelWidth" :labelStyle="labelStyle">
+				<u-form-item label="任务状态：" :labelWidth="labelWidth" :labelStyle="labelStyle">
 					<view class="txt" @click="call">
 						<u--text mode="phone" text="12345678900" color="#2572CC" size="28rpx" suffixIcon="phone"
 							:iconStyle="{color:'#2572CC'}"></u--text>
 					</view>
 				</u-form-item>
-				<u-form-item label="起运地：" :labelWidth="labelWidth" :labelStyle="labelStyle">
+				<u-form-item label="起运地站点名称：" :labelWidth="labelWidth" :labelStyle="labelStyle">
 					<view class="txt">上海市</view>
 				</u-form-item>
-				<u-form-item label="目的地：" :labelWidth="labelWidth" :labelStyle="labelStyle">
+				<u-form-item label="目的地站点名称：" :labelWidth="labelWidth" :labelStyle="labelStyle">
 					<view class="txt flex">
 						<text style="color:#2572CC">大不列颠及北爱尔兰联合王国</text>
 						<view class="map-icon">
@@ -39,16 +39,16 @@
 						</view>
 					</view>
 				</u-form-item>
-				<u-form-item label="货物名称：" :labelWidth="labelWidth" :labelStyle="labelStyle">
+				<!-- <u-form-item label="货物名称：" :labelWidth="labelWidth" :labelStyle="labelStyle">
 					<view class="txt">配件</view>
-				</u-form-item>
-				<u-form-item label="货物件数：" :labelWidth="labelWidth" :labelStyle="labelStyle">
+				</u-form-item> -->
+				<u-form-item label="任务货物件数：" :labelWidth="labelWidth" :labelStyle="labelStyle">
 					<view class="txt">12345678900</view>
 				</u-form-item>
-				<u-form-item label="服务类型：" :labelWidth="labelWidth" :labelStyle="labelStyle">
+				<u-form-item label="任务货物重量：" :labelWidth="labelWidth" :labelStyle="labelStyle">
 					港到港
 				</u-form-item>
-				<u-form-item label="服务时限：" :labelWidth="labelWidth" :labelStyle="labelStyle">
+				<u-form-item label="任务货物体积：" :labelWidth="labelWidth" :labelStyle="labelStyle">
 					<view class="txt">64</view>
 				</u-form-item>
 			</u-form>
@@ -87,7 +87,7 @@
 				// 搜索栏
 				keyword: '',
 				// 表单
-				labelWidth: '160rpx',
+				labelWidth: '220rpx',
 				labelStyle: {
 					fontSize: '28rpx !important;'
 				},
