@@ -1,18 +1,13 @@
 <!--
  * @Description: 高德地图DEMO
  * @Date: 2023-08-05 17:16:32
- * @LastEditTime: 2023-08-17 18:37:10
+ * @LastEditTime: 2023-08-18 18:41:14
 -->
 <template>
 	<view>
 		<view class="map_container">
-			<map class="map" id="map" 
-			:longitude="longitude" 
-			:latitude="latitude" 
-			scale="14" 
-			:show-location="true"
-			:markers="markers" 
-			bindmarkertap="markertap">
+			<map class="map" id="map" :longitude="longitude" :latitude="latitude" scale="14" :show-location="true"
+				:markers="markers" bindmarkertap="markertap">
 			</map>
 		</view>
 		<view class="map_text">
@@ -23,24 +18,25 @@
 </template>
 <script>
 	import amap from "@/libs/amap-wx.js";
+	const iconPath = '@/static/image/icons/location.png'
 	export default {
 		data() {
 			return {
-				AMap:null,
+				AMap: null,
 				markersData: [],
 				// 打点
 				markers: [{
-					iconPath: require('@/static/image/icons/dingding.png'),
+					iconPath: require('@/static/image/icons/location.png'),
 					id: 0,
 					latitude: 24.445676,
-					longitude:  118.082745,
+					longitude: 118.082745,
 					width: 33,
 					height: 33
-				},{
-					iconPath: require('@/static/image/icons/dingding.png'),
+				}, {
+					iconPath: require('@/static/image/icons/location.png'),
 					id: 0,
 					latitude: 30.445676,
-					longitude:  118.082745,
+					longitude: 118.082745,
 					width: 33,
 					height: 33
 				}],
@@ -56,14 +52,14 @@
 				key: this.amapKey
 			});
 			this.getPoiAround()
-			this.getRegeo()//获取自己所在地址的定位
+			this.getRegeo() //获取自己所在地址的定位
 		},
 		methods: {
 			// 检索周边的POI
-			getPoiAround(){
+			getPoiAround() {
 				this.AMap.getPoiAround({
-					// iconPathSelected: require('@/static/image/icons/dingding.png'), //如：..­/..­/img/marker_checked.png
-					// iconPath: require('@/static/image/icons/dingding.png'), //如：..­/..­/img/marker_checked.png
+					// iconPathSelected: require(iconPath), //如：..­/..­/img/marker_checked.png
+					// iconPath: require(iconPath), //如：..­/..­/img/marker_checked.png
 					success: (data) => {
 						console.log('【 getPoiAround 】-40', data)
 						this.markersData = data.markers;
@@ -84,17 +80,17 @@
 				this.AMap.getRegeo({
 					success: (res) => {
 						console.log('【 获取自己所在地址的定位 】-66', res)
-						const curPosition=res[0]||{}
-						this.latitude =curPosition.latitude
+						const curPosition = res[0] || {}
+						this.latitude = curPosition.latitude
 						this.longitude = curPosition.longitude
 						this.textData = {
 							name: curPosition.name,
 							desc: curPosition.desc
-				    }
+						}
 					},
 					//失败回调
 					fail: function(info) {
-					  console.log(info)
+						console.log(info)
 					}
 				})
 			},
@@ -116,10 +112,9 @@
 				const markers = [];
 				for (let j = 0; j < data.length; j++) {
 					if (j == i) {
-						data[j].iconPath = require(
-						'@/static/image/icons/dingding.png'); //如：..­/..­/img/marker_checked.png
+						data[j].iconPath = require(iconPath);
 					} else {
-						data[j].iconPath = require('@/static/image/icons/dingding.png'); //如：..­/..­/img/marker.png
+						data[j].iconPath = require(iconPath);
 					}
 					markers.push(data[j]);
 				}

@@ -4,8 +4,8 @@
  * @LastEditTime: 2023-08-17 13:48:33
 -->
 <template>
-	<u-popup :show="visible" mode="bottom" :round="32" :closeOnClickOverlay="true" @close="handlePopupClose"
-		duration="400" overlay zIndex="1000000">
+	<u-popup :show="visible" mode="bottom" :round="32" :closeOnClickOverlay="true" @close="handlePopupClose" overlay
+		zIndex="1000000">
 		<view class="report-popup">
 			<view class="popup-content__top">
 				<view class="title flex-sb">
@@ -31,8 +31,7 @@
 						<view class="txt">标题</view>
 						<!-- <u--input v-model="model1.userInfo.name" border="none"></u--input> -->
 					</u-form-item>
-					<u-form-item label="标题" prop="userInfo.sex" borderBottom @click="showSex = true; hideKeyboard()"
-						labelWidth="150rpx">
+					<u-form-item label="标题" prop="userInfo.sex" borderBottom labelWidth="150rpx">
 						<view class="txt">标题</view>
 						<!-- <u--input v-model="model1.userInfo.name" border="none"></u--input> -->
 						<!-- <u-icon slot="right" name="arrow-right"></u-icon> -->
@@ -42,7 +41,7 @@
 							activeColor="#008474">
 							<view class="reason-wrap flex-sb-wrap">
 								<u-radio v-for="(item, index) in radiolist1" :key="index" :label="item.name"
-									iconSize="28rpx" labelSize="28rpx" :name="item.name" @change="radioChange"
+									iconSize="28rpx" labelSize="28rpx" :name="item.name"
 									:customStyle="{marginRight: '30rpx',marginTop: '20rpx'}">
 								</u-radio>
 							</view>
@@ -59,16 +58,12 @@
 				</u-form>
 			</view>
 			<view class="popup-content__bottom">
-				<u-button @click="login" type="primary">提交</u-button>
+				<u-button @click="submit" type="primary">提交</u-button>
 				<view class="tips">
 					说明：请上传交付凭证，包含运单签收页，回单上传
 				</view>
 			</view>
 		</view>
-		<!-- 下拉 -->
-		<!-- 	<u-action-sheet :show="showSex" :actions="actions" title="请选择性别" description="如果选择保密会报错"
-			@close="showSex = false" @select="sexSelect">
-		</u-action-sheet> -->
 	</u-popup>
 </template>
 <script>
@@ -164,10 +159,7 @@
 		},
 		computed: {},
 		methods: {
-			sexSelect(e) {
-				this.model1.userInfo.sex = e.name
-				// this.$refs.formRef.validateField('userInfo.sex')
-			},
+			submit() {},
 			// 当前弹框-关闭
 			handlePopupClose() {
 				this.visible = false;
@@ -279,6 +271,5 @@
 				line-height: 44rpx;
 			}
 		}
-
 	}
 </style>

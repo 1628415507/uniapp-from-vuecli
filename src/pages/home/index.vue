@@ -1,7 +1,7 @@
 <!--
  * @Description: 首页
  * @Date: 2023-08-04 09:27:20
- * @LastEditTime: 2023-08-18 11:36:35
+ * @LastEditTime: 2023-08-21 09:06:11
 -->
 <template>
 	<view class="home-page">
@@ -39,7 +39,7 @@
 												{{stepsIndex>0?'卸':'装'}}
 											</text>
 										</u-steps-item>
-										<view class="map-icon">
+										<view class="map-icon" @click="goDetail(item,'map')">
 											<u-icon name="map" color="#2572CC" size="32"></u-icon>
 										</view>
 									</view>
@@ -69,7 +69,7 @@
 						</view>
 					</view>
 					<view class="list-item__footer flex-sb">
-						<view class="btn-item" @click="goDetail(item)">装车详情</view>
+						<view class="btn-item" @click="goDetail(item,'loading')">装车详情</view>
 						<view class="btn-item highlight">装车完成</view>
 					</view>
 				</view>
@@ -164,10 +164,18 @@
 				this.current = index;
 			},
 			// 装车详情
-			goDetail(item) {
-				uni.navigateTo({
-					url: `/pages/sub-packages/loading-detail/index?id=${item.id}`
-				});
+			goDetail(item, type) {
+				console.log('【 goDetail 】-168', type)
+				if (type === 'loading') {
+					uni.navigateTo({
+						url: `/pages/sub-packages/loading-detail/index?id=${item.id}`
+					});
+				}
+				if (type === 'map') {
+					// uni.navigateTo({
+					// 	url: `/pages/sub-packages/example/amap`
+					// })
+				}
 			},
 			// 展开收起
 			handleExpand(item, index) {
@@ -235,7 +243,7 @@
 
 						.map-icon {
 							position: absolute;
-							top: 38rpx;
+							top: 39rpx;
 							right: 117rpx
 						}
 

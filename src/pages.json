@@ -91,7 +91,7 @@
 				{
 					"path": "amap",
 					"style": {
-						"navigationBarTitleText": "amap",
+						"navigationBarTitleText": "地图",
 						"enablePullDownRefresh": false
 					}
 				},

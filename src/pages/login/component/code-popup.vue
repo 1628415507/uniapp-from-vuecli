@@ -4,8 +4,8 @@
  * @LastEditTime: 2023-08-14 17:23:46
 -->
 <template>
-	<u-popup :show="visible" mode="bottom" :round="50" :closeOnClickOverlay="true" @close="handlePopupClose"
-		duration="400" overlay zIndex="1000000">
+	<u-popup :show="visible" mode="bottom" :round="50" :closeOnClickOverlay="true" @close="handlePopupClose" overlay
+		zIndex="1000000">
 		<view class="code-popup">
 			<view class="top-wrap">
 				<u-icon name="arrow-left" class="close" color="#1D2129" size="31" @click="handlePopupClose"></u-icon>
@@ -121,7 +121,7 @@
 
 	.code-popup {
 		padding: 33rpx 0;
-		height: 70vh;
+		height: 72vh;
 
 		.top-wrap {
 			display: flex;
@@ -153,9 +153,6 @@
 			.disabled-txt {
 				color: #86909C;
 			}
-
-
 		}
-
 	}
 </style>
