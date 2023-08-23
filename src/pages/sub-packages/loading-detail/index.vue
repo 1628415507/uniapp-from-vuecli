@@ -1,7 +1,7 @@
 <!--
  * @Description: 装车详情
  * @Date: 2023-08-17 09:45:35
- * @LastEditTime: 2023-08-21 16:44:18
+ * @LastEditTime: 2023-08-22 10:46:24
 -->
 
 <template>
@@ -9,15 +9,16 @@
 		<!-- 列表 -->
 		<scroll-view scroll-y="" :style="{height: 'calc(100vh - 50rpx)'}">
 			<view class="list-wrap">
-				<view class="list-item" v-for="(item,index) in dataList" :key="index">
+				<view class="list-item" v-for="(item) in dataList" :key="item.mtsTaskTmId">
 					<view class="list-item__content">
 						<view class="content-top">
 							<view class="content-top__value ellipsis">
 								任务单：{{item.taskNo}}
 							</view>
-							<view class="content-top__tips flex-sb">
+							<view class="content-top__tips flex">
 								<u-icon name="car" color="#86909C" size="40"></u-icon>
-								提货任务
+								<!-- TODO -->
+								{{item.planName }}
 							</view>
 						</view>
 						<view class="content-middle g-steps-wrap">
@@ -25,7 +26,7 @@
 								<view v-for="(stepsItem,stepsIndex) in item.stepsList" :key="stepsIndex"
 									class="steps-item-wrap">
 									<u-steps-item :title="stepsItem.stationName"
-										:desc="'计划发车时间：'+stepsItem.stationTime">
+										:desc="'计划'+(stepsItem.stationType==='LOAD'?'发车':'到达')+'时间：'+stepsItem.stationTime">
 										<text class="steps-icon" :class="stepsItem.stationType==='LOAD'?'blue':''"
 											slot="icon">
 											{{STATION_TYPE[stepsItem.stationType]}}
@@ -36,32 +37,40 @@
 						</view>
 						<view class="content-bottom">
 							<view class="content-bottom__value flex-sb">
-								<text class="txt ellipsis">重量：{{item.planTotalWeight ||'-'}}</text>
-								<text class="txt ellipsis">体积：{{item.planTotalVolume ||'-'}}</text>
-								<text class="txt ellipsis">件数：{{item.planTotalQty ||'-'}}</text>
+								<text class="txt ellipsis">重量：{{item.planTotalWeight ||'-'}} KG</text>
+								<text class="txt ellipsis">体积：{{item.planTotalVolume ||'-'}} CDM</text>
+								<text class="txt ellipsis">件数：{{item.planTotalQty ||'-'}} CT</text>
 							</view>
 						</view>
 					</view>
 					<view class="list-item__footer flex-sb">
 						<view class="btn-item" @click="reportAbnormal(item)">异常上报</view>
-						<view class="btn-item" @click="goDetail(item)">任务详情</view>
-						<view class="btn-item highlight">装车完成</view>
+						<view class="btn-item" @click="goUrl(item)">任务详情</view>
+						<view class="btn-item highlight" @click="handleItemClick(item)">
+							{{item.nextTaskStatusName}}
+						</view>
 					</view>
 				</view>
-				<!-- <u-empty v-if='isRequired && (dataList.length == 0)' text="暂无数据" mode="data"  margin-top="200"></u-empty> -->
+				<u-empty v-if='isRequired && (dataList.length === 0)' text="暂无数据" mode="list" margin-top="200"
+					iconSize="100" textSize="28rpx"></u-empty>
 			</view>
 		</scroll-view>
 
 		<!-- 异常上报 -->
 		<ReportPopup v-if="reportPopupShow" :show.sync="reportPopupShow" @confirm="confirmReportPopup">
 		</ReportPopup>
+		<!-- 确认框 -->
+		<u-modal :show="confirmShow" content='是否确认操作?' :showCancelButton="true" :confirmColor="colorTheme"
+			@cancel="confirmShow=false" @confirm="confirmUpdateStatus">
+		</u-modal>
 
 	</view>
 </template>
 
 <script>
 	import {
-		getDetailList
+		getDetailList,
+		updateNode
 	} from '@/apis/loading-detail.js'
 	import ReportPopup from "./component/report-popup.vue";
 	import TabBar from '@/components/tab-bar'
@@ -116,22 +125,29 @@
 				// 异常上报
 				reportPopupShow: false,
 				// 列表
+				isRequired: false, //是否请求完
 				dataList: [],
 				STATION_TYPE: {
 					UNLOAD: '卸',
 					LOAD: '装'
-				}
+				},
+				clickItem: {},
+				// 确认框
+				confirmShow: false,
+				loadInfo: {}
 			}
 		},
 		onLoad(opt) {
 			console.log('opt', opt)
-			this.getDataList(opt.id)
+			this.loadInfo = opt
+			this.getDataList()
 		},
 		methods: {
-			getDataList(id) {
+			getDataList() {
 				// this.dataList = tempData
+				this.isRequired = false
 				getDetailList({
-					mtsDispatchId: id
+					mtsDispatchId: this.loadInfo.id
 				}).then(res => {
 					this.dataList = res.data.taskList.map(item => {
 						return {
@@ -154,18 +170,50 @@
 							]
 						}
 					})
+				}).finally(() => {
+					this.isRequired = true
+				})
+			},
+			handleItemClick(item) {
+				if (item.nextTaskStatus === 'SIGNED') {
+					uni.navigateTo({
+						url: `/pages/sub-packages/sign-in/index?id=${item.mtsTaskTmId}`
+					});
+					return
+				}
+				this.confirmShow = true
+				this.clickItem = item
+			},
+			// 更新节点状态
+			confirmUpdateStatus() {
+				const {
+					mtsTaskTmId,
+					nextTaskStatus
+				} = this.clickItem
+				updateNode({
+					mtsTaskTmId,
+					taskStatus: nextTaskStatus,
+				}).then(res => {
+					uni.showToast({
+						icon: 'none',
+						title: '操作成功',
+						duration: 2000
+					})
+					this.getDataList()
+					this.confirmShow = false
 				})
 			},
 			reportAbnormal() {
 				this.reportPopupShow = true
 			},
 			confirmReportPopup() {},
-			goDetail(item) {
+			goUrl(item) {
 				console.log('item', item)
 				uni.navigateTo({
-					url: `/pages/sub-packages/loading-detail/detail?id=${item.id}`
+					url: `/pages/sub-packages/loading-detail/detail?id=${item.mtsTaskTmId}`
 				});
 			},
+
 		}
 	}
 </script>

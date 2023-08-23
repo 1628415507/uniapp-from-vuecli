@@ -5,8 +5,9 @@
  */
 // 默认配置
 const baseConfig = {
-	// baseUrl: 'https://172.16.6.246:8181', //路径前缀
-	baseUrl: 'https://example.com', //mock路径前缀
+	// baseUrl: 'http://172.16.6.246:8181', //路径前缀
+	baseUrl: 'http://172.16.1.232:3000/mock/237', //路径前缀
+	// baseUrl: 'https://example.com', //mock路径前缀
 	// baseUrl: 'https://mocktset.com', //mock路径前缀
 	timeout: 5 * 1000,
 	header: {

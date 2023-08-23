@@ -11,3 +11,19 @@ export const validIntNumber = (rule, value, callback) => {
 	}
 	// return uni.$u.test.digits(value)
 }
+// 非负浮点数值
+export const validFloatNumber = (rule, value, callback) => {
+	// 上面有说，返回true表示校验通过，返回false表示不通过
+	// uni.$u.test.mobile()就是返回true或者false的
+	const regNum = /^-?\d+(\.\d+)?$/;
+	if (!value && value !== 0) {
+		callback();
+	} else if ((!regNum.test(value))) {
+		callback(new Error('请输入数值'));
+	} else if (value < 0) {
+		callback('不允许输入负数2')
+	} else {
+		callback()
+	}
+	// return uni.$u.test.digits(value)
+}

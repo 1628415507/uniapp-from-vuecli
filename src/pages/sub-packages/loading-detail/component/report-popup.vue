@@ -12,34 +12,31 @@
 					异常上报
 					<u-icon name="close" color="#86909C" size="24" @click="handlePopupClose"></u-icon>
 				</view>
-				<view class="sub-title"> 任务单： {{'CN091231231'}}</view>
+				<view class="sub-title"> 任务单号： {{'CN091231231'}}</view>
 			</view>
 			<view class="popup-content__middle">
 				<u-form labelPosition="left" :model="model1" ref="formRef">
-					<u-form-item label="标题" prop="userInfo.name" borderBottom labelWidth="150rpx"
+					<!-- 					<u-form-item label="标题" prop="userInfo.name" borderBottom labelWidth="150rpx"
 						:labelStyle="labelStyle">
 						<view class="txt">标题</view>
-						<!-- <u--input v-model="model1.userInfo.name" border="none"></u--input> -->
-					</u-form-item>
-					<u-form-item label="标题" prop="userInfo.name" borderBottom labelWidth="150rpx"
-						:labelStyle="labelStyle">
-						<view class="txt">标题</view>
-						<!-- <u--input v-model="model1.userInfo.name" border="none"></u--input> -->
 					</u-form-item>
 					<u-form-item label="标题" prop="userInfo.name" borderBottom labelWidth="150rpx"
 						:labelStyle="labelStyle">
 						<view class="txt">标题</view>
-						<!-- <u--input v-model="model1.userInfo.name" border="none"></u--input> -->
 					</u-form-item>
-					<u-form-item label="标题" prop="userInfo.sex" borderBottom labelWidth="150rpx">
+					<u-form-item label="标题" prop="userInfo.name" borderBottom labelWidth="150rpx"
+						:labelStyle="labelStyle">
 						<view class="txt">标题</view>
-						<!-- <u--input v-model="model1.userInfo.name" border="none"></u--input> -->
-						<!-- <u-icon slot="right" name="arrow-right"></u-icon> -->
-					</u-form-item>
+					</u-form-item> -->
+					<!-- <u-form-item label="标题" prop="userInfo.sex" borderBottom labelWidth="150rpx">
+						<view class="txt">标题</view> -->
+					<!-- <u--input v-model="model1.userInfo.name" border="none"></u--input> -->
+					<!-- <u-icon slot="right" name="arrow-right"></u-icon> -->
+					<!-- </u-form-item> -->
 					<u-form-item label="异常原因" prop="userInfo.name" labelWidth="150rpx" :labelStyle="labelStyle">
 						<u-radio-group v-model="model1.userInfo.reason" placement="row" size="28rpx" iconSize="13px"
 							activeColor="#008474">
-							<view class="reason-wrap flex-sb-wrap">
+							<view class="reason-wrap flex-wrap">
 								<u-radio v-for="(item, index) in radiolist1" :key="index" :label="item.name"
 									iconSize="28rpx" labelSize="28rpx" :name="item.name"
 									:customStyle="{marginRight: '30rpx',marginTop: '20rpx'}">
@@ -47,7 +44,7 @@
 							</view>
 						</u-radio-group>
 					</u-form-item>
-					<u-form-item label="上传图片" prop="userInfo.name" labelWidth="150rpx" :labelStyle="labelStyle">
+					<u-form-item label="上报图片" prop="userInfo.name" labelWidth="150rpx" :labelStyle="labelStyle">
 						<u-upload :fileList="fileList3" @afterRead="afterRead" @delete="deletePic" name="3" multiple
 							:maxCount="10" :previewFullImage="true" width="128rpx" height="128rpx"></u-upload>
 					</u-form-item>

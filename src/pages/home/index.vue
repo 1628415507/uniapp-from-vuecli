@@ -1,7 +1,7 @@
 <!--
  * @Description: 首页
  * @Date: 2023-08-04 09:27:20
- * @LastEditTime: 2023-08-21 16:47:40
+ * @LastEditTime: 2023-08-22 09:25:17
 -->
 <template>
 	<view class="home-page">
@@ -20,7 +20,7 @@
 								<text class="txt ellipsis">装车单：{{item.dispatchNo||'-'}}</text>
 								<view class="content-top__value--right flex-sb">
 									<u-icon name="car" :color="colorTheme" size="40"></u-icon>
-									<text>整车调度</text>
+									<text>{{item.dispatchTypeName}}</text>
 								</view>
 							</view>
 							<view class="content-top__tips flex-sb">
@@ -35,15 +35,15 @@
 									<view v-show="item.isExpand?stepsIndex>=0:stepsIndex<2" :key="stepsIndex"
 										class="steps-item-wrap" :class="!item.isExpand&&stepsIndex>=1?'hiddenLine':''">
 										<u-steps-item :title="stepsItem.stationName"
-											:desc="'计划发车时间：'+stepsItem.stationDatetime">
+											:desc="'计划'+(stepsItem.stationType==='LOAD'?'发车':'到达')+'时间：'+stepsItem.stationDatetime">
 											<text class="steps-icon" :class="stepsItem.stationType==='LOAD'?'blue':''"
 												slot="icon">
 												{{STATION_TYPE[stepsItem.stationType]}}
 											</text>
 										</u-steps-item>
-										<view class="map-icon" @click="goDetail(item,'map')">
+										<!-- <view class="map-icon" @click="goDetail(item,'map')">
 											<u-icon name="map" color="#2572CC" size="32"></u-icon>
-										</view>
+										</view> -->
 									</view>
 								</template>
 							</u-steps>
@@ -73,13 +73,20 @@
 					</view>
 					<view class="list-item__footer flex-sb">
 						<view class="btn-item" @click="goDetail(item,'loading')">装车详情</view>
-						<view class="btn-item highlight">装车完成</view>
+						<view v-if="item.overallNextTaskStatus !== 'SIGNED'" class="btn-item highlight"
+							@click="handleItemClick(item)">
+							{{item.overallNextTaskStatusName}}
+						</view>
 					</view>
 				</view>
-				<!-- <u-empty v-if='isRequired && (dataList.length == 0)' text="暂无数据" mode="data"  margin-top="200"></u-empty> -->
+				<u-empty v-if='isRequired && (dataList.length === 0)' text="暂无数据" mode="list" margin-top="200"
+					iconSize="100" textSize="28rpx"></u-empty>
 			</view>
 		</scroll-view>
-
+		<!-- 确认框 -->
+		<u-modal :show="confirmShow" content='是否确认操作?' :showCancelButton="true" :confirmColor="colorTheme"
+			@cancel="confirmShow=false" @confirm="confirmUpdateStatus">
+		</u-modal>
 		<!-- 底部菜单栏 -->
 		<TabBar class="g-tabbar-wrap"></TabBar>
 	</view>
@@ -87,7 +94,8 @@
 
 <script>
 	import {
-		getList
+		getList,
+		updateNode
 	} from '@/apis/loading-detail.js'
 	import TabBar from '@/components/tab-bar'
 	const tempData = [{
@@ -157,21 +165,35 @@
 					name: '已完成',
 					value: 'COMPLETED',
 				}],
+				locationInfo: {},
 				// 列表
+				isRequired: false, //是否请求完
 				dataList: [],
 				STATION_TYPE: {
 					UNLOAD: '卸',
 					LOAD: '装'
-				}
+				},
+				clickItem: {},
+				// 确认框
+				confirmShow: false
 			}
 		},
 		onLoad() {
 			uni.hideTabBar() //隐藏原生的导航栏
 			this.getDataList()
+			// this.getLocationInfo()
 		},
 		methods: {
+			// 完成状态切换
+			sectionChange(index) {
+				this.current = index;
+				this.dispatchStatus = this.subsectionList[index].value
+				this.getDataList()
+			},
+			// 获取列表数据
 			getDataList() {
 				// this.dataList = tempData
+				this.isRequired = false
 				getList({
 					dispatchStatus: this.dispatchStatus
 				}).then(res => {
@@ -185,12 +207,9 @@
 							isExpand: false, //默认收起
 						}
 					})
+				}).finally(() => {
+					this.isRequired = true
 				})
-			},
-			sectionChange(index) {
-				this.current = index;
-				this.dispatchStatus = this.subsectionList[index].value
-				this.getDataList()
 			},
 			// 装车详情
 			goDetail(item, type) {
@@ -200,17 +219,77 @@
 						url: `/pages/sub-packages/loading-detail/index?id=${item.mtsDispatchId}`
 					});
 				}
-				if (type === 'map') {
-					uni.navigateTo({
-						url: `/pages/sub-packages/example/amap`
-					})
-				}
+				// if (type === 'map') {
+				// 	uni.navigateTo({
+				// 		url: `/pages/sub-packages/example/amap`
+				// 	})
+				// }
 			},
 			// 展开收起
 			handleExpand(item, index) {
-				console.log('【 item 】-168', item)
 				this.$set(item, 'isExpand', !item.isExpand)
-			}
+			},
+			handleItemClick(item) {
+				this.confirmShow = true
+				this.clickItem = item
+			},
+			// 更新节点状态
+			confirmUpdateStatus() {
+				const {
+					mtsDispatchId,
+					overallNextTaskStatus
+				} = this.clickItem
+				// this.getLocationInfo()
+				updateNode({
+					mtsDispatchId,
+					taskStatus: overallNextTaskStatus,
+				}).then(res => {
+					uni.showToast({
+						icon: 'none',
+						title: '操作成功',
+						duration: 2000
+					})
+					this.getDataList()
+					this.confirmShow = false
+				})
+			},
+			// 获取位置信息
+			getLocationInfo() {
+				uni.chooseLocation({
+					success: (res) => {
+						this.locationInfo = res; // 地址信息
+						console.log(res, this.locationInfo);
+					},
+					fail: (err) => {
+						console.log('获取地址失败', err);
+					}
+				});
+				// uni.getLocation({
+				// 	success: (res) => {
+				// 		const {
+				// 			latitude,
+				// 			longitude
+				// 		} = res
+				// 		this.locationInfo.latitude = latitude; // 纬度
+				// 		this.locationInfo.longitude = longitude; // 经度
+				// 		// uni.openLocation({
+				// 		// 	latitude: latitude,
+				// 		// 	longitude: longitude,
+				// 		// 	success: (res) => {
+				// 		// 		this.locationInfo.address = res.address; // 地址信息
+				// 		// 		console.log('this.locationInfo.', this.locationInfo);
+				// 		// 	},
+				// 		// 	fail: function(err) {
+				// 		// 		console.log('获取地址失败', err);
+				// 		// 	}
+				// 		// });
+				// 		console.log('this.locationInfo.', this.locationInfo);
+				// 	},
+				// 	fail: function(err) {
+				// 		console.log('获取经纬度失败', err);
+				// 	}
+				// });
+			},
 		}
 	}
 </script>
@@ -248,7 +327,7 @@
 						}
 
 						.content-top__value--right {
-							width: 150rpx;
+							// min-width: 150rpx;
 							font-size: 24rpx;
 							color: $colorTheme;
 							line-height: 34rpx;
@@ -333,8 +412,9 @@
 				color: #1D2129;
 
 				.btn-item {
+					width: 100%;
+					min-width: 50%;
 					text-align: center;
-					width: 50%;
 					font-size: 34rpx;
 					font-weight: 400;
 
@@ -348,6 +428,9 @@
 
 	// //步骤条-默认样式修改
 	::v-deep .content-middle .u-steps {
+		.u-steps-item__line--column {
+			height: 49px !important;
+		}
 
 		// 收起状态下第二竖条线隐藏
 		.hiddenLine {
