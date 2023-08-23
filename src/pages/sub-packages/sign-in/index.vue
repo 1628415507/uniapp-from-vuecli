@@ -20,7 +20,7 @@
 			</view>
 			<u-form labelPosition="left" :model="formData" ref="formRef" :rules="formRules" :labelStyle="labelStyle">
 				<u-form-item label="调度单号:" :labelWidth="labelWidth" :labelStyle="labelStyle">
-					<view class="txt">{{info.taskNo}}</view>
+					<view class="txt">{{info.dispatchNo}}</view>
 				</u-form-item>
 				<u-form-item label="任务单号:" :labelWidth="labelWidth" :labelStyle="labelStyle">
 					<view class="txt">{{info.taskNo}}</view>
@@ -68,7 +68,7 @@
 			</view>
 		</view>
 		<u-datetime-picker ref="datetimePicker" :show="dateShow" v-model="date" mode="datetime" @cancel="dateShow=false"
-			@confirm="confirmDate"></u-datetime-picker>
+			@confirm="confirmDate" itemHeight="60" :confirmColor="colorTheme"></u-datetime-picker>
 	</view>
 </template>
 
@@ -136,7 +136,7 @@
 		},
 		computed: {
 			SIGN_MODE() {
-				return this.$dict.getDictOptions('SIGN_MODE')
+				return this.$dict.getDictOptions('SIGN_MODE') || []
 			}
 		},
 		onReady() {
@@ -171,7 +171,7 @@
 				taskDetail({
 					mtsTaskTmId: id
 				}).then(res => {
-					this.info = res.data
+					this.info = res.data || {}
 				})
 			},
 			cancel() {

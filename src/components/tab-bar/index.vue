@@ -53,10 +53,10 @@
 			},
 			// 扫描
 			getScanVal() {
-				uni.navigateTo({
-					url: `/pages/sub-packages/sign-in/index`
-				});
-				console.log('getScanVal')
+				// uni.navigateTo({
+				// 	url: `/pages/sub-packages/sign-in/index`
+				// });
+				// console.log('getScanVal')
 				// 调用uni扫一扫的方法，允许从相机和相册扫码
 				// uni.scanCode({
 				// 	scanType: ['qrCode'], //条形码

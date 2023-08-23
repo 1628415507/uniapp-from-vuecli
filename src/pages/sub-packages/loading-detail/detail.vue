@@ -83,17 +83,11 @@
 		<view class="info-wrap">
 			<view class="title">签收信息</view>
 			<view class="flex-sb-wrap">
-				<!-- <u--image :showLoading="true" src="https://cdn.uviewui.com/uview/album/1.jpg" width="80px"
-				height="80px"></u--image> -->
-				<!-- 	<u--image src="https://cdn.uviewui.com/uview/album/1.jpg" mode="widthFix">
-				<view slot="error" style="font-size: 24rpx;">加载失败</view>
-			</u--image> -->
-				<!-- <view class="img-wrap"> -->
-				<u--image v-for="item in fileList" :key="item.fileKey" :src="item.imgUrl" width="128rpx"
-					height="128rpx">
-					<view slot="error" style="font-size: 24rpx;">加载失败</view>
-				</u--image>
-				<!-- </view> -->
+				<view v-for="item in fileList" :key="item.fileKey" class="img-wrap">
+					<u--image :src="item.imgUrl" width="128rpx" height="128rpx" style="margin-bottom:15rpx">
+						<view slot="error" style="font-size: 24rpx;">加载失败</view>
+					</u--image>
+				</view>
 
 			</view>
 			<view v-if="!(fileList&&fileList.length)">暂无上传签收单</view>
@@ -223,7 +217,8 @@
 			}
 
 			.img-wrap {
-				width: 30%;
+				width: 128rpx;
+				margin-bottom: 15rpx;
 			}
 		}
 	}
