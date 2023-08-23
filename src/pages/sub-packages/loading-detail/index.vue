@@ -1,219 +1,263 @@
 <!--
- * @Description: 装车详情
- * @Date: 2023-08-17 09:45:35
- * @LastEditTime: 2023-08-22 10:46:24
+ * @Description:报价详情 
+ * @Date: 2023-08-18 14:57:03
+ * @LastEditTime: 2023-08-23 18:11:48
 -->
 
 <template>
-	<view class="loading-detail-page">
-		<!-- 列表 -->
-		<scroll-view scroll-y="" :style="{height: 'calc(100vh - 50rpx)'}">
-			<view class="list-wrap">
-				<view class="list-item" v-for="(item) in dataList" :key="item.mtsTaskTmId">
-					<view class="list-item__content">
-						<view class="content-top">
-							<view class="content-top__value ellipsis">
-								任务单：{{item.taskNo}}
+	<view class="detail-page">
+		<u-form labelPosition="left" :model="formData" ref="formRef" :rules="formRules" :labelStyle="labelStyle"
+			:labelWidth="labelWidth">
+			<!-- 倒计时 -->
+			<view class="time-wrap">
+				<view class="time-wrap__top flex-sb">
+					<view class="label flex-sb">
+						<u-image :src="require('@/static/image/icons/trophy.svg')" width="48rpx"
+							height="48rpx"></u-image>
+						竞价剩余时间
+					</view>
+					<view class="countdown">
+						<u-count-down :time="30 * 60 * 60 * 1000" format="DD:HH:mm" autoStart @change="onChange">
+							<view class="time flex">
+								<view class="time__item">{{ timeData.days }}</view>
+								<text class="time__txt">天</text>
+								<view class="time__item">{{ timeData.hours>10?timeData.hours:'0'+timeData.hours}}</view>
+								<text class="time__txt">时</text>
+								<view class="time__item">{{ timeData.minutes }}</view>
+								<text class="time__txt">分</text>
 							</view>
-							<view class="content-top__tips flex">
-								<u-icon name="car" color="#86909C" size="40"></u-icon>
-								<!-- TODO -->
-								{{item.planName }}
+						</u-count-down>
+					</view>
+				</view>
+				<view class="time-wrap__bottom">
+					<view class="value">2</view>
+					<view class="label">当前竞价排名</view>
+				</view>
+			</view>
+			<!-- 报价信息 -->
+			<view class="info-wrap">
+				<view class="box-title">报价信息</view>
+				<u-form-item label="税率" borderBottom @click="dateShow=true">
+					<u--input v-model="formData.signTime" readonly placeholder="请选择" border="none"></u--input>
+					<u-icon slot="right" name="arrow-right" color="#86909C"></u-icon>
+				</u-form-item>
+				<u-form-item label="含税总额" borderBottom labelPosition="top" prop="signPcs">
+					<u--input v-model="formData.signPcs" type="digit" border="none" placeholder=" " prefixIcon="rmb"
+						prefixIconStyle="fontSize:48rpx;color:#4E5969" customStyle="marginTop:20rpx"
+						fontSize="48rpx"></u--input>
+				</u-form-item>
+				<u-form-item label="报价说明" borderBottom class="form-lable">
+					<u-textarea v-model="formData.remark" border="none" count maxlength="140" placeholder="请输入内容"
+						height="100rpx"></u-textarea>
+				</u-form-item>
+				<u-form-item label="询价说明" borderBottom>
+					<view class="txt">报价说明报价说明，报价说明报价说明 报价说明报价说明</view>
+				</u-form-item>
+			</view>
+			<!-- 委托明细 -->
+			<view class="info-wrap">
+				<view class="box-title">委托明细</view>
+				<view class="list-wrap">
+					<view class="list-item" v-for="(item,index) in 2" :key="index">
+						<view class="content-top flex-sb">
+							<view class="flex">
+								<u-image :src="require('@/static/image/icons/compass-light.svg')" width="40rpx"
+									height="40rpx"></u-image>
+								<text class="txt ellipsis">总里程 {{index||'-'}}</text>
+							</view>
+							<view class="flex">
+								<text class="txt">水运</text>
+								<u-icon name="arrow-right" color="#86909C"></u-icon>
 							</view>
 						</view>
-						<view class="content-middle g-steps-wrap">
-							<u-steps :current="0" direction="column">
-								<view v-for="(stepsItem,stepsIndex) in item.stepsList" :key="stepsIndex"
-									class="steps-item-wrap">
-									<u-steps-item :title="stepsItem.stationName"
-										:desc="'计划'+(stepsItem.stationType==='LOAD'?'发车':'到达')+'时间：'+stepsItem.stationTime">
-										<text class="steps-icon" :class="stepsItem.stationType==='LOAD'?'blue':''"
-											slot="icon">
-											{{STATION_TYPE[stepsItem.stationType]}}
-										</text>
-									</u-steps-item>
+						<view class="content-middle">
+							<view class="flex-sb">
+								<view class="content-middle__item">
+									<view class="label">计划总数量</view>
+									<view>{{item.planTotalQty ||'-'}} KG</view>
 								</view>
-							</u-steps>
+								<view class="content-middle__item">
+									<view class="label">计划总体积</view>
+									<view>{{item.planTotalVolume ||'-'}} CDM</view>
+								</view>
+								<view class="content-middle__item">
+									<view class="label">计划总重量</view>
+									<view>{{item.planTotalWeight ||'-'}} CT</view>
+								</view>
+							</view>
 						</view>
 						<view class="content-bottom">
-							<view class="content-bottom__value flex-sb">
-								<text class="txt ellipsis">重量：{{item.planTotalWeight ||'-'}} KG</text>
-								<text class="txt ellipsis">体积：{{item.planTotalVolume ||'-'}} CDM</text>
-								<text class="txt ellipsis">件数：{{item.planTotalQty ||'-'}} CT</text>
+							<view class="g-steps-wrap">
+								<u-steps :current="0" direction="column">
+									<u-steps-item title="深圳龙湖分拨中心" desc="起运地">
+										<text slot="icon" class="steps-icon blue">装</text>
+									</u-steps-item>
+									<u-steps-item title="深圳龙湖分拨中心分拨中心分拨中心" desc="目的地">
+										<text slot="icon" class="steps-icon">卸</text>
+									</u-steps-item>
+								</u-steps>
 							</view>
-						</view>
-					</view>
-					<view class="list-item__footer flex-sb">
-						<view class="btn-item" @click="reportAbnormal(item)">异常上报</view>
-						<view class="btn-item" @click="goUrl(item)">任务详情</view>
-						<view class="btn-item highlight" @click="handleItemClick(item)">
-							{{item.nextTaskStatusName}}
 						</view>
 					</view>
 				</view>
-				<u-empty v-if='isRequired && (dataList.length === 0)' text="暂无数据" mode="list" margin-top="200"
-					iconSize="100" textSize="28rpx"></u-empty>
 			</view>
-		</scroll-view>
-
-		<!-- 异常上报 -->
-		<ReportPopup v-if="reportPopupShow" :show.sync="reportPopupShow" @confirm="confirmReportPopup">
-		</ReportPopup>
-		<!-- 确认框 -->
-		<u-modal :show="confirmShow" content='是否确认操作?' :showCancelButton="true" :confirmColor="colorTheme"
-			@cancel="confirmShow=false" @confirm="confirmUpdateStatus">
-		</u-modal>
-
+			<!-- 询价信息 -->
+			<view class="info-wrap">
+				<view class="box-title">询价信息</view>
+				<u-form-item label="询价标题" borderBottom>
+					<view class="form-txt">{{info.dispatchNo}}</view>
+				</u-form-item>
+				<u-form-item label="询价日期" borderBottom>
+					<view class="form-txt">{{info.taskNo}}</view>
+				</u-form-item>
+				<u-form-item label="询价方" prop="signer" borderBottom>
+					<view class="form-txt">{{info.taskNo}}</view>
+				</u-form-item>
+				<u-form-item label="询价有效期" borderBottom>
+					<view class="form-txt">{{info.taskNo}}</view>
+				</u-form-item>
+			</view>
+		</u-form>
+		<view class="footer-btn flex-sb">
+			<view class="btn-item">
+				<u-button text="弃标" @click="cancel"></u-button>
+			</view>
+			<view class="btn-item">
+				<u-button type="primary" text="提交报价" @click="submit"></u-button>
+			</view>
+		</view>
+		<u-datetime-picker ref="datetimePicker" :show="dateShow" v-model="date" mode="datetime" @cancel="dateShow=false"
+			@confirm="confirmDate" itemHeight="60" :confirmColor="colorTheme"></u-datetime-picker>
 	</view>
 </template>
 
 <script>
 	import {
-		getDetailList,
-		updateNode
+		taskDetail,
+		signedNode,
+		uploadFile
 	} from '@/apis/loading-detail.js'
-	import ReportPopup from "./component/report-popup.vue";
-	import TabBar from '@/components/tab-bar'
-	const tempData = [{
-		id: '1',
-		carNum: 'CN091231231',
-		date: '2023-12-12',
-		num: '0.00 CDM',
-		isExpand: true,
-		stepsList: [{
-			address: '深圳龙湖分拨中心',
-			time: '2023-12-12 12:12:12'
-		}, {
-			address: '厦门吉联分拨中心',
-			time: '2023-12-12 12:12:12'
-		}]
-	}, {
-		id: '2',
-		carNum: 'CN091231231',
-		date: '2023-12-12',
-		num: '0.00 CDM',
-		isExpand: false,
-		stepsList: [{
-			address: '深圳龙湖分拨中心',
-			time: '2023-12-12 12:12:12'
-		}, {
-			address: '厦门吉联分拨中心',
-			time: '2023-12-12 12:12:12'
-		}]
-	}, {
-		id: '3',
-		carNum: 'CN091231231',
-		date: '2023-12-12',
-		num: '0.00 CDM',
-		isExpand: false,
-		stepsList: [{
-			address: '深圳龙湖分拨中心',
-			time: '2023-12-12 12:12:12'
-		}, {
-			address: '厦门吉联分拨中心',
-			time: '2023-12-12 12:12:12'
-		}]
-	}]
+	import {
+		validFloatNumber
+	} from '@/utils/validator.js'
 	export default {
-		components: {
-			TabBar,
-			ReportPopup
-		},
+		components: {},
 		data() {
 			return {
 				// 公共
-				// 异常上报
-				reportPopupShow: false,
-				// 列表
-				isRequired: false, //是否请求完
-				dataList: [],
-				STATION_TYPE: {
-					UNLOAD: '卸',
-					LOAD: '装'
+				loadInfo: {},
+				colorTheme: this.$store.getters.colorTheme,
+				dateShow: false,
+				// 倒计时
+				timeData: {},
+				// 搜索栏
+				// keyword: '',
+				// 表单
+				labelWidth: '170rpx',
+				labelStyle: {
+					color: '#4E5969 !important' //#4E5969
 				},
-				clickItem: {},
-				// 确认框
-				confirmShow: false,
-				loadInfo: {}
+				info: {},
+				date: Number(new Date()),
+				formData: {
+					signPcs: '',
+					signVolume: '',
+					signWeight: '',
+					signMode: "SIGN",
+					signer: '',
+					signTime: '',
+					remark: ''
+				},
+				formRules: {
+					'signPcs': {
+						validator: validFloatNumber,
+						trigger: ['blur', 'change']
+					},
+					'signVolume': {
+						validator: validFloatNumber,
+						trigger: ['blur', 'change']
+					},
+					'signWeight': {
+						validator: validFloatNumber,
+						trigger: ['blur', 'change']
+					},
+					'signMode': {
+						type: 'string',
+						required: true,
+						message: '选择签收方式',
+						trigger: ['blur', 'change']
+					}
+				},
 			}
 		},
+		computed: {
+			SIGN_MODE() {
+				return this.$dict.getDictOptions('SIGN_MODE') || []
+			}
+		},
+		onReady() {
+			//onReady 为uni-app支持的生命周期之一
+			this.$refs.formRef.setRules(this.formRules)
+		},
 		onLoad(opt) {
-			console.log('opt', opt)
 			this.loadInfo = opt
-			this.getDataList()
+			this.formData.signTime = this.formatter(Number(new Date()))
+			this.getDetailInfo(opt.id)
 		},
 		methods: {
-			getDataList() {
-				// this.dataList = tempData
-				this.isRequired = false
-				getDetailList({
-					mtsDispatchId: this.loadInfo.id
+			onChange(e) {
+				this.timeData = e
+			},
+			formatter(timestamp) {
+				const date = new Date(timestamp);
+				const year = date.getFullYear(); // 获取年份
+				const month = date.getMonth() + 1; // 获取月份（注意月份从0开始，需要加1）
+				const day = date.getDate(); // 获取日期
+				const hour = date.getHours(); // 获取小时
+				const minute = date.getMinutes(); // 获取分钟
+				const second = date.getSeconds(); // 获取秒钟
+				const formattedTime = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+				console.log('【 formattedTime 】-166', formattedTime)
+				return formattedTime
+			},
+			confirmDate(date) {
+				console.log('【 date 】-171', date)
+				this.date = date.value
+				this.formData.signTime = this.formatter(date.value)
+				this.dateShow = false
+			},
+			getDetailInfo(id) {
+				taskDetail({
+					mtsTaskTmId: id
 				}).then(res => {
-					this.dataList = res.data.taskList.map(item => {
-						return {
-							...item,
-							planTotalWeight: item.planTotalWeight?.toFixed(2),
-							planTotalVolume: item.planTotalVolume?.toFixed(2),
-							planTotalQty: item.planTotalQty?.toFixed(2),
-							stepsList: [{
-									stationName: item.originStationName,
-									stationAddress: item.originStationAddress,
-									stationTime: item.reqPickupTime,
-									stationType: 'LOAD'
-								},
-								{
-									stationName: item.destStationName,
-									stationAddress: item.destStationAddr,
-									stationTime: item.reqArrivalTime,
-									stationType: 'UNLOAD'
-								}
-							]
-						}
-					})
-				}).finally(() => {
-					this.isRequired = true
+					this.info = res.data || {}
 				})
 			},
-			handleItemClick(item) {
-				if (item.nextTaskStatus === 'SIGNED') {
-					uni.navigateTo({
-						url: `/pages/sub-packages/sign-in/index?id=${item.mtsTaskTmId}`
-					});
-					return
-				}
-				this.confirmShow = true
-				this.clickItem = item
-			},
-			// 更新节点状态
-			confirmUpdateStatus() {
-				const {
-					mtsTaskTmId,
-					nextTaskStatus
-				} = this.clickItem
-				updateNode({
-					mtsTaskTmId,
-					taskStatus: nextTaskStatus,
-				}).then(res => {
-					uni.showToast({
-						icon: 'none',
-						title: '操作成功',
-						duration: 2000
-					})
-					this.getDataList()
-					this.confirmShow = false
+			cancel() {
+				uni.navigateBack({
+					delta: 1
 				})
 			},
-			reportAbnormal() {
-				this.reportPopupShow = true
-			},
-			confirmReportPopup() {},
-			goUrl(item) {
-				console.log('item', item)
-				uni.navigateTo({
-					url: `/pages/sub-packages/loading-detail/detail?id=${item.mtsTaskTmId}`
+			submit() {
+				this.$refs.formRef?.validate().then(res => {
+					signedNode({
+						mtsTaskTmId: this.loadInfo.id,
+						taskStatus: this.info.taskStatus,
+						...this.formData
+					}).then(res => {
+						uni.showToast({
+							icon: 'none',
+							title: '操作成功',
+							duration: 2000
+						})
+						setTimeout(() => {
+							uni.navigateBack({
+								delta: 1
+							})
+						}, 300)
+					})
 				});
 			},
-
 		}
 	}
 </script>
@@ -223,116 +267,168 @@
 		background: linear-gradient(to bottom, #e8f3f5, #e6eff6) !important;
 	}
 
-	.loading-detail-page {
-		padding: 0 32rpx;
+	// ::v-deep .form-item .u-form-item__body__left {
+	// 	display: flex;
+	// 	flex-direction: row;
+	// 	align-items: flex-start !important;
+	// }
+
+	.detail-page {
+		position: relative;
+		background-color: #fff;
+		padding: 5rpx;
+		box-sizing: border-box;
+		border-radius: 30rpx 30rpx 0 0;
+		overflow: hidden;
+	}
+
+	.time-wrap {
+		height: 320rpx;
+		background: linear-gradient(to bottom, #f0f7f6, #fdfefe) !important;
+		border-radius: 30rpx 30rpx 0 0;
+		box-sizing: border-box;
+		padding: 24rpx 32rpx;
+
+		.time-wrap__top {
+			.label {
+				width: 230rpx;
+				font-size: 28rpx;
+			}
+
+			.time {
+
+				&__item {
+					color: #fff;
+					font-size: 22rpx;
+					text-align: center;
+					width: 40rpx;
+					height: 40rpx;
+					line-height: 40rpx;
+					background: #008474;
+					border-radius: 4rpx;
+				}
+
+				.time__txt {
+					color: #1D2129;
+					font-size: 26rpx;
+					padding: 0px 4px;
+				}
+			}
+		}
+
+		.time-wrap__bottom {
+			margin-top: 28rpx;
+			width: 100%;
+			height: 196rpx;
+			background: #FFFFFF;
+			box-shadow: 0rpx 24rpx 56rpx 0rpx rgba(209, 233, 230, 0.3);
+			border-radius: 16rpx;
+			text-align: center;
+
+			.value {
+				font-size: 88rpx;
+				font-weight: bold;
+				color: #008474;
+			}
+
+			.label {
+				font-size: 28rpx;
+			}
+		}
+	}
+
+	::v-deep .form-lable .u-form-item__body__left {
+		display: flex;
+		flex-direction: row;
+		align-items: flex-start !important;
+	}
+
+	.info-wrap {
+		padding: 24rpx 32rpx;
+		// border-bottom: 2rpx solid #E5E6EB;
+
+		// &:last-child {
+		// 	border-bottom: none;
+		// }
+
+		.box-title {
+			margin-bottom: 24rpx;
+			box-sizing: border-box;
+			width: 100%;
+			padding-left: 16rpx;
+			border-left: 4rpx solid $colorTheme;
+			font-size: 32rpx;
+			font-weight: 500;
+			color: #1D2129;
+		}
+
+		.steps-icon {
+			width: 64rpx;
+			height: 64rpx;
+			line-height: 64rpx;
+			text-align: center;
+			background: #008474;
+			border-radius: 50%;
+			font-size: 28rpx;
+			color: #FFFFFF;
+		}
+
+		.blue {
+			background: #2572CC;
+		}
+
+		.form-txt {
+			text-align: right;
+		}
 	}
 
 	.list-wrap {
-		// padding-bottom: 50rpx;
-
 		.list-item {
 			margin-bottom: 24rpx;
 			box-sizing: border-box;
 			width: 100%;
 			background: #FFFFFF;
 			border-radius: 16rpx;
+			border: 3rpx solid #E5E6EB;
+			padding: 24rpx;
 
-			.list-item__content {
-				box-sizing: border-box;
-				padding: 24rpx;
+			.label {
+				font-size: 24rpx;
+				color: #86909C;
+			}
 
-				.content-top {
-					border-bottom: 2rpx solid $colorBorder;
-					padding-bottom: 24rpx;
+			.content-top {
+				border-bottom: 2rpx solid $colorBorder;
+				padding-bottom: 24rpx;
+				font-size: 32rpx;
+				font-weight: 500;
 
-
-					.content-top__tips {
-						width: 140rpx;
-						margin-top: 16rpx;
-						font-size: 24rpx;
-						color: #86909C;
-					}
-				}
-
-				// 步骤条
-				.content-middle {
-					// padding: 24rpx 0;
-					margin-top: 24rpx;
-
-					.steps-item-wrap {
-						position: relative;
-						height: 76rpx;
-						margin-bottom: 20rpx;
-
-						.map-icon {
-							position: absolute;
-							top: 38rpx;
-							right: 117rpx
-						}
-
-						.steps-icon {
-							width: 64rpx;
-							height: 64rpx;
-							line-height: 64rpx;
-							text-align: center;
-							background: #008474;
-							border-radius: 50%;
-							font-size: 28rpx;
-							color: #FFFFFF;
-						}
-
-						.blue {
-							background: #2572CC;
-						}
-					}
-
-				}
-
-				.content-bottom {
-					font-size: 24rpx;
-
-					.content-bottom__value {
-
-						.txt {
-							min-width: 25%;
-							color: #4E5969;
-						}
-					}
-
-					.content-bottom__tips {
-						margin-top: 24rpx;
-
-						.content-bottom__tips-item {
-							width: 90rpx;
-							color: #86909C;
-
-							.arrow-icon {
-								transform-origin: center;
-								transform: rotate(90deg);
-							}
-						}
-					}
+				.txt {
+					margin: auto 12rpx;
 				}
 			}
 
-			.list-item__footer {
-				height: 96rpx;
-				line-height: 96rpx;
-				border-top: 2rpx solid $colorBorder;
-				color: $colorFontTitle;
+			.content-middle {
+				margin: 24rpx auto;
+				font-size: 30rpx;
+				font-weight: 500;
+				color: #1D2129;
+				font-size: 24rpx;
 
-				.btn-item {
+				.content-middle__item {
 					text-align: center;
-					width: 100%;
-					font-size: 34rpx;
-					font-weight: 400;
-					border-right: 2rpx solid $colorBorder;
-
-					&:last-child {
-						border-right: none;
-					}
+					line-height: 45rpx;
+					font-size: 30rpx;
 				}
 			}
+		}
+	}
+
+	.footer-btn {
+		padding: 24rpx 32rpx;
+
+		.btn-item {
+			width: 48%;
 		}
 	}
 </style>

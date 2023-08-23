@@ -11,7 +11,7 @@
                     "scene": null
                 },
                 {
-                    "name": "装车详情",
+                    "name": "报价详情",
                     "pathName": "pages/sub-packages/loading-detail/index",
                     "query": "id=1",
                     "launchMode": "default",

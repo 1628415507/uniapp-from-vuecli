@@ -63,7 +63,7 @@
 			"pages": [{
 					"path": "index",
 					"style": {
-						"navigationBarTitleText": "装车详情",
+						"navigationBarTitleText": "报价详情",
 						"enablePullDownRefresh": false
 					}
 				},
