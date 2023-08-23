@@ -6,11 +6,10 @@
 <template>
 	<u-tabbar :border="false" :value="activeTab" :fixed="true" :placeholder="false" :safeAreaInsetBottom="false"
 		:activeColor="colorTheme" inactiveColor="#666666" @change="handleTabChange">
-		<u-tabbar-item text="首页" icon="grid-fill" name="home"> </u-tabbar-item>
-		<view class="scan-wrap flex-c" @click="getScanVal">
-			<u-icon name="scan" size="50rpx" color="#fff"></u-icon>
-		</view>
-		<u-tabbar-item text="我的" icon="account" name="account"> </u-tabbar-item>
+		<u-tabbar-item v-for="item in tabList" :key="item.name" :text="item.text" :name="item.name">
+			<u-image slot="active-icon" :src="item.activeIcon" width="40rpx" height="40rpx"></u-image>
+			<u-image slot="inactive-icon" :src="item.inactiveIcon" width="40rpx" height="40rpx"></u-image>
+		</u-tabbar-item>
 	</u-tabbar>
 </template>
 
@@ -21,21 +20,31 @@
 				colorTheme: this.$store.getters.colorTheme,
 				activeTab: this.$store.getters.activeTab,
 				tabList: [{
-						text: '首页',
-						name: 'home',
-						icon: 'grid-fill',
+						text: '报价',
+						name: 'quote',
+						activeIcon: require('@/static/image/icons/quote-active.svg'),
+						inactiveIcon: require('@/static/image/icons/quote-inactive.svg'),
 						url: '/pages/home/index'
+					},
+					{
+						text: '已中标',
+						name: 'bidding',
+						activeIcon: require('@/static/image/icons/bidding-active.svg'),
+						inactiveIcon: require('@/static/image/icons/bidding-inactive.svg'),
+						url: '/pages/bidding/index'
 					},
 					// {
 					// 	text: 'Demo',
 					// 	name: 'demo',
-					// 	icon: 'photo',
+					// 	activeIcon: 'https://cdn.uviewui.com/uview/common/bell-selected.png',
+					// 	inactiveIcon: 'https://cdn.uviewui.com/uview/common/bell.png',
 					// 	url: '/pages/demo/index'
 					// },
 					{
 						text: '我的',
 						name: 'account',
-						icon: 'account',
+						activeIcon: require('@/static/image/icons/account-active.svg'),
+						inactiveIcon: require('@/static/image/icons/account-inactive.svg'),
 						url: '/pages/user/index'
 					}
 				]
@@ -51,32 +60,6 @@
 					url: activeTabInfo.url
 				});
 			},
-			// 扫描
-			getScanVal() {
-				// uni.navigateTo({
-				// 	url: `/pages/sub-packages/sign-in/index`
-				// });
-				// console.log('getScanVal')
-				// 调用uni扫一扫的方法，允许从相机和相册扫码
-				// uni.scanCode({
-				// 	scanType: ['qrCode'], //条形码
-				// 	success: (res) => {
-
-				// 		// console.log('scanCode', res)
-				// 		// TODO:取值
-				// 		// if (res.errMsg == "scanCode:ok") {
-				// 		// 	const val = res.result
-				// 		// 	//  this.$set(原数组, 索引值, 需要赋的值)
-				// 		// 	uni.navigateTo({
-				// 		// 		url: `/pages/sub-packages/sign-in/index`
-				// 		// 	});
-				// 		// } else {
-				// 		// 	console.log("未识别到二维码，请重新尝试！")
-				// 		// 	uni.$u.toast('未识别到二维码，请重新尝试！')
-				// 		// }
-				// 	}
-				// });
-			}
 		}
 	};
 </script>

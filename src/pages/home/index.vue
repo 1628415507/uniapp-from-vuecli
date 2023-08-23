@@ -6,7 +6,7 @@
 <template>
 	<view class="home-page">
 		<!-- 状态栏 -->
-		<view class="subsection-wrap">
+		<view class="subsection-wrap" :class="GRADIENT_CLASS[dispatchStatus]">
 			<u-subsection :current="current" :list="subsectionList" mode="button" @change="sectionChange"
 				activeColor="#fff" fontSize="28rpx"></u-subsection>
 		</view>
@@ -15,67 +15,54 @@
 			<view class="list-wrap">
 				<view class="list-item" v-for="(item,index) in dataList" :key="index">
 					<view class="list-item__content">
-						<view class="content-top">
-							<view class="content-top__value flex-sb">
-								<text class="txt ellipsis">装车单：{{item.dispatchNo||'-'}}</text>
-								<view class="content-top__value--right flex-sb">
-									<u-icon name="car" :color="colorTheme" size="40"></u-icon>
-									<text>{{item.dispatchTypeName}}</text>
+						<view class="content-top flex-sb">
+							<view class="content-top__left flex-col-sb">
+								<text class="title ellipsis">询价标题</text>
+								<view class="label">
+									截止时间 {{item.createTime||'-'}}
 								</view>
 							</view>
-							<view class="content-top__tips flex-sb">
-								<u-icon name="calendar" color="#86909C" size="40"></u-icon>
-								{{item.createTime||'-'}}
+							<view v-if="dispatchStatus==='QUOTED'" class="content-top__right flex-c">
+								<view class="tag" :class="true?'tag--active':''">报价中</view>
+							</view>
+							<view v-else class="content-top__right">
+								<view class="num">{{index+1}}</view>
+								<view class="label">当前排名</view>
 							</view>
 						</view>
-						<view class="content-middle g-steps-wrap">
-							<u-steps :current="0" direction="column">
-								<template v-for="(stepsItem,stepsIndex) in item.taskStationList">
-									<!-- 展开：展示全部； 收起：只展示前两条 -->
-									<view v-show="item.isExpand?stepsIndex>=0:stepsIndex<2" :key="stepsIndex"
-										class="steps-item-wrap" :class="!item.isExpand&&stepsIndex>=1?'hiddenLine':''">
-										<u-steps-item :title="stepsItem.stationName"
-											:desc="'计划'+(stepsItem.stationType==='LOAD'?'发车':'到达')+'时间：'+stepsItem.stationDatetime">
-											<text class="steps-icon" :class="stepsItem.stationType==='LOAD'?'blue':''"
-												slot="icon">
-												{{STATION_TYPE[stepsItem.stationType]}}
-											</text>
-										</u-steps-item>
-										<!-- <view class="map-icon" @click="goDetail(item,'map')">
-											<u-icon name="map" color="#2572CC" size="32"></u-icon>
-										</view> -->
-									</view>
-								</template>
-							</u-steps>
+						<view class="content-middle">
+							<view class="content-middle__item flex">
+								<u-image class="img-icon" :src="require('@/static/image/icons/compass.svg')"
+									width="35rpx" height="35rpx"></u-image>
+								<text class="cm-txt">总里程 {{item.planTotalWeight}}</text>
+							</view>
+							<view class="content-middle__item flex">
+								<u-image class="img-icon" :src="require('@/static/image/icons/frame.svg')" width="35rpx"
+									height="35rpx"></u-image>
+								<text class="cm-txt">运输方式 水运</text>
+							</view>
 						</view>
 						<view class="content-bottom">
-							<view class="content-bottom__value flex-sb">
-								<text class="txt ellipsis">重量：{{item.planTotalWeight ||'-'}} KG</text>
-								<text class="txt ellipsis">体积：{{item.planTotalVolume ||'-'}} CDM</text>
-								<text class="txt ellipsis">件数：{{item.planTotalQty ||'-'}} CT</text>
-							</view>
-							<view v-if="item.taskStationList.length>2" class="content-bottom__tips flex-c"
-								@click="handleExpand(item,index)">
-								<view v-if="item.isExpand" class="content-bottom__tips-item flex-sb">
-									<view class="arrow-icon">
-										<u-icon name="arrow-left-double" color="#86909C" size="32"></u-icon>
-									</view>
-									收起
+							<view class="flex-sb">
+								<view class="content-bottom__item">
+									<view class="label">计划总重量</view>
+									<view class="value">{{item.planTotalWeight ||'-'}} CT</view>
 								</view>
-								<view v-else class="content-bottom__tips-item flex-sb">
-									<view class="arrow-icon">
-										<u-icon name="arrow-right-double" color="#86909C" size="32"></u-icon>
-									</view>
-									展开
+								<view class="content-bottom__item">
+									<view class="label">计划总体积</view>
+									<view class="value">{{item.planTotalVolume ||'-'}} CDM</view>
+								</view>
+								<view class="content-bottom__item">
+									<view class="label">计划总数量</view>
+									<view class="value">{{item.planTotalQty ||'-'}} KG</view>
 								</view>
 							</view>
 						</view>
 					</view>
 					<view class="list-item__footer flex-sb">
-						<view class="btn-item" @click="goDetail(item,'loading')">装车详情</view>
-						<view v-if="item.overallNextTaskStatus !== 'SIGNED'" class="btn-item highlight"
-							@click="handleItemClick(item)">
-							{{item.overallNextTaskStatusName}}
+						<view class="btn-item" @click="goUrl(item,'loading')">弃标</view>
+						<view class="btn-item highlight" @click="handleItemClick(item)">
+							去报价
 						</view>
 					</view>
 				</view>
@@ -157,22 +144,28 @@
 				colorTheme: this.$store.getters.colorTheme,
 				// 状态栏
 				current: 0,
-				dispatchStatus: 'EXECUTING',
+				// 渐变样式类名
+				GRADIENT_CLASS: {
+					UNQUOTE: 'gradient--right',
+					QUOTED: 'gradient--center',
+					QUIT: 'gradient--left'
+				},
+				dispatchStatus: 'UNQUOTE',
 				subsectionList: [{
-					name: '未完成',
-					value: 'EXECUTING',
-				}, {
-					name: '已完成',
-					value: 'COMPLETED',
-				}],
-				locationInfo: {},
+						name: '未报价',
+						value: 'UNQUOTE',
+					},
+					{
+						name: '已报价',
+						value: 'QUOTED',
+					}, {
+						name: '弃标',
+						value: 'QUIT',
+					}
+				],
 				// 列表
 				isRequired: false, //是否请求完
 				dataList: [],
-				STATION_TYPE: {
-					UNLOAD: '卸',
-					LOAD: '装'
-				},
 				clickItem: {},
 				// 确认框
 				confirmShow: false
@@ -181,7 +174,6 @@
 		onLoad() {
 			uni.hideTabBar() //隐藏原生的导航栏
 			this.getDataList()
-			// this.getLocationInfo()
 		},
 		methods: {
 			// 完成状态切换
@@ -200,11 +192,9 @@
 					this.dataList = res.data.map(item => {
 						return {
 							...item,
-							createTime: item.createTime.substring(0, 10),
 							planTotalWeight: item.planTotalWeight.toFixed(2),
 							planTotalVolume: item.planTotalVolume.toFixed(2),
 							planTotalQty: item.planTotalQty.toFixed(2),
-							isExpand: false, //默认收起
 						}
 					})
 				}).finally(() => {
@@ -212,22 +202,13 @@
 				})
 			},
 			// 装车详情
-			goDetail(item, type) {
-				console.log('【 goDetail 】-168', type)
+			goUrl(item, type) {
+				console.log('【 goUrl 】-168', type)
 				if (type === 'loading') {
 					uni.navigateTo({
 						url: `/pages/sub-packages/loading-detail/index?id=${item.mtsDispatchId}`
 					});
 				}
-				// if (type === 'map') {
-				// 	uni.navigateTo({
-				// 		url: `/pages/sub-packages/example/amap`
-				// 	})
-				// }
-			},
-			// 展开收起
-			handleExpand(item, index) {
-				this.$set(item, 'isExpand', !item.isExpand)
 			},
 			handleItemClick(item) {
 				this.confirmShow = true
@@ -239,7 +220,6 @@
 					mtsDispatchId,
 					overallNextTaskStatus
 				} = this.clickItem
-				// this.getLocationInfo()
 				updateNode({
 					mtsDispatchId,
 					taskStatus: overallNextTaskStatus,
@@ -252,43 +232,6 @@
 					this.getDataList()
 					this.confirmShow = false
 				})
-			},
-			// 获取位置信息
-			getLocationInfo() {
-				uni.chooseLocation({
-					success: (res) => {
-						this.locationInfo = res; // 地址信息
-						console.log(res, this.locationInfo);
-					},
-					fail: (err) => {
-						console.log('获取地址失败', err);
-					}
-				});
-				// uni.getLocation({
-				// 	success: (res) => {
-				// 		const {
-				// 			latitude,
-				// 			longitude
-				// 		} = res
-				// 		this.locationInfo.latitude = latitude; // 纬度
-				// 		this.locationInfo.longitude = longitude; // 经度
-				// 		// uni.openLocation({
-				// 		// 	latitude: latitude,
-				// 		// 	longitude: longitude,
-				// 		// 	success: (res) => {
-				// 		// 		this.locationInfo.address = res.address; // 地址信息
-				// 		// 		console.log('this.locationInfo.', this.locationInfo);
-				// 		// 	},
-				// 		// 	fail: function(err) {
-				// 		// 		console.log('获取地址失败', err);
-				// 		// 	}
-				// 		// });
-				// 		console.log('this.locationInfo.', this.locationInfo);
-				// 	},
-				// 	fail: function(err) {
-				// 		console.log('获取经纬度失败', err);
-				// 	}
-				// });
 			},
 		}
 	}
@@ -313,6 +256,11 @@
 			background: #FFFFFF;
 			border-radius: 16rpx;
 
+			.label {
+				font-size: 24rpx;
+				color: #86909C;
+			}
+
 			.list-item__content {
 				box-sizing: border-box;
 				padding: 24rpx;
@@ -320,86 +268,71 @@
 				.content-top {
 					border-bottom: 2rpx solid $colorBorder;
 					padding-bottom: 24rpx;
+					height: 85rpx;
 
-					.content-top__value {
-						.txt {
-							width: calc(100% - 150rpx);
-						}
+					.content-top__left {
+						height: 100%;
 
-						.content-top__value--right {
-							// min-width: 150rpx;
-							font-size: 24rpx;
-							color: $colorTheme;
-							line-height: 34rpx;
+						.title {
+							font-size: 32rpx;
 						}
 					}
 
-					.content-top__tips {
-						width: 175rpx;
-						margin-top: 16rpx;
-						font-size: 24rpx;
-						color: #86909C;
+					.content-top__right {
+						height: 100%;
+						text-align: center;
+
+						.num {
+							font-size: 43rpx;
+							font-weight: 500;
+							color: $colorTheme;
+						}
+
+						.tag {
+							width: 104rpx;
+							height: 48rpx;
+							background: rgba(134, 144, 156, 0.08);
+							border-radius: 6rpx;
+							border: 2rpx solid #86909C;
+							font-size: 24rpx;
+							font-weight: 400;
+							color: #86909C;
+							line-height: 48rpx;
+						}
+
+						.tag--active {
+							background: rgba(0, 132, 116, 0.08) !important;
+							border: 2rpx solid #008474 !important;
+							color: #008474 !important;
+						}
 					}
 				}
 
-				// 步骤条
 				.content-middle {
-					// padding: 24rpx 0;
-					margin-top: 24rpx;
-					margin-bottom: 14rpx;
+					margin: 24rpx auto;
+					font-size: 30rpx;
+					font-weight: 500;
+					color: #1D2129;
 
-					.steps-item-wrap {
-						position: relative;
-						height: 76rpx;
-						margin-bottom: 20rpx;
-
-						.map-icon {
-							position: absolute;
-							top: 39rpx;
-							right: 117rpx
-						}
-
-						.steps-icon {
-							width: 64rpx;
-							height: 64rpx;
-							line-height: 64rpx;
-							text-align: center;
-							background: #008474;
-							border-radius: 50%;
-							font-size: 28rpx;
-							color: #FFFFFF;
-						}
-
-						.blue {
-							background: #2572CC;
-						}
+					.content-middle__item {
+						margin: 15rpx;
 					}
 
+					.cm-txt {
+						margin-left: 15rpx;
+					}
 				}
 
 				// 信息
 				.content-bottom {
 					font-size: 24rpx;
 
-					.content-bottom__value {
+					.content-bottom__item {
+						text-align: center;
 
-						.txt {
-							min-width: 25%;
-							color: #4E5969;
-						}
-					}
-
-					.content-bottom__tips {
-						margin-top: 24rpx;
-
-						.content-bottom__tips-item {
-							width: 90rpx;
-							color: #86909C;
-
-							.arrow-icon {
-								transform-origin: center;
-								transform: rotate(90deg);
-							}
+						.value {
+							margin-top: 10rpx;
+							font-size: 30rpx;
 						}
 					}
 				}
@@ -426,31 +359,59 @@
 		}
 	}
 
-	// //步骤条-默认样式修改
-	::v-deep .content-middle .u-steps {
-		.u-steps-item__line--column {
-			height: 49px !important;
-		}
-
-		// 收起状态下第二竖条线隐藏
-		.hiddenLine {
-			.u-steps-item__line--column {
-				display: none !important;
-			}
-		}
+	// 向右渐变
+	.gradient--right {
+		background: linear-gradient(to right, rgba(0, 132, 116, 1), rgba(255, 255, 255, 0.3));
 	}
 
-	// 分段器-默认样式修改
+	// 向左渐变
+	.gradient--left {
+		background: linear-gradient(to left, rgba(0, 132, 116, 1), rgba(255, 255, 255, 0.3));
+	}
+
+	// 中间向两头
+	.gradient--center {
+		position: relative;
+		width: 100%;
+		height: 68rpx;
+		z-index: 99;
+		border-radius: 72rpx;
+	}
+
+	.gradient--center:before {
+		content: "";
+		position: absolute;
+		z-index: inherit;
+		top: 0;
+		left: 0;
+		right: 50%;
+		height: 68rpx;
+		background-image: linear-gradient(to left, rgba(0, 132, 116, 1), rgba(255, 255, 255, 0.8)) !important;
+		border-radius: 72rpx 0 0 72rpx;
+	}
+
+	.gradient--center:after {
+		content: "";
+		position: absolute;
+		background-image: linear-gradient(to right, rgba(0, 132, 116, 1), rgba(255, 255, 255, 0.8)) !important;
+		top: 0;
+		left: 50%;
+		right: 0;
+		height: 68rpx;
+		border-radius: 0 72rpx 72rpx 0;
+	}
+
 	::v-deep .home-page .subsection-wrap {
 		margin: 20rpx auto 32rpx auto;
+		height: 68rpx;
 		box-sizing: border-box;
-		background: linear-gradient(90deg, rgba(0, 132, 116, 1), rgba(255, 255, 255, 0.3));
 		border-radius: 72rpx;
 		padding: 2rpx;
 
 		.u-subsection {
 			background-color: rgba(255, 255, 255, 0.8) !important;
 			border-radius: 72rpx !important;
+			z-index: 999;
 
 			.u-subsection__item {
 				border-radius: 72rpx !important;

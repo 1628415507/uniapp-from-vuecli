@@ -16,6 +16,11 @@
   justify-content: center;
   align-items: center;
 }
+.flex-col-sb {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 // flex布局
 .flex-wrap {
   display: flex;

@@ -8,19 +8,23 @@
 		"selectedColor": "#3cc51f",
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
-		"list": [
-		{
-			"pagePath": "pages/home/index",
-			"text": "首页"
-		},
-		{
-			"pagePath": "pages/demo/index",
-			"text": "Demo"
-		},
-		{
-			"pagePath": "pages/user/index",
-			"text": "我的"
-		}]
+		"list": [{
+				"pagePath": "pages/home/index",
+				"text": "报价"
+			},
+			{
+				"pagePath": "pages/bidding/index",
+				"text": "已中标"
+			},
+			{
+				"pagePath": "pages/demo/index",
+				"text": "Demo"
+			},
+			{
+				"pagePath": "pages/user/index",
+				"text": "我的"
+			}
+		]
 	},
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
@@ -29,11 +33,16 @@
 				"navigationBarTitleText": "登录"
 			}
 		},
-	 {
+		{
 			"path": "pages/home/index",
 			"style": {
-				"navigationBarTitleText": "首页"
-				// "navigationStyle": "custom"
+				"navigationBarTitleText": "询报价"
+			}
+		},
+		{
+			"path": "pages/bidding/index",
+			"style": {
+				"navigationBarTitleText": "已中标"
 			}
 		},
 		{
@@ -49,8 +58,7 @@
 			}
 		}
 	],
-	"subPackages":[
-		{
+	"subPackages": [{
 			"root": "pages/sub-packages/loading-detail",
 			"pages": [{
 					"path": "index",
@@ -71,13 +79,12 @@
 		{
 			"root": "pages/sub-packages/sign-in",
 			"pages": [{
-					"path": "index",
-					"style": {
-						"navigationBarTitleText": "签收",
-						"enablePullDownRefresh": false
-					}
+				"path": "index",
+				"style": {
+					"navigationBarTitleText": "签收",
+					"enablePullDownRefresh": false
 				}
-			]
+			}]
 		},
 		{
 			"root": "pages/sub-packages/example",
