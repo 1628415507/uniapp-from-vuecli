@@ -9,7 +9,7 @@ export default {
 	state: {
 		userName: 'admin',
 		userInfo: {}, // 用户信息,
-		activeTab: 'quote', //当前激活的tab
+		activeTab: 'home', //当前激活的tab
 		amapKey: '21d1f020389645ee420d864b9c20b70d', //高德地图小程序key
 		colorTheme: '#008474' //主题颜色
 	},

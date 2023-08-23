@@ -16,7 +16,9 @@
 
 ## 各分支说明
 - init：初始化分支
-- develop：开发分支
+  - develop：开发分支（origin from init）
+    - feature-app:司机端分支（origin from develop）
+    - feature-rfq:询报价分支（origin from develop）
 ## Project setup
 ```
 npm install

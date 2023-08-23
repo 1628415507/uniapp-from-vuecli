@@ -21,7 +21,7 @@
 				activeTab: this.$store.getters.activeTab,
 				tabList: [{
 						text: '报价',
-						name: 'quote',
+						name: 'home',
 						activeIcon: require('@/static/image/icons/quote-active.svg'),
 						inactiveIcon: require('@/static/image/icons/quote-inactive.svg'),
 						url: '/pages/home/index'

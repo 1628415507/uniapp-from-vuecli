@@ -33,28 +33,28 @@
 						<view class="content-middle">
 							<view class="content-middle__item flex">
 								<u-image class="img-icon" :src="require('@/static/image/icons/compass.svg')"
-									width="35rpx" height="35rpx"></u-image>
+									width="37rpx" height="37rpx"></u-image>
 								<text class="cm-txt">总里程 {{item.planTotalWeight}}</text>
 							</view>
 							<view class="content-middle__item flex">
-								<u-image class="img-icon" :src="require('@/static/image/icons/frame.svg')" width="35rpx"
-									height="35rpx"></u-image>
+								<u-image class="img-icon" :src="require('@/static/image/icons/frame.svg')" width="37rpx"
+									height="37rpx"></u-image>
 								<text class="cm-txt">运输方式 水运</text>
 							</view>
 						</view>
 						<view class="content-bottom">
 							<view class="flex-sb">
 								<view class="content-bottom__item">
-									<view class="label">计划总重量</view>
-									<view class="value">{{item.planTotalWeight ||'-'}} CT</view>
+									<view class="label">计划总数量</view>
+									<view class="value">{{item.planTotalQty ||'-'}} KG</view>
 								</view>
 								<view class="content-bottom__item">
 									<view class="label">计划总体积</view>
 									<view class="value">{{item.planTotalVolume ||'-'}} CDM</view>
 								</view>
 								<view class="content-bottom__item">
-									<view class="label">计划总数量</view>
-									<view class="value">{{item.planTotalQty ||'-'}} KG</view>
+									<view class="label">计划总重量</view>
+									<view class="value">{{item.planTotalWeight ||'-'}} CT</view>
 								</view>
 							</view>
 						</view>
@@ -275,6 +275,7 @@
 
 						.title {
 							font-size: 32rpx;
+							font-weight: 500;
 						}
 					}
 
