@@ -1,7 +1,7 @@
 /*
  * @Description: 参考：https://www.php.cn/faq/546267.html
  * @Date: 2023-08-03 17:35:50
- * @LastEditTime: 2023-08-04 17:17:33
+ * @LastEditTime: 2023-08-24 11:47:51
  */
 // 默认配置
 const baseConfig = {
@@ -30,7 +30,7 @@ const http = ({ method, url, data = {}, header }) => {
 			// 成功的回调
 			success: result => {
 				const res = result.data.data || {} // 返回的数据
-				console.log('http-result', result, res)
+				console.log('【请求成功】', result, res)
 				switch (res.status) {
 					case 200: // 请求成功
 						resolve(res)
@@ -49,7 +49,7 @@ const http = ({ method, url, data = {}, header }) => {
 			},
 			// 失败的回调
 			fail: fail => {
-				console.log('fail', fail)
+				console.log('【请求失败】', fail)
 				let errMsg
 				if (fail.errMsg.includes("timeout")) {
 					errMsg = '请求超时，请稍后重试'

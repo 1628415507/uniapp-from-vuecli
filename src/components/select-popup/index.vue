@@ -1,3 +1,8 @@
+<!--
+ * @Description: 选择控件-多选、单选
+ * @Date: 2023-08-05 11:40:54
+ * @LastEditTime: 2023-08-24 13:42:49
+-->
 <template>
 	<u-popup :show="visible" mode="bottom" :round="25" :closeOnClickOverlay="false" @close="handlePopupClose"
 		overlay="true" zIndex="1000000">
@@ -67,7 +72,7 @@
 				default: false
 			},
 			list: {
-				requird: true,
+				required: true,
 				type: Array,
 				default: () => []
 			},
@@ -76,17 +81,17 @@
 				default: '标题' // 初始化数据(默认选中的值)
 			},
 			defaultValue: {
-				requird: false,
+				required: false,
 				type: [String, Array, Number],
 				default: '' // 初始化数据(默认选中的值)
 			},
 			valueProp: {
-				requird: true,
+				required: true,
 				type: String,
 				default: 'value' // 值对应的字段(用作key，尽量选唯一值),默认value
 			},
 			labelProp: {
-				requird: true,
+				required: true,
 				type: String,
 				default: 'label' // 显示的字段，默认label
 			},
