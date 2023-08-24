@@ -12,7 +12,7 @@
 				<view v-if="title" class="title">{{title}}</view>
 				<view class="confirm" @click="confirm">确定</view>
 			</view>
-			<view class="list-wrap" :style="{height:'40vh'}">
+			<view class="select-list" :style="{height:'30vh'}">
 				<u-list @scrolltolower="scrollToLower" height="100%">
 					<u-list-item v-for="(item, index) in dataList" :key="index">
 						<view class="list-item" @click="clickItem(item,index)">
@@ -148,11 +148,16 @@
 			// 列表-触底
 			scrollToLower() {},
 			confirm() {
-				this.$emit('confirm', this.multiple ? this.checkArr : this.checkArr[0])
 				const checkItems = this.dataList.filter(item => {
 					return this.checkArr.includes(item[this.valueProp])
 				})
-				this.$emit('getInfo', checkItems) //TODO:只适合dataList是同步数据的场景
+				if (this.multiple) {
+					this.$emit('getInfo', checkItems) //TODO:只适合dataList是同步数据的场景
+					this.$emit('confirm', this.checkArr)
+				} else {
+					this.$emit('confirm', this.checkArr[0])
+					this.$emit('getInfo', checkItems[0]) //TODO:只适合dataList是同步数据的场景
+				}
 				this.handlePopupClose()
 			}
 		},
@@ -180,10 +185,10 @@
 	};
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.select-popup {
 		padding: 24rpx 32rpx;
-		max-height: 50vh;
+		max-height: 40vh;
 		color: #1D2129;
 
 		.content-top {
@@ -202,7 +207,7 @@
 			}
 		}
 
-		.list-wrap {
+		.select-list {
 			margin-top: 24rpx;
 
 			.list-item {
