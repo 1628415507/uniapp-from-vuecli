@@ -77,7 +77,7 @@
 		taskDetail,
 		signedNode,
 		uploadFile
-	} from '@/apis/loading-detail.js'
+	} from '@/apis/quoted-detail.js'
 	import {
 		validFloatNumber
 	} from '@/utils/validator.js'

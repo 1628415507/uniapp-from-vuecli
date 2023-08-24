@@ -12,14 +12,14 @@
                 },
                 {
                     "name": "报价详情",
-                    "pathName": "pages/sub-packages/loading-detail/index",
+                    "pathName": "pages/sub-packages/quoted-detail/index",
                     "query": "id=1",
                     "launchMode": "default",
                     "scene": null
                 },
                 {
                     "name": "任务详情",
-                    "pathName": "pages/sub-packages/loading-detail/detail",
+                    "pathName": "pages/sub-packages/quoted-detail/detail",
                     "query": "id=1",
                     "launchMode": "default",
                     "scene": null

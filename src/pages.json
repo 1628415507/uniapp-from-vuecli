@@ -59,7 +59,7 @@
 		}
 	],
 	"subPackages": [{
-			"root": "pages/sub-packages/loading-detail",
+			"root": "pages/sub-packages/quoted-detail",
 			"pages": [{
 					"path": "index",
 					"style": {

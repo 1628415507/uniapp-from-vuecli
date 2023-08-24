@@ -66,7 +66,7 @@
 	import {
 		getList,
 		updateNode
-	} from '@/apis/loading-detail.js'
+	} from '@/apis/quoted-detail.js'
 	import TabBar from '@/components/tab-bar'
 	const tempData = [{
 		mtsDispatchId: '1',
@@ -162,7 +162,7 @@
 				console.log('【 goUrl 】-168', type)
 				if (type === 'loading') {
 					uni.navigateTo({
-						url: `/pages/sub-packages/loading-detail/index?id=${item.mtsDispatchId}`
+						url: `/pages/sub-packages/quoted-detail/index?id=${item.mtsDispatchId}`
 					});
 				}
 			},

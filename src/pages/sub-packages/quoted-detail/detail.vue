@@ -100,7 +100,7 @@
 		taskDetail,
 		getAttachmentInfo,
 		getFile
-	} from '@/apis/loading-detail.js'
+	} from '@/apis/quoted-detail.js'
 
 	export default {
 		components: {},
