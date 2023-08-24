@@ -1,3 +1,8 @@
+<!--
+ * @Description: 选择控件-多选、单选
+ * @Date: 2023-08-05 11:40:54
+ * @LastEditTime: 2023-08-24 13:42:49
+-->
 <template>
 	<u-popup :show="visible" mode="bottom" :round="25" :closeOnClickOverlay="false" @close="handlePopupClose"
 		overlay="true" zIndex="1000000">
@@ -7,7 +12,7 @@
 				<view v-if="title" class="title">{{title}}</view>
 				<view class="confirm" @click="confirm">确定</view>
 			</view>
-			<view class="list-wrap" :style="{height:'40vh'}">
+			<view class="select-list" :style="{height:'30vh'}">
 				<u-list @scrolltolower="scrollToLower" height="100%">
 					<u-list-item v-for="(item, index) in dataList" :key="index">
 						<view class="list-item" @click="clickItem(item,index)">
@@ -67,7 +72,7 @@
 				default: false
 			},
 			list: {
-				requird: true,
+				required: true,
 				type: Array,
 				default: () => []
 			},
@@ -76,17 +81,17 @@
 				default: '标题' // 初始化数据(默认选中的值)
 			},
 			defaultValue: {
-				requird: false,
+				required: false,
 				type: [String, Array, Number],
 				default: '' // 初始化数据(默认选中的值)
 			},
 			valueProp: {
-				requird: true,
+				required: true,
 				type: String,
 				default: 'value' // 值对应的字段(用作key，尽量选唯一值),默认value
 			},
 			labelProp: {
-				requird: true,
+				required: true,
 				type: String,
 				default: 'label' // 显示的字段，默认label
 			},
@@ -143,11 +148,16 @@
 			// 列表-触底
 			scrollToLower() {},
 			confirm() {
-				this.$emit('confirm', this.multiple ? this.checkArr : this.checkArr[0])
 				const checkItems = this.dataList.filter(item => {
 					return this.checkArr.includes(item[this.valueProp])
 				})
-				this.$emit('getInfo', checkItems) //TODO:只适合dataList是同步数据的场景
+				if (this.multiple) {
+					this.$emit('getInfo', checkItems) //TODO:只适合dataList是同步数据的场景
+					this.$emit('confirm', this.checkArr)
+				} else {
+					this.$emit('confirm', this.checkArr[0])
+					this.$emit('getInfo', checkItems[0]) //TODO:只适合dataList是同步数据的场景
+				}
 				this.handlePopupClose()
 			}
 		},
@@ -175,10 +185,10 @@
 	};
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.select-popup {
 		padding: 24rpx 32rpx;
-		max-height: 50vh;
+		max-height: 40vh;
 		color: #1D2129;
 
 		.content-top {
@@ -197,7 +207,7 @@
 			}
 		}
 
-		.list-wrap {
+		.select-list {
 			margin-top: 24rpx;
 
 			.list-item {

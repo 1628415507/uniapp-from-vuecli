@@ -1,7 +1,7 @@
 <!--
  * @Description: 首页
  * @Date: 2023-08-04 09:27:20
- * @LastEditTime: 2023-08-22 09:25:17
+ * @LastEditTime: 2023-08-24 15:27:11
 -->
 <template>
 	<view class="home-page">
@@ -22,10 +22,10 @@
 									截止时间 {{item.createTime||'-'}}
 								</view>
 							</view>
-							<view v-if="dispatchStatus==='QUOTED'" class="content-top__right flex-c">
+							<view v-if="dispatchStatus==='COMPLETED'" class="content-top__right flex-c">
 								<view class="tag" :class="true?'tag--active':''">报价中</view>
 							</view>
-							<view v-else class="content-top__right">
+							<view v-if="dispatchStatus==='BIDING'" class="content-top__right">
 								<view class="num">{{index+1}}</view>
 								<view class="label">当前排名</view>
 							</view>
@@ -60,8 +60,8 @@
 						</view>
 					</view>
 					<view class="list-item__footer flex-sb">
-						<view class="btn-item" @click="goUrl(item,'loading')">弃标</view>
-						<view class="btn-item highlight" @click="handleItemClick(item)">
+						<view class="btn-item" @click="handleItemClick(item)">弃标</view>
+						<view class="btn-item highlight" @click="goUrl(item)">
 							去报价
 						</view>
 					</view>
@@ -71,8 +71,12 @@
 			</view>
 		</scroll-view>
 		<!-- 确认框 -->
-		<u-modal :show="confirmShow" content='是否确认操作?' :showCancelButton="true" :confirmColor="colorTheme"
-			@cancel="confirmShow=false" @confirm="confirmUpdateStatus">
+		<u-modal :show="confirmShow" :showCancelButton="true" :confirmColor="colorTheme" @cancel="confirmShow=false"
+			@confirm="confirmModal">
+			<view style="width: 100%;">
+				<view style="margin:10rpx 0">弃标理由：</view>
+				<u--textarea v-model="reason" placeholder="请输入"></u--textarea>
+			</view>
 		</u-modal>
 		<!-- 底部菜单栏 -->
 		<TabBar class="g-tabbar-wrap"></TabBar>
@@ -147,20 +151,20 @@
 				// 渐变样式类名
 				GRADIENT_CLASS: {
 					UNQUOTE: 'gradient--right',
-					QUOTED: 'gradient--center',
-					QUIT: 'gradient--left'
+					BIDING: 'gradient--center',
+					COMPLETED: 'gradient--left'
 				},
 				dispatchStatus: 'UNQUOTE',
 				subsectionList: [{
-						name: '未报价',
+						name: '待报价',
 						value: 'UNQUOTE',
 					},
 					{
-						name: '已报价',
-						value: 'QUOTED',
+						name: '待开标',
+						value: 'BIDING',
 					}, {
-						name: '弃标',
-						value: 'QUIT',
+						name: '已完成',
+						value: 'COMPLETED',
 					}
 				],
 				// 列表
@@ -168,7 +172,8 @@
 				dataList: [],
 				clickItem: {},
 				// 确认框
-				confirmShow: false
+				confirmShow: false,
+				reason: ""
 			}
 		},
 		onLoad() {
@@ -201,21 +206,26 @@
 					this.isRequired = true
 				})
 			},
-			// 装车详情
-			goUrl(item, type) {
-				console.log('【 goUrl 】-168', type)
-				if (type === 'loading') {
-					uni.navigateTo({
-						url: `/pages/sub-packages/quoted-detail/index?id=${item.mtsDispatchId}`
-					});
-				}
+			// 路径跳转
+			goUrl(item) {
+				uni.navigateTo({
+					url: `/pages/sub-packages/quoted-detail/index?id=${item.mtsDispatchId}`
+				});
 			},
 			handleItemClick(item) {
 				this.confirmShow = true
 				this.clickItem = item
 			},
 			// 更新节点状态
-			confirmUpdateStatus() {
+			confirmModal() {
+				if (!this.reason) {
+					uni.showToast({
+						icon: 'none',
+						title: '理由不能为空',
+						duration: 2000
+					})
+					return
+				}
 				const {
 					mtsDispatchId,
 					overallNextTaskStatus
@@ -362,12 +372,12 @@
 
 	// 向右渐变
 	.gradient--right {
-		background: linear-gradient(to right, rgba(0, 132, 116, 1), rgba(255, 255, 255, 0.3));
+		background: linear-gradient(to right, rgba(0, 132, 116, 1), rgba(0, 132, 116, 0.1));
 	}
 
 	// 向左渐变
 	.gradient--left {
-		background: linear-gradient(to left, rgba(0, 132, 116, 1), rgba(255, 255, 255, 0.3));
+		background: linear-gradient(to left, rgba(0, 132, 116, 1), rgba(0, 132, 116, 0.1));
 	}
 
 	// 中间向两头
@@ -382,19 +392,18 @@
 	.gradient--center:before {
 		content: "";
 		position: absolute;
-		z-index: inherit;
 		top: 0;
 		left: 0;
 		right: 50%;
 		height: 68rpx;
-		background-image: linear-gradient(to left, rgba(0, 132, 116, 1), rgba(255, 255, 255, 0.8)) !important;
+		background-image: linear-gradient(to left, rgba(0, 132, 116, 1), rgba(0, 132, 116, 0.1)) !important;
 		border-radius: 72rpx 0 0 72rpx;
 	}
 
 	.gradient--center:after {
 		content: "";
 		position: absolute;
-		background-image: linear-gradient(to right, rgba(0, 132, 116, 1), rgba(255, 255, 255, 0.8)) !important;
+		background-image: linear-gradient(to right, rgba(0, 132, 116, 1), rgba(0, 132, 116, 0.1)) !important;
 		top: 0;
 		left: 50%;
 		right: 0;

@@ -1,7 +1,7 @@
 <!--
  * @Description: 委托明细
  * @Date: 2023-08-18 16:55:29
- * @LastEditTime: 2023-08-24 09:36:59
+ * @LastEditTime: 2023-08-24 14:34:15
 -->
 <template>
 	<view class="task-detail-page">

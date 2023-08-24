@@ -32,13 +32,6 @@
                     "scene": null
                 },
                 {
-                    "name": "签收",
-                    "pathName": "pages/sub-packages/sign-in/index",
-                    "query": "id=1",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
                     "name": "已中标",
                     "pathName": "pages/bidding/index",
                     "query": "",

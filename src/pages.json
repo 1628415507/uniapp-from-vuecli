@@ -36,7 +36,7 @@
 		{
 			"path": "pages/home/index",
 			"style": {
-				"navigationBarTitleText": "询报价"
+				"navigationBarTitleText": "报价"
 			}
 		},
 		{
@@ -75,16 +75,6 @@
 					}
 				}
 			]
-		},
-		{
-			"root": "pages/sub-packages/sign-in",
-			"pages": [{
-				"path": "index",
-				"style": {
-					"navigationBarTitleText": "签收",
-					"enablePullDownRefresh": false
-				}
-			}]
 		},
 		{
 			"root": "pages/sub-packages/example",

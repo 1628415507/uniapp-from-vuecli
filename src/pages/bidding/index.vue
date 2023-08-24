@@ -1,7 +1,7 @@
 <!--
  * @Description: 已中标
  * @Date: 2023-08-23 10:56:33
- * @LastEditTime: 2023-08-23 15:13:32
+ * @LastEditTime: 2023-08-24 15:54:23
 -->
 <template>
 	<view class="bidding-page">

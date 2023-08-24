@@ -1,7 +1,7 @@
 <!--
  * @Description:报价详情
  * @Date: 2023-08-18 14:57:03
- * @LastEditTime: 2023-08-24 10:11:39
+ * @LastEditTime: 2023-08-24 17:15:36
 -->
 
 <template>
@@ -19,7 +19,7 @@
 						</text>
 					</view>
 					<view v-if="biddingStatus===BINDING_STATUS.QUOTING" class="countdown">
-						<u-count-down :time="30 * 60 * 60 * 1000" format="DD:HH:mm" autoStart @change="onChange">
+						<u-count-down :time="30 * 60 * 60 * 1000" format="DD:HH:mm" autoStart @change="countDownChange">
 							<view class="time flex">
 								<view class="time__item">{{ timeData.days }}</view>
 								<text class="time__txt">天</text>
@@ -41,33 +41,41 @@
 			<!-- 报价信息 -->
 			<view class="info-wrap">
 				<view class="box-title">报价信息</view>
-				<u-form-item label="税率" borderBottom>
-					<u--input v-if="biddingStatus===BINDING_STATUS.QUOTING" v-model="formData.signTime" readonly
-						placeholder="请选择" border="none" inputAlign="right"></u--input>
-					<u-icon v-if="biddingStatus===BINDING_STATUS.QUOTING" slot="right" name="arrow-right"
-						color="#86909C" @click="dateShow=true"></u-icon>
-					<view v-if="biddingStatus!==BINDING_STATUS.QUOTING" class="form-txt">8%</view>
+				<view class="form--required">
+					<u-form-item v-if="biddingStatus===BINDING_STATUS.QUOTING" label="税率" prop="taxRate" borderBottom
+						@click="showSelectPopup=true">
+						<u--input v-model="formData.taxRate" readonly placeholder="请选择" border="none"
+							inputAlign="right"></u--input>
+						<u-icon slot="right" name="arrow-right" color="#86909C"></u-icon>
+					</u-form-item>
+				</view>
+				<u-form-item v-if="biddingStatus!==BINDING_STATUS.QUOTING" label="税率" borderBottom>
+					<view class="form-txt">{{info.taxRate||'-'}}</view>
 				</u-form-item>
-				<u-form-item v-if="biddingStatus===BINDING_STATUS.QUOTING" label="含税总额" borderBottom labelPosition="top"
-					prop="signPcs">
-					<u--input v-model="formData.signPcs" type="digit" border="none" placeholder=" " prefixIcon="rmb"
-						prefixIconStyle="fontSize:48rpx;color:#4E5969" customStyle="marginTop:20rpx"
-						fontSize="48rpx"></u--input>
-				</u-form-item>
+				<view class="form--required">
+					<u-form-item v-if="biddingStatus===BINDING_STATUS.QUOTING" label="含税总额" borderBottom
+						labelPosition="top" prop="includingTaxPriceTotal">
+						<u--input v-model="formData.includingTaxPriceTotal" type="digit" border="none" placeholder=" "
+							prefixIcon="rmb" prefixIconStyle="fontSize:48rpx;color:#4E5969"
+							customStyle="marginTop:20rpx" fontSize="48rpx"></u--input>
+					</u-form-item>
+				</view>
 				<template v-if="biddingStatus!==BINDING_STATUS.QUOTING">
-					<u-form-item label="含税总额" prop="signPcs">
+					<u-form-item label="含税总额">
 						<view class="form-txt bold">657.456</view>
 					</u-form-item>
-					<u-form-item label="不含税总额" borderBottom prop="signPcs">
+					<u-form-item label="不含税总额" borderBottom>
 						<view class="form-txt bold">657.456</view>
 					</u-form-item>
 				</template>
-				<u-form-item label="报价说明" borderBottom class="form-label">
-					<u-textarea v-if="biddingStatus===BINDING_STATUS.QUOTING" v-model="formData.remark" border="none"
-						count maxlength="140" placeholder="请输入内容" height="100rpx" inputAlign="right"></u-textarea>
-					<view v-else class="txt">报价说明报价说明，报价说明报价说明 报价说明报价说明</view>
-				</u-form-item>
-				<u-form-item label="询价说明" borderBottom>
+				<view class="form--required">
+					<u-form-item label="报价说明" borderBottom class="form-label" prop="quotationExplain">
+						<u-textarea v-if="biddingStatus===BINDING_STATUS.QUOTING" v-model="formData.quotationExplain"
+							border="none" count maxlength="140" placeholder="请输入内容" height="100rpx"
+							inputAlign="right"></u-textarea>
+						<view v-else class="txt">报价说明报价说明，报价说明报价说明 报价说明报价说明</view>
+					</u-form-item>
+				</view> <u-form-item label="询价说明" borderBottom>
 					<view class="txt">报价说明报价说明，报价说明报价说明 报价说明报价说明</view>
 				</u-form-item>
 			</view>
@@ -127,7 +135,7 @@
 				<u-form-item label="询价日期" borderBottom>
 					<view class="form-txt">{{info.taskNo}}</view>
 				</u-form-item>
-				<u-form-item label="询价方" prop="signer" borderBottom>
+				<u-form-item label="询价方" borderBottom>
 					<view class="form-txt">{{info.taskNo}}</view>
 				</u-form-item>
 				<u-form-item label="询价有效期" borderBottom>
@@ -137,18 +145,29 @@
 		</u-form>
 		<view class="footer-btn flex-sb">
 			<view class="btn-item">
-				<u-button text="弃标" @click="cancel"></u-button>
+				<u-button text="弃标" @click="confirmShow = true"></u-button>
 			</view>
 			<view class="btn-item">
 				<u-button type="primary" text="提交报价" @click="submit"></u-button>
 			</view>
 		</view>
-		<u-datetime-picker ref="datetimePicker" :show="dateShow" v-model="date" mode="datetime" @cancel="dateShow=false"
-			@confirm="confirmDate" itemHeight="60" :confirmColor="colorTheme"></u-datetime-picker>
+		<!-- 确认框 -->
+		<u-modal :show="confirmShow" :showCancelButton="true" :confirmColor="colorTheme" @cancel="confirmShow=false"
+			@confirm="confirmModal">
+			<view style="width: 100%;">
+				<view style="margin:10rpx 0">弃标理由：</view>
+				<u--textarea v-model="reason" placeholder="请输入"></u--textarea>
+			</view>
+		</u-modal>
+		<!-- 下拉框 -->
+		<select-popup v-if="showSelectPopup" :show.sync="showSelectPopup" value-prop="value" label-prop="label"
+			:defaultValue="selectDefaultValue" :multiple="false" @getInfo="getSelectInfo" :list="selectList">
+		</select-popup>
 	</view>
 </template>
 
 <script>
+	import SelectPopup from "@/components/select-popup/index.vue";
 	import {
 		taskDetail,
 		signedNode,
@@ -158,59 +177,98 @@
 		validFloatNumber
 	} from '@/utils/validator.js'
 	export default {
-		components: {},
+		components: {
+			SelectPopup
+		},
 		data() {
 			return {
 				// 公共
 				loadInfo: {},
 				colorTheme: this.$store.getters.colorTheme,
-				dateShow: false,
-				biddingStatus: '3',
+				biddingStatus: '1',
 				BINDING_STATUS: {
 					QUOTING: '1', //待报价
-					QUOTED: '1', //已报价
+					QUOTED: '2', //已报价
 					END: '3' //竞价结束
 				},
 				// 倒计时
 				timeData: {},
-				// 搜索栏
-				// keyword: '',
 				// 表单
 				labelWidth: '170rpx',
 				labelStyle: {
 					color: '#4E5969 !important' //#4E5969
 				},
-				info: {},
 				date: Number(new Date()),
+				info: {},
 				formData: {
-					signPcs: '',
-					signVolume: '',
-					signWeight: '',
-					signMode: "SIGN",
-					signer: '',
-					signTime: '',
-					remark: ''
+					taxRate: '',
+					includingTaxPriceTotal: '',
+					quotationExplain: ''
 				},
 				formRules: {
-					'signPcs': {
-						validator: validFloatNumber,
-						trigger: ['blur', 'change']
-					},
-					'signVolume': {
-						validator: validFloatNumber,
-						trigger: ['blur', 'change']
-					},
-					'signWeight': {
-						validator: validFloatNumber,
-						trigger: ['blur', 'change']
-					},
-					'signMode': {
+					'taxRate': [{
 						type: 'string',
 						required: true,
-						message: '选择签收方式',
+						message: '请选择税率',
+						trigger: ['blur', 'change']
+					}],
+					'includingTaxPriceTotal': [{
+						type: 'string',
+						required: true,
+						message: '请输入含税总额',
+						trigger: ['blur', 'change']
+					}, {
+						validator: validFloatNumber,
+						trigger: ['blur', 'change']
+					}],
+					'quotationExplain': {
+						type: 'string',
+						required: true,
+						message: '请输入报价说明',
 						trigger: ['blur', 'change']
 					}
 				},
+				// 确认框
+				confirmShow: false,
+				reason: "",
+				// 下拉框
+				showSelectPopup: false,
+				selectDefaultValue: 1,
+				selectList: [{
+						label: '选项一',
+						value: 1
+					},
+					{
+						label: '选项二',
+						value: 2
+					},
+					{
+						label: '选项三',
+						value: 3
+					}, {
+						label: '禁用选项',
+						value: 4,
+						disabled: true,
+					},
+					{
+						label: '选项五',
+						value: 5
+					}, {
+						label: '选项六',
+						value: 6
+					}, {
+						label: '选项七',
+						value: 7
+					},
+					{
+						label: '选项八',
+						value: 8
+					}, {
+						label: '选项六',
+						value: 9
+					}
+				],
+
 			}
 		},
 		computed: {
@@ -224,36 +282,9 @@
 		},
 		onLoad(opt) {
 			this.loadInfo = opt
-			this.formData.signTime = this.formatter(Number(new Date()))
 			this.getDetailInfo(opt.id)
 		},
 		methods: {
-			goUrl(item = {}) {
-				uni.navigateTo({
-					url: `/pages/sub-packages/quoted-detail/detail?id=${item.mtsDispatchId}`
-				});
-			},
-			onChange(e) {
-				this.timeData = e
-			},
-			formatter(timestamp) {
-				const date = new Date(timestamp);
-				const year = date.getFullYear(); // 获取年份
-				const month = date.getMonth() + 1; // 获取月份（注意月份从0开始，需要加1）
-				const day = date.getDate(); // 获取日期
-				const hour = date.getHours(); // 获取小时
-				const minute = date.getMinutes(); // 获取分钟
-				const second = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds(); // 获取秒钟
-				const formattedTime = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-				console.log('【 formattedTime 】-166', formattedTime)
-				return formattedTime
-			},
-			confirmDate(date) {
-				console.log('【 date 】-171', date)
-				this.date = date.value
-				this.formData.signTime = this.formatter(date.value)
-				this.dateShow = false
-			},
 			getDetailInfo(id) {
 				taskDetail({
 					mtsTaskTmId: id
@@ -261,9 +292,43 @@
 					this.info = res.data || {}
 				})
 			},
-			cancel() {
-				uni.navigateBack({
-					delta: 1
+			goUrl(item) {
+				uni.navigateTo({
+					url: `/pages/sub-packages/quoted-detail/detail?id=${item.mtsDispatchId}`
+				});
+			},
+			countDownChange(e) {
+				this.timeData = e
+			},
+			// 确认弹框
+			confirmModal() {
+				if (!this.reason) {
+					uni.showToast({
+						icon: 'none',
+						title: '理由不能为空',
+						duration: 2000
+					})
+					return
+				}
+				const {
+					mtsDispatchId,
+					overallNextTaskStatus
+				} = this.clickItem
+				updateNode({
+					mtsDispatchId,
+					taskStatus: overallNextTaskStatus,
+				}).then(res => {
+					uni.showToast({
+						icon: 'none',
+						title: '操作成功',
+						duration: 2000
+					})
+					this.confirmShow = false
+					setTimeout(() => {
+						uni.navigateBack({
+							delta: 1
+						})
+					}, 300)
 				})
 			},
 			submit() {
@@ -286,6 +351,12 @@
 					})
 				});
 			},
+			getSelectInfo(info) {
+				this.formData.taxRate = info.label
+				this.selectDefaultValue = info.value
+				this.$refs.formRef.validateField('taxRate')
+				console.log('=下拉getSelectInfo==', info)
+			}
 		}
 	}
 </script>
@@ -295,11 +366,16 @@
 		background: linear-gradient(to bottom, #e8f3f5, #e6eff6) !important;
 	}
 
-	// ::v-deep .form-item .u-form-item__body__left {
-	// 	display: flex;
-	// 	flex-direction: row;
-	// 	align-items: flex-start !important;
-	// }
+	.form--required {
+		.u-form-item__body__left__content__label {
+			&::after {
+				content: '*';
+				margin-left: 5rpx;
+				color: red;
+			}
+		}
+	}
+
 	.bold {
 		font-weight: 600;
 		font-size: 35rpx;
