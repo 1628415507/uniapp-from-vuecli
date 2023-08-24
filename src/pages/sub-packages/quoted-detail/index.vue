@@ -1,7 +1,7 @@
 <!--
- * @Description:报价详情 
+ * @Description:报价详情
  * @Date: 2023-08-18 14:57:03
- * @LastEditTime: 2023-08-23 18:11:48
+ * @LastEditTime: 2023-08-24 10:11:39
 -->
 
 <template>
@@ -11,12 +11,14 @@
 			<!-- 倒计时 -->
 			<view class="time-wrap">
 				<view class="time-wrap__top flex-sb">
-					<view class="label flex-sb">
+					<view class="label flex">
 						<u-image :src="require('@/static/image/icons/trophy.svg')" width="48rpx"
 							height="48rpx"></u-image>
-						竞价剩余时间
+						<text style="margin-left: 15rpx;">
+							{{biddingStatus===BINDING_STATUS.END?'竞价结束':'竞价剩余时间'}}
+						</text>
 					</view>
-					<view class="countdown">
+					<view v-if="biddingStatus===BINDING_STATUS.QUOTING" class="countdown">
 						<u-count-down :time="30 * 60 * 60 * 1000" format="DD:HH:mm" autoStart @change="onChange">
 							<view class="time flex">
 								<view class="time__item">{{ timeData.days }}</view>
@@ -31,24 +33,39 @@
 				</view>
 				<view class="time-wrap__bottom">
 					<view class="value">2</view>
-					<view class="label">当前竞价排名</view>
+					<view class="label">
+						{{biddingStatus===BINDING_STATUS.END?'竞价排名':'当前竞价排名'}}
+					</view>
 				</view>
 			</view>
 			<!-- 报价信息 -->
 			<view class="info-wrap">
 				<view class="box-title">报价信息</view>
-				<u-form-item label="税率" borderBottom @click="dateShow=true">
-					<u--input v-model="formData.signTime" readonly placeholder="请选择" border="none"></u--input>
-					<u-icon slot="right" name="arrow-right" color="#86909C"></u-icon>
+				<u-form-item label="税率" borderBottom>
+					<u--input v-if="biddingStatus===BINDING_STATUS.QUOTING" v-model="formData.signTime" readonly
+						placeholder="请选择" border="none" inputAlign="right"></u--input>
+					<u-icon v-if="biddingStatus===BINDING_STATUS.QUOTING" slot="right" name="arrow-right"
+						color="#86909C" @click="dateShow=true"></u-icon>
+					<view v-if="biddingStatus!==BINDING_STATUS.QUOTING" class="form-txt">8%</view>
 				</u-form-item>
-				<u-form-item label="含税总额" borderBottom labelPosition="top" prop="signPcs">
+				<u-form-item v-if="biddingStatus===BINDING_STATUS.QUOTING" label="含税总额" borderBottom labelPosition="top"
+					prop="signPcs">
 					<u--input v-model="formData.signPcs" type="digit" border="none" placeholder=" " prefixIcon="rmb"
 						prefixIconStyle="fontSize:48rpx;color:#4E5969" customStyle="marginTop:20rpx"
 						fontSize="48rpx"></u--input>
 				</u-form-item>
-				<u-form-item label="报价说明" borderBottom class="form-lable">
-					<u-textarea v-model="formData.remark" border="none" count maxlength="140" placeholder="请输入内容"
-						height="100rpx"></u-textarea>
+				<template v-if="biddingStatus!==BINDING_STATUS.QUOTING">
+					<u-form-item label="含税总额" prop="signPcs">
+						<view class="form-txt bold">657.456</view>
+					</u-form-item>
+					<u-form-item label="不含税总额" borderBottom prop="signPcs">
+						<view class="form-txt bold">657.456</view>
+					</u-form-item>
+				</template>
+				<u-form-item label="报价说明" borderBottom class="form-label">
+					<u-textarea v-if="biddingStatus===BINDING_STATUS.QUOTING" v-model="formData.remark" border="none"
+						count maxlength="140" placeholder="请输入内容" height="100rpx" inputAlign="right"></u-textarea>
+					<view v-else class="txt">报价说明报价说明，报价说明报价说明 报价说明报价说明</view>
 				</u-form-item>
 				<u-form-item label="询价说明" borderBottom>
 					<view class="txt">报价说明报价说明，报价说明报价说明 报价说明报价说明</view>
@@ -65,7 +82,7 @@
 									height="40rpx"></u-image>
 								<text class="txt ellipsis">总里程 {{index||'-'}}</text>
 							</view>
-							<view class="flex">
+							<view class="flex" @click="goUrl(item)">
 								<text class="txt">水运</text>
 								<u-icon name="arrow-right" color="#86909C"></u-icon>
 							</view>
@@ -148,6 +165,12 @@
 				loadInfo: {},
 				colorTheme: this.$store.getters.colorTheme,
 				dateShow: false,
+				biddingStatus: '3',
+				BINDING_STATUS: {
+					QUOTING: '1', //待报价
+					QUOTED: '1', //已报价
+					END: '3' //竞价结束
+				},
 				// 倒计时
 				timeData: {},
 				// 搜索栏
@@ -205,6 +228,11 @@
 			this.getDetailInfo(opt.id)
 		},
 		methods: {
+			goUrl(item = {}) {
+				uni.navigateTo({
+					url: `/pages/sub-packages/quoted-detail/detail?id=${item.mtsDispatchId}`
+				});
+			},
 			onChange(e) {
 				this.timeData = e
 			},
@@ -215,7 +243,7 @@
 				const day = date.getDate(); // 获取日期
 				const hour = date.getHours(); // 获取小时
 				const minute = date.getMinutes(); // 获取分钟
-				const second = date.getSeconds(); // 获取秒钟
+				const second = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds(); // 获取秒钟
 				const formattedTime = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 				console.log('【 formattedTime 】-166', formattedTime)
 				return formattedTime
@@ -272,6 +300,11 @@
 	// 	flex-direction: row;
 	// 	align-items: flex-start !important;
 	// }
+	.bold {
+		font-weight: 600;
+		font-size: 35rpx;
+		color: #1D2129;
+	}
 
 	.detail-page {
 		position: relative;
@@ -337,19 +370,14 @@
 		}
 	}
 
-	::v-deep .form-lable .u-form-item__body__left {
-		display: flex;
-		flex-direction: row;
-		align-items: flex-start !important;
-	}
+	// ::v-deep .form-label .u-form-item__body__left {
+	// 	display: flex;
+	// 	flex-direction: row;
+	// 	align-items: flex-start !important;
+	// }
 
 	.info-wrap {
 		padding: 24rpx 32rpx;
-		// border-bottom: 2rpx solid #E5E6EB;
-
-		// &:last-child {
-		// 	border-bottom: none;
-		// }
 
 		.box-title {
 			margin-bottom: 24rpx;
