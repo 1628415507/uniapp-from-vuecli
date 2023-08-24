@@ -4,27 +4,36 @@
 	display: flex;
 	align-items: center;
 }
-// flex布局
+// flex横向布局
+// flex横向布局-两端
 .flex-sb {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-// 居中
-.flex-c{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-// flex布局
-.flex-wrap {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-}
+// flex布局-换行
 .flex-sb-wrap {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+}
+// flex横向布局-居中
+.flex-c{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+// flex布局-换行
+.flex-wrap {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+// flex纵向布局
+// flex纵向布局-居中
+.flex-col-sb {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }

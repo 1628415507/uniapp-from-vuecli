@@ -1,3 +1,8 @@
+/*
+ * @Description: 表单验证
+ * @Date: 2023-08-05 11:40:24
+ * @LastEditTime: 2023-08-24 17:52:46
+ */
 // 整数值
 export const validIntNumber = (rule, value, callback) => {
 	// // 上面有说，返回true表示校验通过，返回false表示不通过

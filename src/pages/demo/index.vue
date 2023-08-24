@@ -1,11 +1,10 @@
 <!--
  * @Description: 示例
  * @Date: 2023-08-04 11:42:45
- * @LastEditTime: 2023-08-17 10:32:49
+ * @LastEditTime: 2023-08-24 13:41:06
 -->
 <template>
 	<view>
-		<!-- <image class="logo" src="/static/logo.png"></image> -->
 		<!-- uView组件测试 -->
 		<u-line dashed margin="20rpx 0"></u-line>
 		<!-- vuex测试 -->
