@@ -1,12 +1,7 @@
 <!--
- * @Description: 
+ * @Description:  装车详情-任务详情
  * @Date: 2023-08-18 16:55:29
  * @LastEditTime: 2023-08-22 16:05:18
--->
-<!--
- * @Description: 装车详情-任务详情
- * @Date: 2023-08-17 18:29:58
- * @LastEditTime: 2023-08-21 16:52:33
 -->
 <template>
 	<view class="task-detail-page">
@@ -20,24 +15,22 @@
 				<u-icon name="scan" size="65rpx" color="#86909C"></u-icon>
 			</view>
 		</view> -->
-		<!-- 表单信息 -->
+		<!-- 订单信息 -->
 		<view class="info-wrap">
 			<view class="title">订单信息</view>
-			<u-form labelPosition="left" :model="info" ref="formRef">
-				<u-form-item label="任务单号:" :labelWidth="labelWidth" :labelStyle="labelStyle">
+			<u-form labelPosition="left" :model="info" ref="formRef" :labelWidth="labelWidth" :labelStyle="labelStyle">
+				<u-form-item label="任务单号:">
 					<view class="txt">{{info.taskNo}}</view>
 				</u-form-item>
-				<u-form-item label="任务状态：" :labelWidth="labelWidth" :labelStyle="labelStyle">
+				<u-form-item label="任务状态：">
 					<view class="txt" @click="call">
-						<!-- 	<u--text mode="phone" text="12345678900" color="#2572CC" size="28rpx" suffixIcon="phone"
-							:iconStyle="{color:'#2572CC'}"></u--text> -->
 						{{info.taskStatusName}}
 					</view>
 				</u-form-item>
-				<u-form-item label="起运地站点名称：" :labelWidth="labelWidth" :labelStyle="labelStyle">
+				<u-form-item label="起运地站点名称：">
 					<view class="txt"> {{info.originStationName}}</view>
 				</u-form-item>
-				<u-form-item label="目的地站点名称：" :labelWidth="labelWidth" :labelStyle="labelStyle">
+				<u-form-item label="目的地站点名称：">
 					<view class="txt"> {{info.destStationName}}</view>
 					<!-- <view class="txt flex">
 						<text style="color:#2572CC">{{info.destStationName}}</text>
@@ -46,13 +39,13 @@
 						</view>
 					</view> -->
 				</u-form-item>
-				<u-form-item label="任务货物件数：" :labelWidth="labelWidth" :labelStyle="labelStyle">
+				<u-form-item label="任务货物件数：">
 					<view class="txt">{{info.planTotalQty}} CT</view>
 				</u-form-item>
-				<u-form-item label="任务货物重量：" :labelWidth="labelWidth" :labelStyle="labelStyle">
+				<u-form-item label="任务货物重量：">
 					{{info.planTotalWeight}} KG
 				</u-form-item>
-				<u-form-item label="任务货物体积：" :labelWidth="labelWidth" :labelStyle="labelStyle">
+				<u-form-item label="任务货物体积：">
 					<view class="txt">{{info.planTotalVolume}} CDM</view>
 				</u-form-item>
 			</u-form>
@@ -82,10 +75,10 @@
 		<!-- 签收单管理 -->
 		<view class="info-wrap">
 			<view class="title">签收信息</view>
-			<view class="flex-sb-wrap">
-				<view v-for="item in fileList" :key="item.fileKey" class="img-wrap">
+			<view class="img-list">
+				<view v-for="item in fileList" :key="item.fileKey" class="img-item flex-c">
 					<u--image :src="item.imgUrl" width="128rpx" height="128rpx" style="margin-bottom:15rpx">
-						<view slot="error" style="font-size: 24rpx;">加载失败</view>
+						<!-- <view slot="error" style="font-size: 24rpx;">加载失败</view> -->
 					</u--image>
 				</view>
 
@@ -118,7 +111,6 @@
 				fileList: [{
 					url: 'https://cdn.uviewui.com/uview/swiper/1.jpg'
 				}],
-				fileKeyList: [],
 			}
 		},
 		onLoad(opt) {
@@ -130,17 +122,18 @@
 					mtsTaskTmId: id
 				}).then(res => {
 					this.info = res.data
+					// console.log('【 this.$config.baseUrl  】-141', this.$config, this.$config?.baseUrl)
 					getAttachmentInfo({
 						sourceOrderNo: this.info.taskNo,
 						sourceOrderType: 'SIGNED',
 					}).then(res => {
 						const fileList = res.data || []
-						// this.fileKeyList = res.data.map(item => item.fileKey)
-						fileList.forEach(item => {
-							getFile(item.fileKey).then(res => {
-								item.imgUrl = res || ''
-							})
-							this.fileList.push(item)
+						this.fileList = fileList.map(item => {
+							return {
+								...item,
+								imgUrl: `${this.$config.baseUrl}/filesystem/downloadFile/${item
+									.fileKey}`
+							}
 						})
 						console.log('this.fileList', this.fileList)
 					})
@@ -191,11 +184,11 @@
 		border-radius: 30rpx 30rpx 0 0;
 		font-size: 28rpx;
 
-		.search-wrap {
-			.scan-icon {
-				margin-left: 30rpx;
-			}
-		}
+		// .search-wrap {
+		// 	.scan-icon {
+		// 		margin-left: 30rpx;
+		// 	}
+		// }
 
 		.info-wrap {
 			padding: 24rpx 0;
@@ -216,9 +209,14 @@
 				color: #1D2129;
 			}
 
-			.img-wrap {
-				width: 128rpx;
-				margin-bottom: 15rpx;
+			.img-list {
+				display: grid;
+				grid-template-columns: repeat(4, 25%);
+				grid-row-gap: 20rpx;
+
+				.img-item {
+					width: 100%;
+				}
 			}
 		}
 	}

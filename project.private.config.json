@@ -37,6 +37,13 @@
                     "query": "id=1",
                     "launchMode": "default",
                     "scene": null
+                },
+                {
+                    "name": "任务详情",
+                    "pathName": "pages/sub-packages/loading-detail/detail",
+                    "query": "id=14",
+                    "launchMode": "default",
+                    "scene": null
                 }
             ]
         }
@@ -44,5 +51,6 @@
     "setting": {
         "urlCheck": false,
         "compileHotReLoad": false
-    }
+    },
+    "libVersion": "3.0.1"
 }

@@ -122,6 +122,7 @@
 		data() {
 			return {
 				// 公共
+				colorTheme: this.$store.getters.colorTheme,
 				// 异常上报
 				reportPopupShow: false,
 				// 列表
@@ -213,7 +214,6 @@
 					url: `/pages/sub-packages/loading-detail/detail?id=${item.mtsTaskTmId}`
 				});
 			},
-
 		}
 	}
 </script>

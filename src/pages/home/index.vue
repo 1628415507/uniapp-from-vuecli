@@ -85,11 +85,12 @@
 			</view>
 			<!-- 上拉加载更多 -->
 			<u-loadmore @loadmore="getDataList" :status="loadStatus" :loading-text="loadingText"
-				:loadmore-text="loadmoreText" :nomore-text="nomoreText" margin-top="30" />
+				:loadmore-text="loadmoreText" :nomore-text="nomoreText" margin-top="30" fontSize="30rpx"
+				iconSize="35rpx" lineColor="#fff" />
 		</scroll-view>
 		<!-- 确认框 -->
 		<u-modal :show="confirmShow" content='是否确认操作?' :showCancelButton="true" :confirmColor="colorTheme"
-			@cancel="confirmShow=false" @confirm="confirmUpdateStatus">
+			@cancel="confirmShow=false" @confirm="confirmUpdateStatus" line>
 		</u-modal>
 		<!-- 底部菜单栏 -->
 		<TabBar class="g-tabbar-wrap"></TabBar>
@@ -213,7 +214,8 @@
 					pageSize: this.pageSize,
 					dispatchStatus: this.dispatchStatus,
 				}).then(res => {
-					let newData = res.data.map((item) => {
+					const _res = res.data
+					let newData = _res.records.map((item) => {
 						return {
 							...item,
 							createTime: item.createTime.substring(0, 10),
@@ -234,7 +236,7 @@
 					// 	this.pageStatus(newData.length, this.dataList.length)
 					// }
 				}).catch(err => {
-					console.log(err)
+					console.error(err)
 					this.loadStatus = "nomore"
 					this.nomoreText = "加载失败"
 				}).finally(() => {
@@ -472,18 +474,18 @@
 
 	// 向右渐变
 	.gradient--right {
-		background: linear-gradient(to right, rgba(0, 132, 116, 1), rgba(0, 132, 116, 0.1));
+		background: linear-gradient(to right, rgba(0, 132, 116, 1), rgba(0, 132, 116, 0.1)) !important;
 	}
 
 	// 向左渐变
 	.gradient--left {
-		background: linear-gradient(to left, rgba(0, 132, 116, 1), rgba(0, 132, 116, 0.1));
+		background: linear-gradient(to left, rgba(0, 132, 116, 1), rgba(0, 132, 116, 0.1)) !important;
 	}
 
 	// 分段器-默认样式修改
 	::v-deep .home-page .subsection-wrap {
 		margin: 20rpx auto 32rpx auto;
-		height: 68rpx;
+		// height: 70rpx;
 		box-sizing: border-box;
 		// background: linear-gradient(90deg, rgba(0, 132, 116, 1), rgba(255, 255, 255, 0.3));
 		border-radius: 72rpx;

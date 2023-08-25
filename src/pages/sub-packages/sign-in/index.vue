@@ -1,7 +1,7 @@
 <!--
  * @Description: 首页-签收
  * @Date: 2023-08-17 10:26:18
- * @LastEditTime: 2023-08-22 11:11:00
+ * @LastEditTime: 2023-08-25 16:18:21
 -->
 
 <template>
@@ -81,6 +81,9 @@
 	import {
 		validFloatNumber
 	} from '@/utils/validator.js'
+	import {
+		formatterTime
+	} from '@/utils/methods.js'
 	export default {
 		components: {},
 		data() {
@@ -89,8 +92,6 @@
 				loadInfo: {},
 				colorTheme: this.$store.getters.colorTheme,
 				dateShow: false,
-				// 搜索栏
-				// keyword: '',
 				// 表单
 				labelWidth: '150rpx',
 				labelStyle: {
@@ -145,26 +146,14 @@
 		},
 		onLoad(opt) {
 			this.loadInfo = opt
-			this.formData.signTime = this.formatter(Number(new Date()))
+			this.formData.signTime = formatterTime(Number(new Date()))
 			this.getDetailInfo(opt.id)
 		},
 		methods: {
-			formatter(timestamp) {
-				const date = new Date(timestamp);
-				const year = date.getFullYear(); // 获取年份
-				const month = date.getMonth() + 1; // 获取月份（注意月份从0开始，需要加1）
-				const day = date.getDate(); // 获取日期
-				const hour = date.getHours(); // 获取小时
-				const minute = date.getMinutes(); // 获取分钟
-				const second = date.getSeconds(); // 获取秒钟
-				const formattedTime = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-				console.log('【 formattedTime 】-166', formattedTime)
-				return formattedTime
-			},
 			confirmDate(date) {
 				console.log('【 date 】-171', date)
 				this.date = date.value
-				this.formData.signTime = this.formatter(date.value)
+				this.formData.signTime = formatterTime(date.value)
 				this.dateShow = false
 			},
 			getDetailInfo(id) {
@@ -246,17 +235,17 @@
 			uploadFilePromise(url) {
 				console.log('【 url 】-240', url)
 				return new Promise((resolve, reject) => {
-					// TODO
 					let a = uni.uploadFile({
-						url: 'http://172.16.1.232:3000/mock/237/dip-imp-psm/filesystem/uploadFile', // 仅为示例，非真实的接口地址
+						url: `${this.$config.baseUrl}/filesystem/uploadFile`,
 						filePath: url,
 						name: 'file',
 						formData: {
-							sourceOrderNo: 'test'
+							sourceOrderNo: this.info.taskNo,
+							sourceOrderType: 'SIGNED',
 						},
 						success: (res) => {
 							setTimeout(() => {
-								resolve(res.data.data)
+								resolve(res.data)
 							}, 1000)
 						}
 					});
