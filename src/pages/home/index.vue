@@ -1,17 +1,18 @@
 <!--
  * @Description: 首页
  * @Date: 2023-08-04 09:27:20
- * @LastEditTime: 2023-08-22 09:25:17
+ * @LastEditTime: 2023-08-25 11:31:43
 -->
 <template>
 	<view class="home-page">
 		<!-- 状态栏 -->
-		<view class="subsection-wrap">
+		<view class="subsection-wrap" :class="GRADIENT_CLASS[dispatchStatus]">
 			<u-subsection :current="current" :list="subsectionList" mode="button" @change="sectionChange"
 				activeColor="#fff" fontSize="28rpx"></u-subsection>
 		</view>
 		<!-- 列表 -->
-		<scroll-view scroll-y="" :style="{height: 'calc(100vh - 265rpx)'}">
+		<scroll-view :scroll-y="true" :style="{height: 'calc(100vh - 265rpx)'}" @scroll="scroll"
+			@scrolltolower="scrollToLower" :scroll-top="scrollTop">
 			<view class="list-wrap">
 				<view class="list-item" v-for="(item,index) in dataList" :key="index">
 					<view class="list-item__content">
@@ -55,7 +56,7 @@
 								<text class="txt ellipsis">件数：{{item.planTotalQty ||'-'}} CT</text>
 							</view>
 							<view v-if="item.taskStationList.length>2" class="content-bottom__tips flex-c"
-								@click="handleExpand(item,index)">
+								@click="handleExpand(item)">
 								<view v-if="item.isExpand" class="content-bottom__tips-item flex-sb">
 									<view class="arrow-icon">
 										<u-icon name="arrow-left-double" color="#86909C" size="32"></u-icon>
@@ -79,9 +80,12 @@
 						</view>
 					</view>
 				</view>
-				<u-empty v-if='isRequired && (dataList.length === 0)' text="暂无数据" mode="list" margin-top="200"
-					iconSize="100" textSize="28rpx"></u-empty>
+				<!-- <u-empty v-if='isRequested && (dataList.length === 0)' text="暂无数据" mode="list" margin-top="200"
+					iconSize="100" textSize="28rpx"></u-empty> -->
 			</view>
+			<!-- 上拉加载更多 -->
+			<u-loadmore @loadmore="getDataList" :status="loadStatus" :loading-text="loadingText"
+				:loadmore-text="loadmoreText" :nomore-text="nomoreText" margin-top="30" />
 		</scroll-view>
 		<!-- 确认框 -->
 		<u-modal :show="confirmShow" content='是否确认操作?' :showCancelButton="true" :confirmColor="colorTheme"
@@ -93,6 +97,7 @@
 </template>
 
 <script>
+	import pageMixin from '@/mixin/pageMixin.js'
 	import {
 		getList,
 		updateNode
@@ -148,6 +153,7 @@
 		}]
 	}]
 	export default {
+		mixins: [pageMixin],
 		components: {
 			TabBar,
 		},
@@ -158,6 +164,11 @@
 				// 状态栏
 				current: 0,
 				dispatchStatus: 'EXECUTING',
+				// 渐变样式类名
+				GRADIENT_CLASS: {
+					EXECUTING: 'gradient--right',
+					COMPLETED: 'gradient--left'
+				},
 				subsectionList: [{
 					name: '未完成',
 					value: 'EXECUTING',
@@ -167,7 +178,7 @@
 				}],
 				locationInfo: {},
 				// 列表
-				isRequired: false, //是否请求完
+				isRequested: false, //是否请求完
 				dataList: [],
 				STATION_TYPE: {
 					UNLOAD: '卸',
@@ -180,7 +191,7 @@
 		},
 		onLoad() {
 			uni.hideTabBar() //隐藏原生的导航栏
-			this.getDataList()
+			this.getDataList(true)
 			// this.getLocationInfo()
 		},
 		methods: {
@@ -188,16 +199,21 @@
 			sectionChange(index) {
 				this.current = index;
 				this.dispatchStatus = this.subsectionList[index].value
-				this.getDataList()
+				this.getDataList(true)
+				this.goTop() //回到顶部
 			},
 			// 获取列表数据
-			getDataList() {
+			getDataList(isInit = false) {
 				// this.dataList = tempData
-				this.isRequired = false
+				this.isRequested = false
+				this.currentPage = isInit ? 1 : this.currentPage
+				this.loadStatus = 'loading'
 				getList({
-					dispatchStatus: this.dispatchStatus
+					currentPage: this.currentPage,
+					pageSize: this.pageSize,
+					dispatchStatus: this.dispatchStatus,
 				}).then(res => {
-					this.dataList = res.data.map(item => {
+					let newData = res.data.map((item) => {
 						return {
 							...item,
 							createTime: item.createTime.substring(0, 10),
@@ -207,8 +223,22 @@
 							isExpand: false, //默认收起
 						}
 					})
+					this.dataList = isInit ? newData : this.dataList.concat(newData)
+					console.log('【dataList】', this.dataList);
+					// 分页处理
+					this.pageStatus(newData.length, this.dataList.length)
+					// if (this.dataList.length > 20) {
+					// 	console.log('【33345345】', this.dataList);
+					// 	this.pageStatus(5, this.dataList.length)
+					// } else {
+					// 	this.pageStatus(newData.length, this.dataList.length)
+					// }
+				}).catch(err => {
+					console.log(err)
+					this.loadStatus = "nomore"
+					this.nomoreText = "加载失败"
 				}).finally(() => {
-					this.isRequired = true
+					this.isRequested = true
 				})
 			},
 			// 装车详情
@@ -226,7 +256,7 @@
 				// }
 			},
 			// 展开收起
-			handleExpand(item, index) {
+			handleExpand(item) {
 				this.$set(item, 'isExpand', !item.isExpand)
 			},
 			handleItemClick(item) {
@@ -304,7 +334,7 @@
 	}
 
 	.list-wrap {
-		padding-bottom: 50rpx;
+		padding-bottom: 30rpx;
 
 		.list-item {
 			margin-bottom: 24rpx;
@@ -440,11 +470,22 @@
 		}
 	}
 
+	// 向右渐变
+	.gradient--right {
+		background: linear-gradient(to right, rgba(0, 132, 116, 1), rgba(0, 132, 116, 0.1));
+	}
+
+	// 向左渐变
+	.gradient--left {
+		background: linear-gradient(to left, rgba(0, 132, 116, 1), rgba(0, 132, 116, 0.1));
+	}
+
 	// 分段器-默认样式修改
 	::v-deep .home-page .subsection-wrap {
 		margin: 20rpx auto 32rpx auto;
+		height: 68rpx;
 		box-sizing: border-box;
-		background: linear-gradient(90deg, rgba(0, 132, 116, 1), rgba(255, 255, 255, 0.3));
+		// background: linear-gradient(90deg, rgba(0, 132, 116, 1), rgba(255, 255, 255, 0.3));
 		border-radius: 72rpx;
 		padding: 2rpx;
 
