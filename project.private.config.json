@@ -45,5 +45,6 @@
         "urlCheck": false,
         "compileHotReLoad": true
     },
-    "projectname": "uniapp-from-vuecli-2"
+    "projectname": "uniapp-from-vuecli",
+    "libVersion": "3.0.1"
 }

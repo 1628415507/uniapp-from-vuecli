@@ -44,14 +44,14 @@ export function signedNode(data) {
 // 签收
 export function uploadFile(data) {
 	return request({
-		url: '/dip-imp-psm/filesystem/uploadFile',
+		url: '/filesystem/uploadFile',
 		method: 'post',
 		data
 	})
 }
 export function getAttachmentInfo(data) {
 	return request({
-		url: '/dip-imp-psm/filesystem/getAttachmentInfo',
+		url: '/filesystem/getAttachmentInfo',
 		method: 'get',
 		data,
 	})
@@ -59,7 +59,7 @@ export function getAttachmentInfo(data) {
 // 根据文件key下载分享文件
 export function getFile(fileKey) {
 	return request({
-		url: `/dip-imp-psm/share/filesystem/downloadFile/${fileKey}`,
+		url: `/share/filesystem/downloadFile/${fileKey}`,
 		method: 'get',
 	})
 }

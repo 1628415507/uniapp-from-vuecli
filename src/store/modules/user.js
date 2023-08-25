@@ -7,11 +7,13 @@ export default {
 	namespaced: true, // 为当前模块开启命名空间
 	// 模块的 state 数据
 	state: {
-		userName: 'admin',
-		userInfo: {}, // 用户信息,
+		// 系统配置
 		activeTab: 'home', //当前激活的tab
 		amapKey: '21d1f020389645ee420d864b9c20b70d', //高德地图小程序key
-		colorTheme: '#008474' //主题颜色
+		colorTheme: '#008474', //主题颜色
+		// 用户配置
+		userName: 'admin',
+		userInfo: {}, // 用户信息,
 	},
 	// 模块的 mutations 方法
 	mutations: {

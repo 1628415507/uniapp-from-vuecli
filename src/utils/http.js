@@ -3,10 +3,13 @@
  * @Date: 2023-08-03 17:35:50
  * @LastEditTime: 2023-08-24 18:13:53
  */
+import config from './config.js'
+// console.log('【 baseUrl 】-11', config, config.baseUrl)
 // 默认配置
 const baseConfig = {
+	baseUrl: config.baseUrl, //路径前缀
 	// baseUrl: 'http://172.16.6.246:8181', //路径前缀
-	baseUrl: 'http://172.16.1.232:3000/mock/237', //路径前缀
+	// baseUrl: 'http://172.16.6.246:8181', //路径前缀
 	// baseUrl: 'https://example.com', //mock路径前缀
 	// baseUrl: 'https://mocktset.com', //mock路径前缀
 	timeout: 5 * 1000,
@@ -20,7 +23,7 @@ const http = ({
 	data = {},
 	header
 }) => {
-	console.log('【 data 】-11', data)
+	// console.log('【 data 】-11', data, (baseConfig.baseUrl || '') + url)
 	// uni.addInterceptor()//请求拦截
 	return new Promise((resolve, reject) => {
 		uni.request({
@@ -38,7 +41,7 @@ const http = ({
 			// 成功的回调
 			success: result => {
 				const res = result.data || {} // 返回的数据
-				console.log('http-result', res)
+				// console.log('http-result', res)
 				if (res.success) {
 					resolve(res)
 				} else {
@@ -52,21 +55,6 @@ const http = ({
 					}
 					reject(res)
 				}
-				// switch (res.status) {
-				// 	case 200: // 请求成功
-				// 		resolve(res)
-				// 		break;
-				// 	default:
-				// if (res.message) {
-				// 	// console.log('message', res.message)
-				// 	uni.showToast({
-				// 		icon: 'none',
-				// 		title: res.message,
-				// 		duration: 2000
-				// 	})
-				// }
-				// reject(res)
-				// }
 			},
 			// 失败的回调
 			fail: fail => {
