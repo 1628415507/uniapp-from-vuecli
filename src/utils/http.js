@@ -40,8 +40,9 @@ const http = ({
 			// timeout: baseConfig.timeout, //请求超时
 			// 成功的回调
 			success: result => {
+				// resolve(result)
 				const res = result.data || {} // 返回的数据
-				// console.log('http-result', res)
+				// console.log('【请求成功】', res)
 				if (res.success) {
 					resolve(res)
 				} else {
@@ -58,7 +59,7 @@ const http = ({
 			},
 			// 失败的回调
 			fail: fail => {
-				console.log('fail', fail)
+				console.log('【请求失败】', fail)
 				let errMsg
 				if (fail.errMsg.includes("timeout")) {
 					errMsg = '请求超时，请稍后重试'

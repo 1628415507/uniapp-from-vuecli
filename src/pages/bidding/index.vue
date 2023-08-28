@@ -1,19 +1,21 @@
 <!--
  * @Description: 已中标
  * @Date: 2023-08-23 10:56:33
- * @LastEditTime: 2023-08-24 15:54:23
+ * @LastEditTime: 2023-08-28 13:47:38
 -->
 <template>
 	<view class="bidding-page">
 		<!-- 列表 -->
-		<scroll-view scroll-y="" :style="{height: 'calc(100vh - 150rpx)'}">
+		<scroll-view :scroll-y="true" :style="{height: 'calc(100vh - 150rpx)'}" @scroll="scroll"
+			@scrolltolower="scrollToLower" :scroll-top="scrollTop">
 			<view class="list-wrap">
 				<view class="list-item" v-for="(item,index) in dataList" :key="index">
 					<view class="list-item__content">
 						<view class="content-top flex-sb">
 							<view class="content-top__left flex-col-sb">
-								<text class="title ellipsis">询价标题</text>
+								<text class="title ellipsis">{{item.inquiryTitle}}</text>
 								<view class="price">
+									<!-- TODO:字段 -->
 									中标价格 {{index||'-'}}
 								</view>
 							</view>
@@ -22,12 +24,12 @@
 							<view class="content-middle__item flex">
 								<u-image class="img-icon" :src="require('@/static/image/icons/compass.svg')"
 									width="37rpx" height="37rpx"></u-image>
-								<text class="cm-txt">总里程 {{item.planTotalWeight}}</text>
+								<text class="cm-txt">总里程 {{item.totalMileage}}</text>
 							</view>
 							<view class="content-middle__item flex">
 								<u-image class="img-icon" :src="require('@/static/image/icons/frame.svg')" width="37rpx"
 									height="37rpx"></u-image>
-								<text class="cm-txt">运输方式 水运</text>
+								<text class="cm-txt">运输方式 {{item.transMode}}</text>
 							</view>
 						</view>
 						<view class="content-bottom">
@@ -47,77 +49,26 @@
 							</view>
 						</view>
 					</view>
-
 				</view>
-				<u-empty v-if='isRequired && (dataList.length === 0)' text="暂无数据" mode="list" margin-top="200"
-					iconSize="100" textSize="28rpx"></u-empty>
 			</view>
+			<u-loadmore @loadmore="getDataList" :status="loadStatus" :loading-text="loadingText"
+				:loadmore-text="loadmoreText" :nomore-text="nomoreText" margin-top="30" fontSize="30rpx"
+				iconSize="35rpx" lineColor="#fff" />
 		</scroll-view>
-		<!-- 确认框 -->
-		<u-modal :show="confirmShow" content='是否确认操作?' :showCancelButton="true" :confirmColor="colorTheme"
-			@cancel="confirmShow=false" @confirm="confirmUpdateStatus">
-		</u-modal>
 		<!-- 底部菜单栏 -->
 		<TabBar class="g-tabbar-wrap"></TabBar>
 	</view>
 </template>
 
 <script>
+	import pageMixin from '@/mixin/pageMixin.js'
 	import {
 		getList,
 		updateNode
 	} from '@/apis/quoted-detail.js'
 	import TabBar from '@/components/tab-bar'
-	const tempData = [{
-		mtsDispatchId: '1',
-		dispatchNo: 'CN091231231',
-		stationDatetime: '2023-12-12',
-		num: '0.00 CDM',
-		isExpand: false,
-		taskStationList: [{
-			stationName: '深圳龙湖分拨中心',
-			stationDatetime: '2023-12-12 12:12:12'
-		}, {
-			stationName: '厦门吉联分拨中心',
-			stationDatetime: '2023-12-12 12:12:12'
-		}, {
-			stationName: '厦门吉联分拨中心',
-			stationDatetime: '2023-12-12 12:12:12'
-		}]
-	}, {
-		mtsDispatchId: '2',
-		dispatchNo: 'CN091231231',
-		stationDatetime: '2023-12-12',
-		num: '0.00 CDM',
-		isExpand: false,
-		taskStationList: [{
-			stationName: '深圳龙湖分拨中心',
-			stationDatetime: '2023-12-12 12:12:12'
-		}, {
-			stationName: '厦门吉联分拨中心',
-			stationDatetime: '2023-12-12 12:12:12'
-		}, {
-			stationName: '厦门吉联分拨中心',
-			stationDatetime: '2023-12-12 12:12:12'
-		}]
-	}, {
-		mtsDispatchId: '3',
-		dispatchNo: 'CN091231231',
-		stationDatetime: '2023-12-12',
-		num: '0.00 CDM',
-		isExpand: false,
-		taskStationList: [{
-			stationName: '深圳龙湖分拨中心',
-			stationDatetime: '2023-12-12 12:12:12'
-		}, {
-			stationName: '厦门吉联分拨中心',
-			stationDatetime: '2023-12-12 12:12:12'
-		}, {
-			stationName: '厦门吉联分拨中心',
-			stationDatetime: '2023-12-12 12:12:12'
-		}]
-	}]
 	export default {
+		mixins: [pageMixin],
 		components: {
 			TabBar,
 		},
@@ -126,26 +77,27 @@
 				// 公共
 				colorTheme: this.$store.getters.colorTheme,
 				// 列表
-				isRequired: false, //是否请求完
-				dataList: [],
-				clickItem: {},
-				// 确认框
-				confirmShow: false
+				isRequested: false, //是否请求完
+				dataList: []
 			}
 		},
 		onLoad() {
 			uni.hideTabBar() //隐藏原生的导航栏
-			this.getDataList()
+			this.getDataList(true)
 		},
 		methods: {
 			// 获取列表数据
-			getDataList() {
-				// this.dataList = tempData
-				this.isRequired = false
+			getDataList(isInit = false) {
+				this.isRequested = false
+				this.currentPage = isInit ? 1 : this.currentPage
+				this.loadStatus = 'loading'
 				getList({
-					dispatchStatus: this.dispatchStatus
+					currentPage: this.currentPage,
+					pageSize: this.pageSize,
+					tabStatus: 'WINNING_BIDDER'
 				}).then(res => {
-					this.dataList = res.data.map(item => {
+					const _res = res.data
+					let newData = _res.records.map(item => {
 						return {
 							...item,
 							planTotalWeight: item.planTotalWeight.toFixed(2),
@@ -153,8 +105,16 @@
 							planTotalQty: item.planTotalQty.toFixed(2),
 						}
 					})
+					this.dataList = isInit ? newData : this.dataList.concat(newData)
+					console.log('【dataList】', this.dataList);
+					// 分页处理
+					this.pageStatus(newData.length, this.dataList.length)
+				}).catch(err => {
+					console.log(err)
+					this.loadStatus = "nomore"
+					this.nomoreText = "加载失败"
 				}).finally(() => {
-					this.isRequired = true
+					this.isRequested = true
 				})
 			},
 			// 路径跳转
@@ -165,30 +125,7 @@
 						url: `/pages/sub-packages/quoted-detail/index?id=${item.mtsDispatchId}`
 					});
 				}
-			},
-			handleItemClick(item) {
-				this.confirmShow = true
-				this.clickItem = item
-			},
-			// 更新节点状态
-			confirmUpdateStatus() {
-				const {
-					mtsDispatchId,
-					overallNextTaskStatus
-				} = this.clickItem
-				updateNode({
-					mtsDispatchId,
-					taskStatus: overallNextTaskStatus,
-				}).then(res => {
-					uni.showToast({
-						icon: 'none',
-						title: '操作成功',
-						duration: 2000
-					})
-					this.getDataList()
-					this.confirmShow = false
-				})
-			},
+			}
 		}
 	}
 </script>

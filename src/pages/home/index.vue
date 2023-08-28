@@ -1,12 +1,12 @@
 <!--
  * @Description: 首页
  * @Date: 2023-08-04 09:27:20
- * @LastEditTime: 2023-08-25 18:22:29
+ * @LastEditTime: 2023-08-28 10:58:13
 -->
 <template>
 	<view class="home-page">
 		<!-- 状态栏 -->
-		<view class="subsection-wrap" :class="GRADIENT_CLASS[dispatchStatus]">
+		<view class="subsection-wrap" :class="GRADIENT_CLASS[tabStatus]">
 			<u-subsection :current="current" :list="subsectionList" mode="button" @change="sectionChange"
 				activeColor="#fff" fontSize="28rpx"></u-subsection>
 		</view>
@@ -14,20 +14,23 @@
 		<scroll-view :scroll-y="true" :style="{height: 'calc(100vh - 265rpx)'}" @scroll="scroll"
 			@scrolltolower="scrollToLower" :scroll-top="scrollTop">
 			<view class="list-wrap">
-				<view class="list-item" v-for="(item,index) in dataList" :key="index">
+				<view class="list-item" v-for="(item) in dataList" :key="item.scctQuotationId">
 					<view class="list-item__content">
 						<view class="content-top flex-sb">
 							<view class="content-top__left flex-col-sb">
-								<text class="title ellipsis">询价标题</text>
+								<text class="title ellipsis">{{item.inquiryTitle}}</text>
 								<view class="label">
-									截止时间 {{item.createTime||'-'}}
+									截止时间 {{item.quotationDeadline||'-'}}
 								</view>
 							</view>
-							<view v-if="dispatchStatus==='COMPLETED'" class="content-top__right flex-c">
-								<view class="tag" :class="true?'tag--active':''">报价中</view>
+							<view v-if="tabStatus==='QUOTATION_STATUS_END'" class="content-top__right flex-c">
+								<!-- TODO:状态值、判断 -->
+								<view class="tag" :class="true?'tag--active':''">
+									{{QUOTATION_STATUS[item.quotationStatus]||'-'}}
+								</view>
 							</view>
-							<view v-if="dispatchStatus==='BIDING'" class="content-top__right">
-								<view class="num">{{index+1}}</view>
+							<view v-if="tabStatus==='HAVE_QUOTATION_NOT_END'" class="content-top__right">
+								<view class="num">{{item.ranking}}</view>
 								<view class="label">当前排名</view>
 							</view>
 						</view>
@@ -35,12 +38,13 @@
 							<view class="content-middle__item flex">
 								<u-image class="img-icon" :src="require('@/static/image/icons/compass.svg')"
 									width="37rpx" height="37rpx"></u-image>
-								<text class="cm-txt">总里程 {{item.planTotalWeight}}</text>
+								<text class="cm-txt">总里程 {{item.totalMileage}}</text>
 							</view>
 							<view class="content-middle__item flex">
 								<u-image class="img-icon" :src="require('@/static/image/icons/frame.svg')" width="37rpx"
 									height="37rpx"></u-image>
-								<text class="cm-txt">运输方式 水运</text>
+								<!-- TODO:中文 -->
+								<text class="cm-txt">运输方式 {{item.transModeName||'-'}}</text>
 							</view>
 						</view>
 						<view class="content-bottom">
@@ -70,7 +74,7 @@
 				<!-- 	<u-empty v-if='isRequested && (dataList.length === 0)' text="暂无数据" mode="list" margin-top="200"
 					iconSize="100" textSize="28rpx"></u-empty> -->
 			</view>
-		<u-loadmore @loadmore="getDataList" :status="loadStatus" :loading-text="loadingText"
+			<u-loadmore @loadmore="getDataList" :status="loadStatus" :loading-text="loadingText"
 				:loadmore-text="loadmoreText" :nomore-text="nomoreText" margin-top="30" fontSize="30rpx"
 				iconSize="35rpx" lineColor="#fff" />
 		</scroll-view>
@@ -91,7 +95,7 @@
 	import pageMixin from '@/mixin/pageMixin.js'
 	import {
 		getList,
-		updateNode
+		abandoningBid
 	} from '@/apis/quoted-detail.js'
 	import TabBar from '@/components/tab-bar'
 	export default {
@@ -107,27 +111,32 @@
 				current: 0,
 				// 渐变样式类名
 				GRADIENT_CLASS: {
-					UNQUOTE: 'gradient--right',
-					BIDING: 'gradient--center',
-					COMPLETED: 'gradient--left'
+					NOT_QUOTATION: 'gradient--right',
+					HAVE_QUOTATION_NOT_END: 'gradient--center',
+					QUOTATION_STATUS_END: 'gradient--left'
 				},
-				dispatchStatus: 'UNQUOTE',
+				tabStatus: 'NOT_QUOTATION',
 				subsectionList: [{
 						name: '待报价',
-						value: 'UNQUOTE',
+						value: 'NOT_QUOTATION',
 					},
 					{
 						name: '待开标',
-						value: 'BIDING',
+						value: 'HAVE_QUOTATION_NOT_END',
 					}, {
 						name: '已完成',
-						value: 'COMPLETED',
+						value: 'QUOTATION_STATUS_END',
 					}
 				],
 				// 列表
 				isRequested: false, //是否请求完
 				dataList: [],
 				clickItem: {},
+				QUOTATION_STATUS: {
+					30: '已中标',
+					40: '未中标',
+					50: '弃标',
+				},
 				// 确认框
 				confirmShow: false,
 				reason: ""
@@ -141,24 +150,22 @@
 			// 完成状态切换
 			sectionChange(index) {
 				this.current = index;
-				this.dispatchStatus = this.subsectionList[index].value
+				this.tabStatus = this.subsectionList[index].value
 				this.getDataList(true)
-				this.goTop() //回到顶部
 
 			},
 			// 获取列表数据
-			getDataList(isInit=false) {
-				// this.dataList = tempData
+			getDataList(isInit = false) {
 				this.isRequested = false
 				this.currentPage = isInit ? 1 : this.currentPage
 				this.loadStatus = 'loading'
 				getList({
 					currentPage: this.currentPage,
 					pageSize: this.pageSize,
-					dispatchStatus: this.dispatchStatus
+					tabStatus: this.tabStatus
 				}).then(res => {
-						const _res = res.data
-					  let newData = _res.records.map(item => {
+					const _res = res.data
+					let newData = _res.records.map(item => {
 						return {
 							...item,
 							planTotalWeight: item.planTotalWeight.toFixed(2),
@@ -167,7 +174,8 @@
 						}
 					})
 					this.dataList = isInit ? newData : this.dataList.concat(newData)
-					console.log('【dataList】', this.dataList);
+					isInit && this.goTop() //回到顶部
+					// console.log('【dataList】', this.dataList);
 					// 分页处理
 					this.pageStatus(newData.length, this.dataList.length)
 				}).catch(err => {
@@ -181,37 +189,35 @@
 			// 路径跳转
 			goUrl(item) {
 				uni.navigateTo({
-					url: `/pages/sub-packages/quoted-detail/index?id=${item.mtsDispatchId}`
+					url: `/pages/sub-packages/quoted-detail/index?scctInquiryId=${item.scctInquiryId}&scctQuotationId=${item.scctQuotationId}`
 				});
 			},
 			handleItemClick(item) {
+				this.reason = ''
 				this.confirmShow = true
 				this.clickItem = item
 			},
-			// 更新节点状态
+			// 确认弹框
 			confirmModal() {
 				if (!this.reason) {
 					uni.showToast({
 						icon: 'none',
-						title: '理由不能为空',
+						title: '弃标理由必填',
 						duration: 2000
 					})
 					return
 				}
-				const {
-					mtsDispatchId,
-					overallNextTaskStatus
-				} = this.clickItem
-				updateNode({
-					mtsDispatchId,
-					taskStatus: overallNextTaskStatus,
+				abandoningBid({
+					scctInquiryId: this.clickItem.scctInquiryId, //询价管理主键
+					reason: this.reason,
 				}).then(res => {
+					// TODO:返回格式
 					uni.showToast({
 						icon: 'none',
 						title: '操作成功',
 						duration: 2000
 					})
-					this.getDataList()
+					this.getDataList(true)
 					this.confirmShow = false
 				})
 			},
@@ -253,17 +259,21 @@
 					height: 85rpx;
 
 					.content-top__left {
+						max-width: 80%;
 						height: 100%;
 
 						.title {
+							width: 100%;
 							font-size: 32rpx;
 							font-weight: 500;
 						}
 					}
 
 					.content-top__right {
+						max-width: 25%;
 						height: 100%;
 						text-align: center;
+						overflow: hidden;
 
 						.num {
 							font-size: 43rpx;
@@ -342,6 +352,8 @@
 		}
 	}
 
+	$subsectionH: 68rpx;
+
 	// 向右渐变
 	.gradient--right {
 		background: linear-gradient(to right, rgba(0, 132, 116, 1), rgba(0, 132, 116, 0.1));
@@ -367,7 +379,7 @@
 		top: 0;
 		left: 0;
 		right: 50%;
-		height: 68rpx;
+		height: $subsectionH;
 		background-image: linear-gradient(to left, rgba(0, 132, 116, 1), rgba(0, 132, 116, 0.1)) !important;
 		border-radius: 72rpx 0 0 72rpx;
 	}
@@ -379,13 +391,14 @@
 		top: 0;
 		left: 50%;
 		right: 0;
-		height: 68rpx;
+		height: $subsectionH;
 		border-radius: 0 72rpx 72rpx 0;
 	}
 
+
 	::v-deep .home-page .subsection-wrap {
 		margin: 20rpx auto 32rpx auto;
-		height: 68rpx;
+		height: $subsectionH;
 		box-sizing: border-box;
 		border-radius: 72rpx;
 		padding: 2rpx;
@@ -394,6 +407,8 @@
 			background-color: rgba(255, 255, 255, 0.8) !important;
 			border-radius: 72rpx !important;
 			z-index: 999;
+			box-sizing: border-box;
+			height: 64rpx !important;
 
 			.u-subsection__item {
 				border-radius: 72rpx !important;

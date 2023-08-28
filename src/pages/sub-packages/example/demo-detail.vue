@@ -20,39 +20,23 @@
 			:defaultValue="selectDefaultValue" :multiple="true" @confirm="getSelectVal" @getInfo="getSelectInfo"
 			:list="tempData">
 		</select-popup>
-
-		<!-- 组合输入框 -->
-		<u-divider text="组合输入框" lineColor="#2979ff" textColor="#2979ff"></u-divider>
-		<input-group :source.sync="formData.sealNo" :scannable="true"
-			@handleDataChange="(val) => handleDataChange(val,'sealNo')" />
-		<associate-input-group :source.sync="formData.gcon" :scannable="true"
-			@handleDataChange="(val) => handleDataChange(val,'gcon')" />
 		<!-- echarts -->
 		<u-divider text="echarts图表" lineColor="#2979ff" textColor="#2979ff"></u-divider>
 		<!-- 折线图 -->
 		<view class="content-line">
 			<!-- <lineEcharts canvasId="publicReport" :dateList="lineData"></lineEcharts> -->
 		</view>
-		<!-- 暂无数据 -->
-		<u-divider text="暂无数据" lineColor="#2979ff" textColor="#2979ff"></u-divider>
-		<Empty title="暂无数据"></Empty>
 	</view>
 </template>
 
 <script>
 	import AssociatePopup from "@/components/associate-popup/index.vue";
 	import SelectPopup from "@/components/select-popup/index.vue";
-	import InputGroup from "@/components/input-group/input-group.vue";
-	import AssociateInputGroup from "@/components/input-group/associate-input-group.vue";
-	import Empty from "@/components/empty/index.vue";
 	import lineEcharts from './component/line-echarts.vue'
 	export default {
 		components: {
 			AssociatePopup,
 			SelectPopup,
-			InputGroup,
-			AssociateInputGroup,
-			Empty,
 			lineEcharts
 		},
 		data() {

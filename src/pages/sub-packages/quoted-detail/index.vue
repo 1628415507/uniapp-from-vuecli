@@ -1,7 +1,7 @@
 <!--
  * @Description:报价详情
  * @Date: 2023-08-18 14:57:03
- * @LastEditTime: 2023-08-24 17:15:36
+ * @LastEditTime: 2023-08-28 11:08:05
 -->
 
 <template>
@@ -19,7 +19,7 @@
 						</text>
 					</view>
 					<view v-if="biddingStatus===BINDING_STATUS.QUOTING" class="countdown">
-						<u-count-down :time="30 * 60 * 60 * 1000" format="DD:HH:mm" autoStart @change="countDownChange">
+						<u-count-down :time="countdownTime" format="DD:HH:mm" autoStart @change="countDownChange">
 							<view class="time flex">
 								<view class="time__item">{{ timeData.days }}</view>
 								<text class="time__txt">天</text>
@@ -62,10 +62,10 @@
 				</view>
 				<template v-if="biddingStatus!==BINDING_STATUS.QUOTING">
 					<u-form-item label="含税总额">
-						<view class="form-txt bold">657.456</view>
+						<view class="form-txt bold">{{info.includingTaxPriceTotal}}</view>
 					</u-form-item>
 					<u-form-item label="不含税总额" borderBottom>
-						<view class="form-txt bold">657.456</view>
+						<view class="form-txt bold">{{info.excludingTaxPriceTotal}}</view>
 					</u-form-item>
 				</template>
 				<view class="form--required">
@@ -73,25 +73,25 @@
 						<u-textarea v-if="biddingStatus===BINDING_STATUS.QUOTING" v-model="formData.quotationExplain"
 							border="none" count maxlength="140" placeholder="请输入内容" height="100rpx"
 							inputAlign="right"></u-textarea>
-						<view v-else class="txt">报价说明报价说明，报价说明报价说明 报价说明报价说明</view>
+						<view v-else class="txt">{{info.quotationExplain}}</view>
 					</u-form-item>
 				</view> <u-form-item label="询价说明" borderBottom>
-					<view class="txt">报价说明报价说明，报价说明报价说明 报价说明报价说明</view>
+					<view class="txt">{{info.inquiryExplain}}</view>
 				</u-form-item>
 			</view>
 			<!-- 委托明细 -->
 			<view class="info-wrap">
 				<view class="box-title">委托明细</view>
 				<view class="list-wrap">
-					<view class="list-item" v-for="(item,index) in 2" :key="index">
+					<view class="list-item" v-for="(item,index) in info.inquiryDetailsVoList" :key="index">
 						<view class="content-top flex-sb">
-							<view class="flex">
-								<u-image :src="require('@/static/image/icons/compass-light.svg')" width="40rpx"
-									height="40rpx"></u-image>
-								<text class="txt ellipsis">总里程 {{index||'-'}}</text>
+							<u-image :src="require('@/static/image/icons/compass-light.svg')" width="40rpx"
+								height="40rpx"></u-image>
+							<view style="width:100%" class="content-top__item flex-sb">
+								<text class="txt ellipsis">总里程 {{item.totalMileage||'-'}}</text>
+								<text class="txt ellipsis">{{item.transMode}}</text>
 							</view>
-							<view class="flex" @click="goUrl(item)">
-								<text class="txt">水运</text>
+							<view style="width:30rpx" @click="goUrl(item)">
 								<u-icon name="arrow-right" color="#86909C"></u-icon>
 							</view>
 						</view>
@@ -99,25 +99,25 @@
 							<view class="flex-sb">
 								<view class="content-middle__item">
 									<view class="label">计划总数量</view>
-									<view>{{item.planTotalQty ||'-'}} KG</view>
+									<view class="ellipsis">{{item.planTotalQty ||'-'}} KG</view>
 								</view>
 								<view class="content-middle__item">
 									<view class="label">计划总体积</view>
-									<view>{{item.planTotalVolume ||'-'}} CDM</view>
+									<view class="ellipsis">{{item.planTotalVolume ||'-'}} CDM</view>
 								</view>
 								<view class="content-middle__item">
 									<view class="label">计划总重量</view>
-									<view>{{item.planTotalWeight ||'-'}} CT</view>
+									<view class="ellipsis">{{item.planTotalWeight ||'-'}} CT</view>
 								</view>
 							</view>
 						</view>
 						<view class="content-bottom">
 							<view class="g-steps-wrap">
 								<u-steps :current="0" direction="column">
-									<u-steps-item title="深圳龙湖分拨中心" desc="起运地">
+									<u-steps-item :title="item.originName" desc="起运地">
 										<text slot="icon" class="steps-icon blue">装</text>
 									</u-steps-item>
-									<u-steps-item title="深圳龙湖分拨中心分拨中心分拨中心" desc="目的地">
+									<u-steps-item :title="item.destName" desc="目的地">
 										<text slot="icon" class="steps-icon">卸</text>
 									</u-steps-item>
 								</u-steps>
@@ -130,16 +130,16 @@
 			<view class="info-wrap">
 				<view class="box-title">询价信息</view>
 				<u-form-item label="询价标题" borderBottom>
-					<view class="form-txt">{{info.dispatchNo}}</view>
+					<view class="form-txt">{{info.inquiryTitle}}</view>
 				</u-form-item>
 				<u-form-item label="询价日期" borderBottom>
-					<view class="form-txt">{{info.taskNo}}</view>
+					<view class="form-txt">{{info.inquiryDate}}</view>
 				</u-form-item>
 				<u-form-item label="询价方" borderBottom>
-					<view class="form-txt">{{info.taskNo}}</view>
+					<view class="form-txt">{{info.inquirer}}</view>
 				</u-form-item>
 				<u-form-item label="询价有效期" borderBottom>
-					<view class="form-txt">{{info.taskNo}}</view>
+					<view class="form-txt">{{info.inquiryValidityDate}}</view>
 				</u-form-item>
 			</view>
 		</u-form>
@@ -169,9 +169,9 @@
 <script>
 	import SelectPopup from "@/components/select-popup/index.vue";
 	import {
-		taskDetail,
-		signedNode,
-		uploadFile
+		quotationDetail,
+		quotationSave,
+		abandoningBid
 	} from '@/apis/quoted-detail.js'
 	import {
 		validFloatNumber
@@ -192,26 +192,27 @@
 					END: '3' //竞价结束
 				},
 				// 倒计时
+				countdownTime: 0,
 				timeData: {},
 				// 表单
 				labelWidth: '170rpx',
 				labelStyle: {
-					color: '#4E5969 !important' //#4E5969
+					color: '#4E5969 !important'
 				},
-				date: Number(new Date()),
 				info: {},
 				formData: {
 					taxRate: '',
 					includingTaxPriceTotal: '',
+					excludingTaxPriceTotal: '', //
 					quotationExplain: ''
 				},
 				formRules: {
-					'taxRate': [{
-						type: 'string',
+					'taxRate': {
+						type: 'number',
 						required: true,
 						message: '请选择税率',
 						trigger: ['blur', 'change']
-					}],
+					},
 					'includingTaxPriceTotal': [{
 						type: 'string',
 						required: true,
@@ -268,7 +269,6 @@
 						value: 9
 					}
 				],
-
 			}
 		},
 		computed: {
@@ -281,15 +281,17 @@
 			this.$refs.formRef.setRules(this.formRules)
 		},
 		onLoad(opt) {
+			console.log('=loadInfo==', opt)
 			this.loadInfo = opt
-			this.getDetailInfo(opt.id)
+			this.getDetailInfo(opt.scctInquiryId)
 		},
 		methods: {
 			getDetailInfo(id) {
-				taskDetail({
-					mtsTaskTmId: id
+				quotationDetail({
+					scctInquiryId: id
 				}).then(res => {
 					this.info = res.data || {}
+					this.countdownTime = 30 * 60 * 60 * 1000 //this.info.inquiryValidityDate
 				})
 			},
 			goUrl(item) {
@@ -305,18 +307,14 @@
 				if (!this.reason) {
 					uni.showToast({
 						icon: 'none',
-						title: '理由不能为空',
+						title: '弃标理由必填',
 						duration: 2000
 					})
 					return
 				}
-				const {
-					mtsDispatchId,
-					overallNextTaskStatus
-				} = this.clickItem
-				updateNode({
-					mtsDispatchId,
-					taskStatus: overallNextTaskStatus,
+				abandoningBid({
+					scctInquiryId: this.loadInfo.scctInquiryId,
+					reason: this.reason,
 				}).then(res => {
 					uni.showToast({
 						icon: 'none',
@@ -333,10 +331,15 @@
 			},
 			submit() {
 				this.$refs.formRef?.validate().then(res => {
-					signedNode({
-						mtsTaskTmId: this.loadInfo.id,
-						taskStatus: this.info.taskStatus,
-						...this.formData
+					const {
+						includingTaxPriceTotal,
+						taxRate
+					} = this.formData
+					quotationSave({
+						scctInquiryId: this.loadInfo.scctInquiryId,
+						scctQuotationId: this.loadInfo.scctQuotationId,
+						...this.formData,
+						excludingTaxPriceTotal: includingTaxPriceTotal - includingTaxPriceTotal * taxRate
 					}).then(res => {
 						uni.showToast({
 							icon: 'none',
@@ -352,9 +355,13 @@
 				});
 			},
 			getSelectInfo(info) {
-				this.formData.taxRate = info.label
+				// this.formData.taxRate = info.label
+				this.formData.taxRate = info.value
 				this.selectDefaultValue = info.value
 				this.$refs.formRef.validateField('taxRate')
+				// this.$nextTick(() => {
+				// 	this.$refs.formRef.validateField('taxRate')
+				// })
 				console.log('=下拉getSelectInfo==', info)
 			}
 		}
@@ -507,6 +514,10 @@
 				font-size: 32rpx;
 				font-weight: 500;
 
+				.content-top__item {
+					overflow: hidden;
+				}
+
 				.txt {
 					margin: auto 12rpx;
 				}
@@ -520,9 +531,11 @@
 				font-size: 24rpx;
 
 				.content-middle__item {
+					max-width: 33.3%;
 					text-align: center;
 					line-height: 45rpx;
 					font-size: 30rpx;
+					overflow: hidden;
 				}
 			}
 		}

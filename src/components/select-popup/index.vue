@@ -5,7 +5,7 @@
 -->
 <template>
 	<u-popup :show="visible" mode="bottom" :round="25" :closeOnClickOverlay="false" @close="handlePopupClose"
-		overlay="true" zIndex="1000000">
+		:overlay="true" zIndex="1000000">
 		<view class="select-popup">
 			<view class="content-top">
 				<view class="close" @click="handlePopupClose">取消</view>
@@ -78,7 +78,7 @@
 			},
 			title: {
 				type: String,
-				default: '标题' // 初始化数据(默认选中的值)
+				default: '' // 初始化数据(默认选中的值)
 			},
 			defaultValue: {
 				required: false,
