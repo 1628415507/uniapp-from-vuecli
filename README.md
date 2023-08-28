@@ -17,6 +17,7 @@
 ## 各分支说明
 - init：初始化分支
 - develop：开发分支
+- feature-driver：司机端
 ## Project setup
 ```
 npm install
