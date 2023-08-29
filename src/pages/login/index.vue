@@ -1,7 +1,7 @@
 <!--
  * @Description: 登录页
  * @Date: 2023-08-04 17:34:31
- * @LastEditTime: 2023-08-18 13:30:47
+ * @LastEditTime: 2023-08-29 16:10:16
 -->
 <template>
 	<!-- 账号登录 -->
@@ -11,8 +11,8 @@
 		<view class="login-content">
 			<view class="title"> 欢迎登录 </view>
 			<view class="tabs-wrap">
-				<u-tabs :list="tabsList" itemStyle="font-size: 32px;color: #1D2129; height:50rpx" @click="tabClick"
-					:lineColor="colorTheme" :current="currentTab"></u-tabs>
+				<u-tabs :list="tabsList" itemStyle="font-size: 32px;color: #1D2129; height:65rpx" @click="tabClick"
+					:lineColor="colorTheme" :current="currentTab" lineWidth="80rpx" lineHeight="6rpx"></u-tabs>
 			</view>
 			<!-- 登录方式 -->
 			<!-- APP支持 :rules="formRules" -->
@@ -482,7 +482,6 @@
 		.code-wrap {
 			margin: 48rpx auto;
 		}
-
 	}
 
 	// 密码登录
