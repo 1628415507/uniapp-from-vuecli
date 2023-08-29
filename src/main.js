@@ -1,7 +1,7 @@
 /*
  * @Description: 全局配置
  * @Date: 2023-08-03 16:08:19
- * @LastEditTime: 2023-08-23 10:40:25
+ * @LastEditTime: 2023-08-29 17:01:13
  */
 import Vue from 'vue'
 // 组件
@@ -13,7 +13,8 @@ uni.$u.config.unit = 'rpx' //默认单位配置
 import store from './store/index.js' // 全局参数
 Vue.prototype.$store = store // 引入vuex
 // import mock from './mock/index.js'
-import config from './utils/config.js'
+// import './mock/index.js';
+import config from './config/index.js'
 Vue.prototype.$config = config;
 // 方法
 import dictionary from './utils/dictionary' // 字典方法

@@ -1,17 +1,14 @@
 /*
  * @Description: 参考：https://www.php.cn/faq/546267.html
  * @Date: 2023-08-03 17:35:50
- * @LastEditTime: 2023-08-29 11:35:10
+ * @LastEditTime: 2023-08-29 17:14:44
  */
-import config from './config.js'
+import config from '../config/index.js'
+
 // console.log('【 baseUrl 】-11', config, config.baseUrl)
 // 默认配置
 const baseConfig = {
 	baseUrl: config.baseUrl, //路径前缀
-	// baseUrl: 'http://172.16.6.246:8181', //路径前缀
-	// baseUrl: 'http://172.16.6.246:8181', //路径前缀
-	// baseUrl: 'https://example.com', //mock路径前缀
-	// baseUrl: 'https://mocktset.com', //mock路径前缀
 	timeout: 5 * 1000,
 	header: {
 		'Accept-Language': 'zh-CN' // 'zh-CN' 、 'en-US',
