@@ -1,13 +1,13 @@
 <!--
  * @Description: 
  * @Date: 2023-08-04 09:26:48
- * @LastEditTime: 2023-08-18 11:35:32
+ * @LastEditTime: 2023-08-29 16:10:41
 -->
 <template>
 	<view>
 		<text>用户名：{{userName}}</text>
-		<view @click="goDetail"> 详情页跳转</view>
-		<view class="g-footer-btn flex-c">
+		<!-- <view @click="goDetail"> 详情页跳转</view> -->
+		<view class="g-footer-btn flex-c" style="bottom:180rpx">
 			<u-button type="error" @click="logout">退出登录</u-button>
 		</view>
 		<!-- 弹框 -->
