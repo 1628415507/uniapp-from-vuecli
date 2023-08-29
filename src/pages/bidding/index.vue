@@ -1,7 +1,7 @@
 <!--
  * @Description: 已中标
  * @Date: 2023-08-23 10:56:33
- * @LastEditTime: 2023-08-28 13:47:38
+ * @LastEditTime: 2023-08-29 16:03:13
 -->
 <template>
 	<view class="bidding-page">
@@ -16,7 +16,7 @@
 								<text class="title ellipsis">{{item.inquiryTitle}}</text>
 								<view class="price">
 									<!-- TODO:字段 -->
-									中标价格 {{index||'-'}}
+									中标价格 {{item.includingTaxPriceTotal||'-'}}
 								</view>
 							</view>
 						</view>
@@ -29,7 +29,7 @@
 							<view class="content-middle__item flex">
 								<u-image class="img-icon" :src="require('@/static/image/icons/frame.svg')" width="37rpx"
 									height="37rpx"></u-image>
-								<text class="cm-txt">运输方式 {{item.transMode}}</text>
+								<text class="cm-txt">运输方式 {{TRANS_MODE[item.transMode]||'-'}}</text>
 							</view>
 						</view>
 						<view class="content-bottom">
@@ -81,12 +81,21 @@
 				dataList: []
 			}
 		},
+		computed: {
+			// 运输方式
+			TRANS_MODE() {
+				return this.$dict.getDictsEnum('TRANS_MODE', {
+					keyProp: 'value',
+					valueProp: 'text'
+				})
+			},
+		},
 		onLoad() {
 			uni.hideTabBar() //隐藏原生的导航栏
 			this.getDataList(true)
 		},
 		methods: {
-			// 获取列表数据
+			// 获取列表数据 
 			getDataList(isInit = false) {
 				this.isRequested = false
 				this.currentPage = isInit ? 1 : this.currentPage
@@ -96,8 +105,7 @@
 					pageSize: this.pageSize,
 					tabStatus: 'WINNING_BIDDER'
 				}).then(res => {
-					const _res = res.data
-					let newData = _res.records.map(item => {
+					let newData = res.records.map(item => {
 						return {
 							...item,
 							planTotalWeight: item.planTotalWeight.toFixed(2),
@@ -110,16 +118,15 @@
 					// 分页处理
 					this.pageStatus(newData.length, this.dataList.length)
 				}).catch(err => {
-					console.log(err)
-					this.loadStatus = "nomore"
-					this.nomoreText = "加载失败"
+					console.error(err)
+					this.loadStatus = "loadmore"
+					this.loadmoreText = "加载失败"
 				}).finally(() => {
 					this.isRequested = true
 				})
 			},
 			// 路径跳转
 			goUrl(item, type) {
-				console.log('【 goUrl 】-168', type)
 				if (type === 'loading') {
 					uni.navigateTo({
 						url: `/pages/sub-packages/quoted-detail/index?id=${item.mtsDispatchId}`

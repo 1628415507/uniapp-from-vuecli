@@ -1,7 +1,7 @@
 <!--
  * @Description:报价详情
  * @Date: 2023-08-18 14:57:03
- * @LastEditTime: 2023-08-28 11:08:05
+ * @LastEditTime: 2023-08-29 15:44:07
 -->
 
 <template>
@@ -15,10 +15,10 @@
 						<u-image :src="require('@/static/image/icons/trophy.svg')" width="48rpx"
 							height="48rpx"></u-image>
 						<text style="margin-left: 15rpx;">
-							{{biddingStatus===BINDING_STATUS.END?'竞价结束':'竞价剩余时间'}}
+							{{isFinished?'竞价结束':'竞价剩余时间'}}
 						</text>
 					</view>
-					<view v-if="biddingStatus===BINDING_STATUS.QUOTING" class="countdown">
+					<view v-if="!isFinished" class="countdown">
 						<u-count-down :time="countdownTime" format="DD:HH:mm" autoStart @change="countDownChange">
 							<view class="time flex">
 								<view class="time__item">{{ timeData.days }}</view>
@@ -32,9 +32,9 @@
 					</view>
 				</view>
 				<view class="time-wrap__bottom">
-					<view class="value">2</view>
+					<view class="value">{{info.rank||'-'}}</view>
 					<view class="label">
-						{{biddingStatus===BINDING_STATUS.END?'竞价排名':'当前竞价排名'}}
+						{{isFinished?'竞价排名':'当前竞价排名'}}
 					</view>
 				</view>
 			</view>
@@ -42,25 +42,25 @@
 			<view class="info-wrap">
 				<view class="box-title">报价信息</view>
 				<view class="form--required">
-					<u-form-item v-if="biddingStatus===BINDING_STATUS.QUOTING" label="税率" prop="taxRate" borderBottom
-						@click="showSelectPopup=true">
-						<u--input v-model="formData.taxRate" readonly placeholder="请选择" border="none"
+					<u-form-item v-if="canQuoting" label="税率" prop="taxRate" borderBottom @click="showSelectPopup=true">
+						<u--input v-model="formData.taxRateName" readonly placeholder="请选择" border="none"
 							inputAlign="right"></u--input>
 						<u-icon slot="right" name="arrow-right" color="#86909C"></u-icon>
 					</u-form-item>
 				</view>
-				<u-form-item v-if="biddingStatus!==BINDING_STATUS.QUOTING" label="税率" borderBottom>
+				<!-- 转字典 -->
+				<u-form-item v-if="!canQuoting" label="税率" borderBottom>
 					<view class="form-txt">{{info.taxRate||'-'}}</view>
 				</u-form-item>
 				<view class="form--required">
-					<u-form-item v-if="biddingStatus===BINDING_STATUS.QUOTING" label="含税总额" borderBottom
-						labelPosition="top" prop="includingTaxPriceTotal">
+					<u-form-item v-if="canQuoting" label="含税总额" borderBottom labelPosition="top"
+						prop="includingTaxPriceTotal">
 						<u--input v-model="formData.includingTaxPriceTotal" type="digit" border="none" placeholder=" "
 							prefixIcon="rmb" prefixIconStyle="fontSize:48rpx;color:#4E5969"
 							customStyle="marginTop:20rpx" fontSize="48rpx"></u--input>
 					</u-form-item>
 				</view>
-				<template v-if="biddingStatus!==BINDING_STATUS.QUOTING">
+				<template v-if="!canQuoting">
 					<u-form-item label="含税总额">
 						<view class="form-txt bold">{{info.includingTaxPriceTotal}}</view>
 					</u-form-item>
@@ -68,15 +68,15 @@
 						<view class="form-txt bold">{{info.excludingTaxPriceTotal}}</view>
 					</u-form-item>
 				</template>
-				<view class="form--required">
+				<view :class="canQuoting?'form--required':''">
 					<u-form-item label="报价说明" borderBottom class="form-label" prop="quotationExplain">
-						<u-textarea v-if="biddingStatus===BINDING_STATUS.QUOTING" v-model="formData.quotationExplain"
-							border="none" count maxlength="140" placeholder="请输入内容" height="100rpx"
-							inputAlign="right"></u-textarea>
-						<view v-else class="txt">{{info.quotationExplain}}</view>
+						<u-textarea v-if="canQuoting" v-model="formData.quotationExplain" border="none" count
+							maxlength="140" placeholder="请输入内容" height="100rpx" inputAlign="right"></u-textarea>
+						<view v-else class="form-txt">{{info.quotationExplain}}</view>
 					</u-form-item>
-				</view> <u-form-item label="询价说明" borderBottom>
-					<view class="txt">{{info.inquiryExplain}}</view>
+				</view> 
+				<u-form-item label="询价说明" borderBottom>
+					<view class="form-txt">{{info.inquiryExplain}}</view>
 				</u-form-item>
 			</view>
 			<!-- 委托明细 -->
@@ -89,9 +89,9 @@
 								height="40rpx"></u-image>
 							<view style="width:100%" class="content-top__item flex-sb">
 								<text class="txt ellipsis">总里程 {{item.totalMileage||'-'}}</text>
-								<text class="txt ellipsis">{{item.transMode}}</text>
+								<text class="txt ellipsis">{{TRANS_MODE[item.transMode]||'-'}}</text>
 							</view>
-							<view style="width:30rpx" @click="goUrl(item)">
+							<view style="width:30rpx" @click="goUrl(index)">
 								<u-icon name="arrow-right" color="#86909C"></u-icon>
 							</view>
 						</view>
@@ -139,7 +139,7 @@
 					<view class="form-txt">{{info.inquirer}}</view>
 				</u-form-item>
 				<u-form-item label="询价有效期" borderBottom>
-					<view class="form-txt">{{info.inquiryValidityDate}}</view>
+					<view class="form-txt">{{info.quotationStartTime}}至{{info.quotationDeadline}}</view>
 				</u-form-item>
 			</view>
 		</u-form>
@@ -160,8 +160,8 @@
 			</view>
 		</u-modal>
 		<!-- 下拉框 -->
-		<select-popup v-if="showSelectPopup" :show.sync="showSelectPopup" value-prop="value" label-prop="label"
-			:defaultValue="selectDefaultValue" :multiple="false" @getInfo="getSelectInfo" :list="selectList">
+		<select-popup v-if="showSelectPopup" :show.sync="showSelectPopup" value-prop="value" label-prop="text"
+			:defaultValue="selectDefaultValue" :multiple="false" @getInfo="getSelectInfo" :list="MDM_TAX_RATE">
 		</select-popup>
 	</view>
 </template>
@@ -185,11 +185,13 @@
 				// 公共
 				loadInfo: {},
 				colorTheme: this.$store.getters.colorTheme,
-				biddingStatus: '1',
+				biddingStatus: 10,
 				BINDING_STATUS: {
-					QUOTING: '1', //待报价
-					QUOTED: '2', //已报价
-					END: '3' //竞价结束
+					QUOTING: 10, // 待报价
+					BIDING: 20, // 待开标
+					WIN_BID: 30, // 已中标
+					NO_BID: 40, // 未中标
+					ABANDON: 50, //弃标
 				},
 				// 倒计时
 				countdownTime: 0,
@@ -200,11 +202,12 @@
 					color: '#4E5969 !important'
 				},
 				info: {},
+				isFinished: false,
 				formData: {
 					taxRate: '',
 					includingTaxPriceTotal: '',
 					excludingTaxPriceTotal: '', //
-					quotationExplain: ''
+					quotationExplain: '',
 				},
 				formRules: {
 					'taxRate': {
@@ -235,45 +238,22 @@
 				// 下拉框
 				showSelectPopup: false,
 				selectDefaultValue: 1,
-				selectList: [{
-						label: '选项一',
-						value: 1
-					},
-					{
-						label: '选项二',
-						value: 2
-					},
-					{
-						label: '选项三',
-						value: 3
-					}, {
-						label: '禁用选项',
-						value: 4,
-						disabled: true,
-					},
-					{
-						label: '选项五',
-						value: 5
-					}, {
-						label: '选项六',
-						value: 6
-					}, {
-						label: '选项七',
-						value: 7
-					},
-					{
-						label: '选项八',
-						value: 8
-					}, {
-						label: '选项六',
-						value: 9
-					}
-				],
 			}
 		},
 		computed: {
-			SIGN_MODE() {
-				return this.$dict.getDictOptions('SIGN_MODE') || []
+			canQuoting() {
+				return !this.isFinished&&(this.biddingStatus === this.BINDING_STATUS.QUOTING || this.biddingStatus === this.BINDING_STATUS
+					.BIDING)
+			},
+			// 运输方式
+			TRANS_MODE() {
+				return this.$dict.getDictsEnum('TRANS_MODE', {
+					keyProp: 'value',
+					valueProp: 'text'
+				})
+			},
+			MDM_TAX_RATE() {
+				return this.$dict.getDictOptions('MDM_TAX_RATE') || []
 			}
 		},
 		onReady() {
@@ -282,21 +262,39 @@
 		},
 		onLoad(opt) {
 			console.log('=loadInfo==', opt)
-			this.loadInfo = opt
-			this.getDetailInfo(opt.scctInquiryId)
+			this.loadInfo = JSON.parse(opt.info)
+			this.biddingStatus = 10 //this.loadInfo.quotationStatus
+			this.getDetailInfo()
 		},
 		methods: {
-			getDetailInfo(id) {
+			getCountdownTime(time) {
+				const deadline = new Date(time)
+				const now = new Date()
+				const diff = deadline - now
+				// console.log('【 diff 】-296', diff, diffSeconds)
+				return diff < 0 ? 0 : diff
+			},
+			getDetailInfo() {
 				quotationDetail({
-					scctInquiryId: id
+					scctInquiryId: this.loadInfo.scctInquiryId
 				}).then(res => {
-					this.info = res.data || {}
-					this.countdownTime = 30 * 60 * 60 * 1000 //this.info.inquiryValidityDate
+					this.info = {
+						...res,
+						quotationStartTime: res.quotationStartTime?.substring(0, 10),
+						quotationDeadline: res.quotationDeadline?.substring(0, 10),
+						taxRate:this.$dict.getDictNameByCode('MDM_TAX_RATE', res.taxRate)
+					}
+					this.countdownTime = this.getCountdownTime(res.quotationDeadline) //'2023-8-30 21:21'
+					if (new Date(res.quotationDeadline)  < new Date()) {
+						this.isFinished = true
+					}
+					console.log('【 this.isFinished 】-288', this.isFinished)
 				})
 			},
-			goUrl(item) {
+			goUrl(index) {
+				const item = this.info.inquiryDetailsVoList[index]
 				uni.navigateTo({
-					url: `/pages/sub-packages/quoted-detail/detail?id=${item.mtsDispatchId}`
+					url: `/pages/sub-packages/quoted-detail/detail?info=${JSON.stringify(item)}`
 				});
 			},
 			countDownChange(e) {
@@ -316,17 +314,20 @@
 					scctInquiryId: this.loadInfo.scctInquiryId,
 					reason: this.reason,
 				}).then(res => {
+					const success = res
 					uni.showToast({
 						icon: 'none',
-						title: '操作成功',
+						title: success ? '操作成功' : '操作失败',
 						duration: 2000
 					})
-					this.confirmShow = false
-					setTimeout(() => {
-						uni.navigateBack({
-							delta: 1
-						})
-					}, 300)
+					if (success) {
+						this.confirmShow = false
+						setTimeout(() => {
+							uni.navigateBack({
+								delta: 1
+							})
+						}, 300)
+					}
 				})
 			},
 			submit() {
@@ -355,13 +356,10 @@
 				});
 			},
 			getSelectInfo(info) {
-				// this.formData.taxRate = info.label
+				this.formData.taxRateName=info.text
 				this.formData.taxRate = info.value
 				this.selectDefaultValue = info.value
 				this.$refs.formRef.validateField('taxRate')
-				// this.$nextTick(() => {
-				// 	this.$refs.formRef.validateField('taxRate')
-				// })
 				console.log('=下拉getSelectInfo==', info)
 			}
 		}
@@ -442,6 +440,7 @@
 			text-align: center;
 
 			.value {
+				min-height: 88rpx;
 				font-size: 88rpx;
 				font-weight: bold;
 				color: #008474;
@@ -489,6 +488,7 @@
 		}
 
 		.form-txt {
+			width:100%;
 			text-align: right;
 		}
 	}
@@ -540,6 +540,7 @@
 			}
 		}
 	}
+
 
 	.footer-btn {
 		padding: 24rpx 32rpx;

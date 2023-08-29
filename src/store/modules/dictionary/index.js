@@ -1,7 +1,7 @@
 /*
  * @Description: 
  * @Date: 2023-08-05 09:35:19
- * @LastEditTime: 2023-08-05 09:47:22
+ * @LastEditTime: 2023-08-29 15:24:34
  */
 import {
 	covertAsyncDicts
@@ -46,8 +46,7 @@ const actions = {
 					dictCode: dictStr
 				}).then(res => {
 					const constantDicts = constantDictsObj
-					const _res = res.data
-					const asyncDicts = _res //covertAsyncDicts(_res)
+					const asyncDicts = res //covertAsyncDicts(_res)
 					const dicts = {
 						...constantDicts,
 						...asyncDicts

@@ -18,13 +18,6 @@
                     "scene": null
                 },
                 {
-                    "name": "委托明细",
-                    "pathName": "pages/sub-packages/quoted-detail/detail",
-                    "query": "id=1",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
                     "name": "Demo详情",
                     "pathName": "pages/sub-packages/example/demo-detail",
                     "query": "",
@@ -35,6 +28,13 @@
                     "name": "已中标",
                     "pathName": "pages/bidding/index",
                     "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
+                    "name": "委托明细",
+                    "pathName": "pages/sub-packages/quoted-detail/detail",
+                    "query": "info=%7B%22referencePrice%22%3A-99640791.88870426%2C%22reqVehicleMode%22%3A%22occaecat%22%2C%22destName%22%3A%22laboris%22%2C%22totalMileage%22%3A34385380.37219897%2C%22planCode%22%3A%22in%20cillum%22%2C%22routeName%22%3A%22nisi%20est%22%2C%22planType%22%3A%22dolore%20consectetur%22%2C%22planTotalWeight%22%3A6024679.157066748%2C%22planTotalVolume%22%3A-85008631.27284229%2C%22planTotalQty%22%3A63072163.261408776%2C%22originName%22%3A%22proident%20in%20exercitation%20fugiat%22%2C%22ownerCode%22%3A%22ut%22%2C%22planName%22%3A%22voluptate%20esse%22%2C%22consignorCode%22%3A%22minim%20Excepteur%20officia%20aliqua%22%2C%22transMode%22%3A%22est%20cillum%22%2C%22routeCode%22%3A%22ullamco%20id%22%2C%22consignorName%22%3A%22veniam%20aliqua%22%2C%22stowageMode%22%3A%22enim%20nostrud%22%2C%22ownerName%22%3A%22laborum%20ea%20deserunt%22%7D",
                     "launchMode": "default",
                     "scene": null
                 }

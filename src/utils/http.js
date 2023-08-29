@@ -1,7 +1,7 @@
 /*
  * @Description: 参考：https://www.php.cn/faq/546267.html
  * @Date: 2023-08-03 17:35:50
- * @LastEditTime: 2023-08-24 18:13:53
+ * @LastEditTime: 2023-08-29 11:35:10
  */
 import config from './config.js'
 // console.log('【 baseUrl 】-11', config, config.baseUrl)
@@ -21,13 +21,14 @@ const http = ({
 	method,
 	url,
 	data = {},
-	header
+	header,
+	baseUrl = ''
 }) => {
 	// console.log('【 data 】-11', data, (baseConfig.baseUrl || '') + url)
 	// uni.addInterceptor()//请求拦截
 	return new Promise((resolve, reject) => {
 		uni.request({
-			url: (baseConfig.baseUrl || '') + url,
+			url: (baseUrl || baseConfig.baseUrl || '') + url,
 			method,
 			data,
 			// ContentType: 'application/json;charset-utf-8',
@@ -42,18 +43,16 @@ const http = ({
 			success: result => {
 				// resolve(result)
 				const res = result.data || {} // 返回的数据
-				// console.log('【请求成功】', res)
+				// console.log('【请求成功】', result)
+				console.log('【请求数据】', res.data)
 				if (res.success) {
-					resolve(res)
+					resolve(res.data)
 				} else {
-					if (res.message) {
-						// console.log('message', res.message)
-						uni.showToast({
-							icon: 'none',
-							title: res.message,
-							duration: 2000
-						})
-					}
+					uni.showToast({
+						icon: 'none',
+						title: res.message || '请求错误',
+						duration: 1000
+					})
 					reject(res)
 				}
 			},

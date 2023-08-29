@@ -1,16 +1,16 @@
 <!--
  * @Description: 委托明细
  * @Date: 2023-08-18 16:55:29
- * @LastEditTime: 2023-08-28 15:13:36
+ * @LastEditTime: 2023-08-29 15:10:59
 -->
 <template>
 	<view class="task-detail-page">
 		<!-- 表单信息 -->
 		<view class="info-wrap">
-			<view class="title">总里程 1234.45</view>
+			<view class="title">总里程 {{info.totalMileage}}</view>
 			<u-form labelPosition="left" :model="info" ref="formRef" :labelWidth="labelWidth" :labelStyle="labelStyle">
 				<u-form-item v-for="(item,index) in fieldList" :key="index" :label="item.label" borderBottom>
-					<view class="txt">{{info[item.prop]||'==='}}</view>
+					<view class="txt">{{info[item.prop]||'-'}}</view>
 				</u-form-item>
 			</u-form>
 		</view>
@@ -94,15 +94,16 @@
 			}
 		},
 		onLoad(opt) {
-			this.getDetailInfo(opt.id)
+			const info = JSON.parse(opt.info)
+			this.getDetailInfo(info)
 		},
 		methods: {
-			getDetailInfo(id) {
-				taskDetail({
-					mtsTaskTmId: id
-				}).then(res => {
-					this.info = res.data
-				})
+			getDetailInfo(info) {
+				this.info = {
+					...info,
+					transMode: this.$dict.getDictNameByCode('TRANS_MODE', info.transMode)
+				}
+				console.log('【 this.info 】-104', this.info)
 			},
 		}
 	}
