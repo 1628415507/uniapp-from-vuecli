@@ -1,7 +1,7 @@
 <!--
  * @Description: 首页
  * @Date: 2023-08-04 09:27:20
- * @LastEditTime: 2023-08-29 15:59:57
+ * @LastEditTime: 2023-08-29 18:09:55
 -->
 <template>
 	<view class="home-page">
@@ -193,7 +193,7 @@
 					currentPage: this.currentPage,
 					pageSize: this.pageSize,
 					tabStatus: this.tabStatus,
-					keyword:this.keyword
+					keyword: this.keyword
 				}).then(res => {
 					let newData = res.records.map(item => {
 						return {
@@ -210,6 +210,9 @@
 					this.pageStatus(newData.length, this.dataList.length)
 				}).catch(err => {
 					console.error(err)
+					if (isInit) {
+						this.dataList = []
+					}
 					this.loadStatus = "loadmore"
 					this.loadmoreText = "加载失败"
 				}).finally(() => {
@@ -218,17 +221,19 @@
 			},
 			// 路径跳转
 			goUrl(index) {
-				const item = this.dataList[index]
+				const item = this.dataList[index] || {}
 				console.log('【 item 】-221', item)
 				const {
 					scctInquiryId,
 					scctQuotationId,
-					quotationStatus
+					quotationStatus,
+					quotationDeadline
 				} = item
 				const info = {
 					scctInquiryId,
 					scctQuotationId,
-					quotationStatus
+					quotationStatus: this.tabStatus === 'NOT_QUOTATION' ? 10 : quotationStatus,
+					quotationDeadline
 				}
 				uni.navigateTo({
 					url: `/pages/sub-packages/quoted-detail/index?info=${JSON.stringify(info)}`

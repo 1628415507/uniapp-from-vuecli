@@ -1,7 +1,7 @@
 <!--
  * @Description:报价详情
  * @Date: 2023-08-18 14:57:03
- * @LastEditTime: 2023-08-29 15:44:07
+ * @LastEditTime: 2023-08-29 18:20:54
 -->
 
 <template>
@@ -21,11 +21,11 @@
 					<view v-if="!isFinished" class="countdown">
 						<u-count-down :time="countdownTime" format="DD:HH:mm" autoStart @change="countDownChange">
 							<view class="time flex">
-								<view class="time__item">{{ timeData.days }}</view>
+								<view class="time__item">{{ timeData.days ||0 }}</view>
 								<text class="time__txt">天</text>
-								<view class="time__item">{{ timeData.hours>10?timeData.hours:'0'+timeData.hours}}</view>
+								<view class="time__item">{{ timeData.hours || 0}}</view>
 								<text class="time__txt">时</text>
-								<view class="time__item">{{ timeData.minutes }}</view>
+								<view class="time__item">{{ timeData.minutes || 0}}</view>
 								<text class="time__txt">分</text>
 							</view>
 						</u-count-down>
@@ -74,7 +74,7 @@
 							maxlength="140" placeholder="请输入内容" height="100rpx" inputAlign="right"></u-textarea>
 						<view v-else class="form-txt">{{info.quotationExplain}}</view>
 					</u-form-item>
-				</view> 
+				</view>
 				<u-form-item label="询价说明" borderBottom>
 					<view class="form-txt">{{info.inquiryExplain}}</view>
 				</u-form-item>
@@ -139,7 +139,7 @@
 					<view class="form-txt">{{info.inquirer}}</view>
 				</u-form-item>
 				<u-form-item label="询价有效期" borderBottom>
-					<view class="form-txt">{{info.quotationStartTime}}至{{info.quotationDeadline}}</view>
+					<view v-show="info.quotationStartTime" class="form-txt">{{info.quotationStartTime}}至{{info.quotationDeadline}}</view>
 				</u-form-item>
 			</view>
 		</u-form>
@@ -185,7 +185,8 @@
 				// 公共
 				loadInfo: {},
 				colorTheme: this.$store.getters.colorTheme,
-				biddingStatus: 10,
+				isFinished: false,
+				biddingStatus: '',
 				BINDING_STATUS: {
 					QUOTING: 10, // 待报价
 					BIDING: 20, // 待开标
@@ -202,7 +203,6 @@
 					color: '#4E5969 !important'
 				},
 				info: {},
-				isFinished: false,
 				formData: {
 					taxRate: '',
 					includingTaxPriceTotal: '',
@@ -237,12 +237,13 @@
 				reason: "",
 				// 下拉框
 				showSelectPopup: false,
-				selectDefaultValue: 1,
+				selectDefaultValue: '',
 			}
 		},
 		computed: {
 			canQuoting() {
-				return !this.isFinished&&(this.biddingStatus === this.BINDING_STATUS.QUOTING || this.biddingStatus === this.BINDING_STATUS
+				return !this.isFinished && (this.biddingStatus === this.BINDING_STATUS.QUOTING || this.biddingStatus ===
+					this.BINDING_STATUS
 					.BIDING)
 			},
 			// 运输方式
@@ -261,34 +262,32 @@
 			this.$refs.formRef.setRules(this.formRules)
 		},
 		onLoad(opt) {
-			console.log('=loadInfo==', opt)
 			this.loadInfo = JSON.parse(opt.info)
-			this.biddingStatus = 10 //this.loadInfo.quotationStatus
+			console.log('【 loadInfo 】-266', this.loadInfo)
+			this.biddingStatus = this.loadInfo.quotationStatus
+			this.isFinished = new Date(this.loadInfo.quotationDeadline) < new Date()
+			this.countdownTime = this.getCountdownTime(this.loadInfo.quotationDeadline) //'2023-8-30 21:21'
 			this.getDetailInfo()
 		},
 		methods: {
+			// 获取ms倒计时
 			getCountdownTime(time) {
 				const deadline = new Date(time)
 				const now = new Date()
 				const diff = deadline - now
-				// console.log('【 diff 】-296', diff, diffSeconds)
+				console.log('【 diff 】-296', diff)
 				return diff < 0 ? 0 : diff
 			},
 			getDetailInfo() {
-				quotationDetail({
+				this.loadInfo.scctInquiryId && quotationDetail({
 					scctInquiryId: this.loadInfo.scctInquiryId
 				}).then(res => {
 					this.info = {
 						...res,
 						quotationStartTime: res.quotationStartTime?.substring(0, 10),
 						quotationDeadline: res.quotationDeadline?.substring(0, 10),
-						taxRate:this.$dict.getDictNameByCode('MDM_TAX_RATE', res.taxRate)
+						taxRate: this.$dict.getDictNameByCode('MDM_TAX_RATE', res.taxRate)
 					}
-					this.countdownTime = this.getCountdownTime(res.quotationDeadline) //'2023-8-30 21:21'
-					if (new Date(res.quotationDeadline)  < new Date()) {
-						this.isFinished = true
-					}
-					console.log('【 this.isFinished 】-288', this.isFinished)
 				})
 			},
 			goUrl(index) {
@@ -356,7 +355,7 @@
 				});
 			},
 			getSelectInfo(info) {
-				this.formData.taxRateName=info.text
+				this.formData.taxRateName = info?.text
 				this.formData.taxRate = info.value
 				this.selectDefaultValue = info.value
 				this.$refs.formRef.validateField('taxRate')
@@ -488,7 +487,7 @@
 		}
 
 		.form-txt {
-			width:100%;
+			width: 100%;
 			text-align: right;
 		}
 	}

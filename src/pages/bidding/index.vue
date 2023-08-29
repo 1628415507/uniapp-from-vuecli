@@ -1,12 +1,12 @@
 <!--
  * @Description: 已中标
  * @Date: 2023-08-23 10:56:33
- * @LastEditTime: 2023-08-29 16:03:13
+ * @LastEditTime: 2023-08-29 18:21:53
 -->
 <template>
 	<view class="bidding-page">
 		<!-- 列表 -->
-		<scroll-view :scroll-y="true" :style="{height: 'calc(100vh - 150rpx)'}" @scroll="scroll"
+		<scroll-view :scroll-y="true" :style="{height: 'calc(100vh - 130rpx)'}" @scroll="scroll"
 			@scrolltolower="scrollToLower" :scroll-top="scrollTop">
 			<view class="list-wrap">
 				<view class="list-item" v-for="(item,index) in dataList" :key="index">
@@ -95,7 +95,7 @@
 			this.getDataList(true)
 		},
 		methods: {
-			// 获取列表数据 
+			// 获取列表数据
 			getDataList(isInit = false) {
 				this.isRequested = false
 				this.currentPage = isInit ? 1 : this.currentPage
@@ -119,6 +119,9 @@
 					this.pageStatus(newData.length, this.dataList.length)
 				}).catch(err => {
 					console.error(err)
+					if (isInit) {
+						this.dataList = []
+					}
 					this.loadStatus = "loadmore"
 					this.loadmoreText = "加载失败"
 				}).finally(() => {
