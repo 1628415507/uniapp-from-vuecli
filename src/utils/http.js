@@ -1,22 +1,31 @@
 /*
  * @Description: 参考：https://www.php.cn/faq/546267.html
  * @Date: 2023-08-03 17:35:50
- * @LastEditTime: 2023-08-24 11:47:51
+ * @LastEditTime: 2023-08-29 16:46:04
  */
+import config from '../config/index.js'
+
+// console.log('【 baseUrl 】-11', config, config.baseUrl)
 // 默认配置
 const baseConfig = {
-	baseUrl: 'https://dhltms.gillion.com.cn/dhl',//路径前缀
+	baseUrl: config.baseUrl, //路径前缀
 	timeout: 5 * 1000,
 	header: {
 		'Accept-Language': 'zh-CN' // 'zh-CN' 、 'en-US',
 	}
 }
-const http = ({ method, url, data = {}, header }) => {
-	console.log('【 data 】-11', data)
+const http = ({
+	method,
+	url,
+	data = {},
+	header,
+	baseUrl = ''
+}) => {
+	// console.log('【 data 】-11', data, (baseConfig.baseUrl || '') + url)
 	// uni.addInterceptor()//请求拦截
 	return new Promise((resolve, reject) => {
 		uni.request({
-			url: baseConfig.baseUrl + url,
+			url: (baseUrl || baseConfig.baseUrl || '') + url,
 			method,
 			data,
 			// ContentType: 'application/json;charset-utf-8',
@@ -26,25 +35,22 @@ const http = ({ method, url, data = {}, header }) => {
 				ContentType: 'application/json',
 				...header // 请求头部
 			},
-			timeout: baseConfig.timeout, //请求超时
+			// timeout: baseConfig.timeout, //请求超时
 			// 成功的回调
 			success: result => {
-				const res = result.data.data || {} // 返回的数据
-				console.log('【请求成功】', result, res)
-				switch (res.status) {
-					case 200: // 请求成功
-						resolve(res)
-						break;
-					default:
-						if (res.message) {
-							// console.log('message', res.message)
-							uni.showToast({
-								icon: 'none',
-								title: res.message,
-								duration: 2000
-							})
-						}
-						reject(res)
+				// resolve(result)
+				const res = result.data || {} // 返回的数据
+				// console.log('【请求成功】', result)
+				console.log('【请求数据】', res.data)
+				if (res.success) {
+					resolve(res.data)
+				} else {
+					uni.showToast({
+						icon: 'none',
+						title: res.message || '请求错误',
+						duration: 1000
+					})
+					reject(res)
 				}
 			},
 			// 失败的回调
