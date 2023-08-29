@@ -1,3 +1,8 @@
+/*
+ * @Description: 
+ * @Date: 2023-08-25 18:27:51
+ * @LastEditTime: 2023-08-29 16:49:06
+ */
 //时间格式化
 export const formatterTime = (timestamp) => {
 	const date = new Date(timestamp);

@@ -1,7 +1,7 @@
 /*
  * @Description: 表单验证
  * @Date: 2023-08-05 11:40:24
- * @LastEditTime: 2023-08-24 17:52:46
+ * @LastEditTime: 2023-08-29 16:49:34
  */
 // 整数值
 export const validIntNumber = (rule, value, callback) => {
@@ -26,7 +26,7 @@ export const validFloatNumber = (rule, value, callback) => {
 	} else if ((!regNum.test(value))) {
 		callback(new Error('请输入数值'));
 	} else if (value < 0) {
-		callback('不允许输入负数2')
+		callback('不允许输入负数')
 	} else {
 		callback()
 	}

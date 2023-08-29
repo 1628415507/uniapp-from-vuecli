@@ -14,6 +14,7 @@
 }
 // 超出省略号，有width情况下生效
 .ellipsis {
+	max-width: 100%;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
