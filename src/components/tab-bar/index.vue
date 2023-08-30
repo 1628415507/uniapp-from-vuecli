@@ -1,7 +1,7 @@
 <!--
  * @Description: 底部菜单栏
  * @Date: 2023-08-04 09:27:20
- * @LastEditTime: 2023-08-29 18:24:23
+ * @LastEditTime: 2023-08-30 15:33:07
 -->
 <template>
 	<u-tabbar :border="false" :value="activeTab" :fixed="true" :placeholder="false" :safeAreaInsetBottom="false"
@@ -45,7 +45,7 @@
 						name: 'account',
 						activeIcon: require('@/static/image/icons/account-active.svg'),
 						inactiveIcon: require('@/static/image/icons/account-inactive.svg'),
-						url: '/pages/demo/index'
+						url: '/pages/user/index'
 					}
 				]
 			};

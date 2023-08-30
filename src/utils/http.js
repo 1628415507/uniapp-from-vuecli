@@ -1,7 +1,7 @@
 /*
  * @Description: 参考：https://www.php.cn/faq/546267.html
  * @Date: 2023-08-03 17:35:50
- * @LastEditTime: 2023-08-29 17:14:44
+ * @LastEditTime: 2023-08-30 15:28:09
  */
 import config from '../config/index.js'
 
@@ -25,7 +25,8 @@ const http = ({
 	// uni.addInterceptor()//请求拦截
 	return new Promise((resolve, reject) => {
 		uni.request({
-			url: (baseUrl || baseConfig.baseUrl || '') + url,
+			// url: (baseUrl || baseConfig.baseUrl || '') + url,
+			url,
 			method,
 			data,
 			// ContentType: 'application/json;charset-utf-8',
@@ -40,15 +41,15 @@ const http = ({
 			success: result => {
 				// resolve(result)
 				const res = result.data || {} // 返回的数据
-				// console.log('【请求成功】', result)
+				console.log('【请求成功】', result)
 				console.log('【请求数据】', res.data)
 				if (res.success) {
 					resolve(res.data)
 				} else {
 					uni.showToast({
 						icon: 'none',
-						title: res.message || '请求错误',
-						duration: 1000
+						title: res.errorMessages?.length?res.errorMessages[0] :'请求错误',
+						duration: 2000
 					})
 					reject(res)
 				}
