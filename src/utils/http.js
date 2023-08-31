@@ -1,7 +1,7 @@
 /*
  * @Description: 参考：https://www.php.cn/faq/546267.html
  * @Date: 2023-08-03 17:35:50
- * @LastEditTime: 2023-08-29 16:46:04
+ * @LastEditTime: 2023-08-31 09:27:00
  */
 import config from '../config/index.js'
 
@@ -24,8 +24,9 @@ const http = ({
 	// console.log('【 data 】-11', data, (baseConfig.baseUrl || '') + url)
 	// uni.addInterceptor()//请求拦截
 	return new Promise((resolve, reject) => {
+		const isH5 = uni.getSystemInfoSync().platform === 'web';
 		uni.request({
-			url: (baseUrl || baseConfig.baseUrl || '') + url,
+			url: isH5 ? url : (baseUrl || baseConfig.baseUrl || '') + url,
 			method,
 			data,
 			// ContentType: 'application/json;charset-utf-8',
@@ -40,22 +41,23 @@ const http = ({
 			success: result => {
 				// resolve(result)
 				const res = result.data || {} // 返回的数据
-				// console.log('【请求成功】', result)
+				console.log('【请求成功】', result)
 				console.log('【请求数据】', res.data)
 				if (res.success) {
-					resolve(res)
+					resolve(res.data)
 				} else {
 					uni.showToast({
 						icon: 'none',
-						title: res.message || '请求错误',
-						duration: 1000
+						title: res.errorMessages?.length ? res.errorMessages[0] :
+							'请求错误',
+						duration: 2000
 					})
 					reject(res)
 				}
 			},
 			// 失败的回调
 			fail: fail => {
-				console.log('fail', fail)
+				console.log('【请求失败】', fail)
 				let errMsg
 				if (fail.errMsg.includes("timeout")) {
 					errMsg = '请求超时，请稍后重试'
