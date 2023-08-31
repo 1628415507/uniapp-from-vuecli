@@ -1,7 +1,7 @@
 /*
  * @Description: 环境配置
  * @Date: 2023-08-28 09:24:49
- * @LastEditTime: 2023-08-29 17:00:13
+ * @LastEditTime: 2023-08-31 09:47:05
  */
 let baseUrl
 // 开发环境
