@@ -1,7 +1,7 @@
 /*
  * @Description: 参考：https://www.php.cn/faq/546267.html
  * @Date: 2023-08-03 17:35:50
- * @LastEditTime: 2023-08-31 09:27:00
+ * @LastEditTime: 2023-08-31 09:37:39
  */
 import config from '../config/index.js'
 
@@ -44,7 +44,7 @@ const http = ({
 				console.log('【请求成功】', result)
 				console.log('【请求数据】', res.data)
 				if (res.success) {
-					resolve(res.data)
+					resolve(res)
 				} else {
 					uni.showToast({
 						icon: 'none',
