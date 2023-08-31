@@ -24,9 +24,9 @@ const http = ({
 	// console.log('【 data 】-11', data, (baseConfig.baseUrl || '') + url)
 	// uni.addInterceptor()//请求拦截
 	return new Promise((resolve, reject) => {
+		const isH5 = uni.getSystemInfoSync().platform === 'web';
 		uni.request({
-			// url: (baseUrl || baseConfig.baseUrl || '') + url,
-			url,
+			url: isH5 ? url : (baseUrl || baseConfig.baseUrl || '') + url,
 			method,
 			data,
 			// ContentType: 'application/json;charset-utf-8',
@@ -48,7 +48,8 @@ const http = ({
 				} else {
 					uni.showToast({
 						icon: 'none',
-						title: res.errorMessages?.length?res.errorMessages[0] :'请求错误',
+						title: res.errorMessages?.length ? res.errorMessages[0] :
+							'请求错误',
 						duration: 2000
 					})
 					reject(res)

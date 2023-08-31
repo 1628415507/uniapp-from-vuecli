@@ -1,7 +1,7 @@
 <!--
  * @Description: 委托明细
  * @Date: 2023-08-18 16:55:29
- * @LastEditTime: 2023-08-29 15:10:59
+ * @LastEditTime: 2023-08-30 18:35:46
 -->
 <template>
 	<view class="task-detail-page">
@@ -52,13 +52,13 @@
 					prop: 'destName'
 				}, {
 					label: '计划数量',
-					prop: 'planQty'
+					prop: 'planTotalQty'
 				}, {
 					label: '计划体积',
-					prop: 'planVolume'
+					prop: 'planTotalVolume'
 				}, {
 					label: '计划重量',
-					prop: 'planWeight'
+					prop: 'planTotalWeight'
 				}, {
 					label: '线路编码',
 					prop: 'routeCode'
@@ -101,7 +101,10 @@
 			getDetailInfo(info) {
 				this.info = {
 					...info,
-					transMode: this.$dict.getDictNameByCode('TRANS_MODE', info.transMode)
+					transMode: this.$dict.getDictNameByCode('TRANS_MODE', info.transMode),
+					planTotalQty: info.planTotalQty + ' KG',
+					planTotalVolume: info.planTotalVolume + ' CDM',
+					planTotalWeight: info.planTotalWeight + ' CT'
 				}
 				console.log('【 this.info 】-104', this.info)
 			},

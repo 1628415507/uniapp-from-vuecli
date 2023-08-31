@@ -1,7 +1,7 @@
 <!--
  * @Description: 首页
  * @Date: 2023-08-04 09:27:20
- * @LastEditTime: 2023-08-29 18:09:55
+ * @LastEditTime: 2023-08-30 17:37:19
 -->
 <template>
 	<view class="home-page">
@@ -18,8 +18,8 @@
 		<!-- 状态栏 -->
 		<view class="tabs-wrap">
 			<u-tabs :list="subsectionList" itemStyle="font-size: 32px;color: #1D2129; height:65rpx" @click="tabClick"
-				:lineColor="colorTheme" :current="current" lineWidth="80rpx" lineHeight="6rpx"
-				:scrollable="false"></u-tabs>
+				:lineColor="colorTheme" :current="current" lineWidth="80rpx" lineHeight="6rpx" :scrollable="false">
+			</u-tabs>
 		</view>
 		<!-- <view class="subsection-wrap" :class="GRADIENT_CLASS[tabStatus]">
 			<u-subsection :current="current" :list="subsectionList" mode="button" @change="sectionChange"
@@ -30,7 +30,7 @@
 			@scrolltolower="scrollToLower" :scroll-top="scrollTop">
 			<view class="list-wrap">
 				<view class="list-item" v-for="(item,index) in dataList" :key="item.scctQuotationId">
-					<view class="list-item__content" @click="goUrl(item)">
+					<view class="list-item__content" @click="goUrl(index,'detail')">
 						<view class="content-top flex-sb">
 							<view class="content-top__left flex-col-sb">
 								<text class="title ellipsis">{{item.inquiryTitle}}</text>
@@ -39,7 +39,7 @@
 								</view>
 							</view>
 							<view v-if="tabStatus==='QUOTATION_STATUS_END'" class="content-top__right flex-c">
-								<view class="tag" :class="item.quotationStatus===30?'tag--active':''">
+								<view class="tag" :class="item.quotationStatus==30?'tag--active':''">
 									{{QUOTATION_STATUS[item.quotationStatus]||'-'}}
 								</view>
 							</view>
@@ -169,7 +169,14 @@
 		},
 		onLoad() {
 			uni.hideTabBar() //隐藏原生的导航栏
+			// this.getDataList(true)
+		},
+		onShow(opt) {
+			// console.log('onShow', opt); // 输出：value1
+			// if (opt.isInit) {
+			// 	this.getDataList(true)
 			this.getDataList(true)
+			// }
 		},
 		methods: {
 			// 完成状态切换
@@ -220,20 +227,36 @@
 				})
 			},
 			// 路径跳转
-			goUrl(index) {
+			goUrl(index, type = '') {
 				const item = this.dataList[index] || {}
 				console.log('【 item 】-221', item)
 				const {
 					scctInquiryId,
 					scctQuotationId,
 					quotationStatus,
-					quotationDeadline
+					quotationDeadline,
+					quotationStartTime
 				} = item
+				if (type === 'detail') {
+					if (this.tabStatus !== 'QUOTATION_STATUS_END') {
+						return
+					}
+				} else {
+					if (new Date(quotationStartTime) > new Date() || new Date(quotationDeadline) < new Date()) {
+						uni.showToast({
+							icon: 'none',
+							title: '请在询价有效期间内进行报价！',
+							duration: 2000
+						})
+						return
+					}
+				}
 				const info = {
 					scctInquiryId,
 					scctQuotationId,
 					quotationStatus: this.tabStatus === 'NOT_QUOTATION' ? 10 : quotationStatus,
-					quotationDeadline
+					quotationDeadline,
+					type
 				}
 				uni.navigateTo({
 					url: `/pages/sub-packages/quoted-detail/index?info=${JSON.stringify(info)}`

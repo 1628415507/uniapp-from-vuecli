@@ -1,7 +1,7 @@
 <!--
  * @Description:报价详情
  * @Date: 2023-08-18 14:57:03
- * @LastEditTime: 2023-08-29 18:20:54
+ * @LastEditTime: 2023-08-30 17:41:41
 -->
 
 <template>
@@ -12,8 +12,8 @@
 			<view class="time-wrap">
 				<view class="time-wrap__top flex-sb">
 					<view class="label flex">
-						<u-image :src="require('@/static/image/icons/trophy.svg')" width="48rpx"
-							height="48rpx"></u-image>
+						<u-image :src="require('@/static/image/icons/trophy.svg')" width="48rpx" height="48rpx">
+						</u-image>
 						<text style="margin-left: 15rpx;">
 							{{isFinished?'竞价结束':'竞价剩余时间'}}
 						</text>
@@ -139,11 +139,13 @@
 					<view class="form-txt">{{info.inquirer}}</view>
 				</u-form-item>
 				<u-form-item label="询价有效期" borderBottom>
-					<view v-show="info.quotationStartTime" class="form-txt">{{info.quotationStartTime}}至{{info.quotationDeadline}}</view>
+					<view v-show="info.quotationStartTime" class="form-txt">
+						{{info.quotationStartTime}}至{{info.quotationDeadline}}
+					</view>
 				</u-form-item>
 			</view>
 		</u-form>
-		<view class="footer-btn flex-sb">
+		<view v-show="canQuoting" class="footer-btn flex-sb">
 			<view class="btn-item">
 				<u-button text="弃标" @click="confirmShow = true"></u-button>
 			</view>
@@ -217,7 +219,7 @@
 						trigger: ['blur', 'change']
 					},
 					'includingTaxPriceTotal': [{
-						type: 'string',
+						type: 'number',
 						required: true,
 						message: '请输入含税总额',
 						trigger: ['blur', 'change']
@@ -263,11 +265,11 @@
 		},
 		onLoad(opt) {
 			this.loadInfo = JSON.parse(opt.info)
-			console.log('【 loadInfo 】-266', this.loadInfo)
-			this.biddingStatus = this.loadInfo.quotationStatus
+			this.biddingStatus = Number(this.loadInfo.quotationStatus)
 			this.isFinished = new Date(this.loadInfo.quotationDeadline) < new Date()
 			this.countdownTime = this.getCountdownTime(this.loadInfo.quotationDeadline) //'2023-8-30 21:21'
 			this.getDetailInfo()
+			console.log('【 loadInfo 】-266', this.loadInfo, this.biddingStatus, this.isFinished)
 		},
 		methods: {
 			// 获取ms倒计时
@@ -288,6 +290,8 @@
 						quotationDeadline: res.quotationDeadline?.substring(0, 10),
 						taxRate: this.$dict.getDictNameByCode('MDM_TAX_RATE', res.taxRate)
 					}
+					this.formData = res
+					this.formData.taxRateName = this.$dict.getDictNameByCode('MDM_TAX_RATE', res.taxRate)
 				})
 			},
 			goUrl(index) {
@@ -325,7 +329,7 @@
 							uni.navigateBack({
 								delta: 1
 							})
-						}, 300)
+						}, 500)
 					}
 				})
 			},
@@ -343,14 +347,14 @@
 					}).then(res => {
 						uni.showToast({
 							icon: 'none',
-							title: '操作成功',
+							title: '报价成功',
 							duration: 2000
 						})
 						setTimeout(() => {
 							uni.navigateBack({
 								delta: 1
 							})
-						}, 300)
+						}, 500)
 					})
 				});
 			},
