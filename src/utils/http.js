@@ -24,9 +24,11 @@ const http = ({
 	// console.log('【 data 】-11', data, (baseConfig.baseUrl || '') + url)
 	// uni.addInterceptor()//请求拦截
 	return new Promise((resolve, reject) => {
-		const isH5 = uni.getSystemInfoSync().platform === 'web';
+		const isWeb = ['windows', 'web'].includes(uni.getSystemInfoSync().platform);
+		console.log('【 isWeb 】-11', isWeb, uni.getSystemInfoSync().platform)
 		uni.request({
-			url: isH5 ? url : (baseUrl || baseConfig.baseUrl || '') + url,
+			// url, 
+			url: isWeb ? url : (baseUrl || baseConfig.baseUrl || '') + url,
 			method,
 			data,
 			// ContentType: 'application/json;charset-utf-8',

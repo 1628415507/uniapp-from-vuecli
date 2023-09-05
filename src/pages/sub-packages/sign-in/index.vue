@@ -1,7 +1,7 @@
 <!--
  * @Description: 首页-签收
  * @Date: 2023-08-17 10:26:18
- * @LastEditTime: 2023-08-25 16:18:21
+ * @LastEditTime: 2023-09-05 18:42:03
 -->
 
 <template>
@@ -41,8 +41,8 @@
 				<u-form-item label="签收方式:" prop="signMode" :labelWidth="labelWidth" :labelStyle="labelStyle">
 					<u-radio-group v-model="formData.signMode" placement="row" size="28rpx" iconSize="13px"
 						activeColor="#008474">
-						<u-radio v-for="(item, index) in SIGN_MODE" :key="index" :label="item.value" labelSize="28rpx"
-							:name="item.text" :customStyle="{marginRight: '30rpx'}">
+						<u-radio v-for="(item, index) in SIGN_MODE" :key="index" :label="item.text" labelSize="28rpx"
+							:name="item.value" :customStyle="{marginRight: '30rpx'}">
 						</u-radio>
 					</u-radio-group>
 				</u-form-item>
@@ -172,32 +172,25 @@
 				this.$refs.formRef?.validate().then(res => {
 					signedNode({
 						mtsTaskTmId: this.loadInfo.id,
-						taskStatus: this.info.taskStatus,
+						taskStatus: 'SIGNED', //this.info.taskStatus,
 						...this.formData
 					}).then(res => {
-						let fileListLen = this.fileList.length
-						for (let i = 0; i < fileListLen; i++) {
-							this.uploadFilePromise(this.fileList[i].url)
-							// const result = await this.uploadFilePromise(lists[i].url)
-							// let item = this.fileList[fileListLen]
-							// this.fileList.splice(fileListLen, 1, Object.assign(item, {
-							// 	status: 'success',
-							// 	message: '',
-							// 	url: result
-							// }))
-							// fileListLen++
-						}
 						uni.showToast({
 							icon: 'none',
-							title: '操作成功',
+							title: res.data ? '操作成功' : '操作失败',
 							duration: 2000
 						})
-						setTimeout(() => {
-							uni.navigateBack({
-								delta: 1
-							})
-						}, 300)
-
+						if (res.data) {
+							let fileListLen = this.fileList.length
+							for (let i = 0; i < fileListLen; i++) {
+								this.uploadFilePromise(this.fileList[i].url)
+							}
+							setTimeout(() => {
+								uni.navigateBack({
+									delta: 1
+								})
+							}, 300)
+						}
 					})
 				});
 			},
@@ -232,24 +225,26 @@
 				// }
 			},
 			// 上传图片
-			uploadFilePromise(url) {
-				console.log('【 url 】-240', url)
+			uploadFilePromise(path) {
+				console.log('【 path 】-240', path)
 				return new Promise((resolve, reject) => {
-					let a = uni.uploadFile({
-						url: `${this.$config.baseUrl}/filesystem/uploadFile`,
-						filePath: url,
+					uni.uploadFile({
+						// url: `${this.$config.baseUrl}/filesystem/uploadFile`,
+						url: '/filesystem/uploadFile',
+						filePath: path,
 						name: 'file',
 						formData: {
 							sourceOrderNo: this.info.taskNo,
 							sourceOrderType: 'SIGNED',
 						},
 						success: (res) => {
-							setTimeout(() => {
-								resolve(res.data)
-							}, 1000)
+							console.log('上传成功', res.data);
+							resolve(res.data)
+						},
+						fail: function(err) {
+							console.log('上传失败', err);
 						}
 					});
-					resolve()
 				})
 			},
 			blurSearch(val) {

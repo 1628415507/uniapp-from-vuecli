@@ -1,7 +1,7 @@
 <!--
  * @Description: 首页
  * @Date: 2023-08-04 09:27:20
- * @LastEditTime: 2023-08-25 11:31:43
+ * @LastEditTime: 2023-09-05 18:31:07
 -->
 <template>
 	<view class="home-page">
@@ -237,8 +237,11 @@
 					// }
 				}).catch(err => {
 					console.error(err)
-					this.loadStatus = "nomore"
-					this.nomoreText = "加载失败"
+					if (isInit) {
+						this.dataList = []
+					}
+					this.loadStatus = "loadmore"
+					this.loadmoreText = "加载失败"
 				}).finally(() => {
 					this.isRequested = true
 				})
@@ -276,13 +279,16 @@
 					mtsDispatchId,
 					taskStatus: overallNextTaskStatus,
 				}).then(res => {
+					const success = res.data
+					if (success) {
+						this.getDataList(true)
+						this.confirmShow = false
+					}
 					uni.showToast({
 						icon: 'none',
-						title: '操作成功',
+						title: success ? '操作成功' : '操作失败',
 						duration: 2000
 					})
-					this.getDataList()
-					this.confirmShow = false
 				})
 			},
 			// 获取位置信息

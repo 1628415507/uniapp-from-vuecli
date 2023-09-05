@@ -1,7 +1,7 @@
 <!--
  * @Description:  装车详情-任务详情
  * @Date: 2023-08-18 16:55:29
- * @LastEditTime: 2023-08-22 16:05:18
+ * @LastEditTime: 2023-09-05 18:34:49
 -->
 <template>
 	<view class="task-detail-page">
@@ -43,7 +43,7 @@
 					<view class="txt">{{info.planTotalQty}} CT</view>
 				</u-form-item>
 				<u-form-item label="任务货物重量：">
-					{{info.planTotalWeight}} KG
+					<view class="txt">{{info.planTotalWeight}} KG</view>
 				</u-form-item>
 				<u-form-item label="任务货物体积：">
 					<view class="txt">{{info.planTotalVolume}} CDM</view>
@@ -54,22 +54,20 @@
 		<view class="info-wrap">
 			<view class="title">物流信息</view>
 			<u-steps current="0" direction="column">
-				<u-steps-item v-for="(item,index) in info.nodeLineList" :key="index"
-					:title="item.lastModifyTime+item.nodeName ">
-					<u--image slot="icon" :src="require('@/static/image/icons/order.svg')" width="32rpx"
-						height="32rpx"></u--image>
-				</u-steps-item>
-				<!-- <u-steps-item title="2022-12-12 10:25:20已下单">
-					<u--image slot="icon" :src="require('@/static/image/icons/order.svg')" width="32rpx"
-						height="32rpx"></u--image>
-				</u-steps-item>
-				<u-steps-item title="2022-12-12 10:25:20已发货">
-					<u--image slot="icon" :src="require('@/static/image/icons/plane.svg')" width="32rpx"
-						height="32rpx"></u--image>
-				</u-steps-item>
-				<u-steps-item title="2022-12-12 10:25:20已签收" iconSize="32">
-					<u-icon name="calendar" slot="icon" color="#4F9B0E" size="40"></u-icon>
-				</u-steps-item> -->
+				<template v-for="(item,index) in info.nodeLineList">
+					<u-steps-item :key="index" :title="item.lastModifyTime+item.nodeName ">
+						<u-icon v-if="item.nodeCode==='SIGNED'" name="calendar" slot="icon" color="#4F9B0E" size="40">
+						</u-icon>
+						<u--image v-else slot="icon" :src="require('@/static/image/icons/order.svg')" width="32rpx"
+							height="32rpx">
+						</u--image>
+					</u-steps-item>
+					<!-- <u-steps-item v-else :key="index"
+						:title="item.lastModifyTime+item.nodeName ">
+						<u--image slot="icon" :src="require('@/static/image/icons/order.svg')" width="32rpx" height="32rpx">
+						</u--image>
+					</u-steps-item> -->
+				</template>
 			</u-steps>
 		</view>
 		<!-- 签收单管理 -->
@@ -131,8 +129,9 @@
 						this.fileList = fileList.map(item => {
 							return {
 								...item,
-								imgUrl: `${this.$config.baseUrl}/filesystem/downloadFile/${item
-									.fileKey}`
+								imgUrl: `/filesystem/downloadFile/${item.fileKey}`
+								// imgUrl: `${this.$config.baseUrl}/filesystem/downloadFile/${item
+								// 	.fileKey}`
 							}
 						})
 						console.log('this.fileList', this.fileList)

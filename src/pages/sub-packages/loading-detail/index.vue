@@ -1,7 +1,7 @@
 <!--
  * @Description: 装车详情
  * @Date: 2023-08-17 09:45:35
- * @LastEditTime: 2023-08-22 10:46:24
+ * @LastEditTime: 2023-09-05 18:35:45
 -->
 
 <template>
@@ -46,7 +46,8 @@
 					<view class="list-item__footer flex-sb">
 						<view class="btn-item" @click="reportAbnormal(item)">异常上报</view>
 						<view class="btn-item" @click="goUrl(item)">任务详情</view>
-						<view class="btn-item highlight" @click="handleItemClick(item)">
+						<view v-if="item.nextTaskStatus==='SIGNED'" class="btn-item highlight"
+							@click="handleItemClick(item)">
 							{{item.nextTaskStatusName}}
 						</view>
 					</view>
@@ -138,17 +139,21 @@
 				loadInfo: {}
 			}
 		},
-		onLoad(opt) {
-			console.log('opt', opt)
+	  onLoad(opt) {
+			// console.log('opt', opt)
 			this.loadInfo = opt
+			// this.getDataList()
+		},
+		onShow() {
+			console.log('onShow-opt', this.loadInfo)
 			this.getDataList()
 		},
 		methods: {
 			getDataList() {
 				// this.dataList = tempData
 				this.isRequired = false
-				getDetailList({
-					mtsDispatchId: this.loadInfo.id
+				this.loadInfo?.id &&getDetailList({
+					mtsDispatchId: this.loadInfo?.id
 				}).then(res => {
 					this.dataList = res.data.taskList.map(item => {
 						return {
