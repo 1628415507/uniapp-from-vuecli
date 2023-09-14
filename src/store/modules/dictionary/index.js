@@ -42,12 +42,16 @@ const actions = {
 			if (asyncDictsKeys.length) {
 				// 调接口
 				const dictStr = asyncDictsKeys.join(',')
+				const constantDicts = constantDictsObj
 				getDictRowList({
-					dictCode: dictStr
+					dictCodes: dictStr
 				}).then(res => {
-					const constantDicts = constantDictsObj
-					const _res = res.data
-					const asyncDicts = _res //covertAsyncDicts(_res)
+					console.log('【 dicts 】-20', res)
+					let asyncDicts = [] //covertAsyncDicts(_res)
+					if (res.success) {
+						const _res = res.data
+						asyncDicts = _res //covertAsyncDicts(_res)
+					}
 					const dicts = {
 						...constantDicts,
 						...asyncDicts
@@ -55,6 +59,7 @@ const actions = {
 					commit('SET_DICTS', dicts)
 					resolve(dicts)
 				}).catch(() => {
+					commit('SET_DICTS', constantDicts)
 					resolve()
 				})
 			}

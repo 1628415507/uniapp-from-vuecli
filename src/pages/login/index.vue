@@ -1,7 +1,7 @@
 <!--
  * @Description: 登录页
  * @Date: 2023-08-04 17:34:31
- * @LastEditTime: 2023-08-29 16:10:16
+ * @LastEditTime: 2023-09-14 10:43:21
 -->
 <template>
 	<!-- 账号登录 -->
@@ -18,12 +18,12 @@
 			<!-- APP支持 :rules="formRules" -->
 			<u-form :ref="formRef" :model="formData" labelPosition="left" labelWidth="0">
 				<!-- 手机号登录 -->
-				<view v-if="loginMethod==='phone'" class="phone-method">
+				<view v-if="loginMethod === 'phone'" class="phone-method">
 					<u-form-item label=" " border="none">
 						<u-input v-model="formData.phoneNumber" placeholder="请输入手机号">
 							<template slot="prefix">
 								<view class="phone-prefix" @click="showTelCodesPopup = true">
-									<text class="num">+{{telCode}}</text>
+									<text class="num">+{{ telCode }}</text>
 									<u-icon name="arrow-down"></u-icon>
 									<text class="line">|</text>
 								</view>
@@ -37,19 +37,18 @@
 				</view>
 
 				<!-- 密码登录 -->
-				<view v-if="loginMethod==='pwd'" class="pwd-method">
+				<view v-if="loginMethod === 'pwd'" class="pwd-method">
 					<view class="pwd-method-form">
 						<u-form-item label=" " prop="username">
 							<u-input v-model="formData.username" placeholder-class="placeholder-tips"
-								placeholder="请输入账号">
-							</u-input>
+								placeholder="请输入账号"> </u-input>
 						</u-form-item>
 						<u-form-item label=" " prop="password">
-							<u-input v-model="formData.password" :password="!pwdVisible"
+							<u-input v-model="formData.password" :password="pwdVisible ? true : undefined"
 								placeholder-class="placeholder-tips" placeholder="请输入密码">
 								<template slot="suffix">
-									<u-icon :name="pwdVisible?'eye-fill':'eye-off'" size="28"
-										@click="pwdVisible=!pwdVisible"></u-icon>
+									<u-icon :name="pwdVisible ? 'eye-fill' : 'eye-off'" size="28"
+										@click="pwdVisible = !pwdVisible"></u-icon>
 								</template>
 							</u-input>
 						</u-form-item>
@@ -66,7 +65,7 @@
 
 				<!-- 同意协议 -->
 				<view class="protocol-wrap">
-					<view style="margin-top: 9rpx;">
+					<view style="margin-top: 9rpx">
 						<u-checkbox-group v-model="formData.isAgree" placement="row" size="28rpx" iconSize="13px"
 							activeColor="#008474">
 							<u-checkbox label=" " :activeColor="colorTheme" :name="true" labelSize="28rpx">
@@ -74,8 +73,8 @@
 						</u-checkbox-group>
 					</view>
 					<view class="protocol-txt">
-						未注册的手机号，登录时将自动注册，且代表您已 同意<text class="highlight">《某某注册协议》</text>和 <text
-							class="highlight">《某某隐私政策》</text>
+						未注册的手机号，登录时将自动注册，且代表您已 同意<text class="highlight">《某某注册协议》</text>和
+						<text class="highlight">《某某隐私政策》</text>
 					</view>
 				</view>
 			</u-form>
@@ -93,8 +92,8 @@
 					</view>
 					<view class="btn-item-wrap flex-sb">
 						<view class="btn-item flex-c" @click="loginOnAppByDDing">
-							<u--image :src="require('@/static/image/icons/dingding.png')" width="48rpx"
-								height="48rpx"></u--image>
+							<u--image :src="require('@/static/image/icons/dingding.png')" width="48rpx" height="48rpx">
+							</u--image>
 							<text class="label">钉钉登录</text>
 						</view>
 					</view>
@@ -124,11 +123,10 @@
 		<TelCodesPopup v-if="showTelCodesPopup" :show.sync="showTelCodesPopup" @getInfo="getTelCodesInfo">
 		</TelCodesPopup>
 		<!-- 输入验证码 -->
-		<SetCodesPopup v-if="setCodesPopup" :show.sync="setCodesPopup" @confirm="getVerificationCode">
-		</SetCodesPopup>
+		<SetCodesPopup v-if="setCodesPopup" :show.sync="setCodesPopup" @confirm="getVerificationCode"> </SetCodesPopup>
 		<!-- 同意协议提示框 -->
 		<u-modal :show="showAgreeModal" title="提示" @confirm="handleAgree" ref="uModal" width="600rpx"
-			:showCancelButton="true" confirmText="同意" :confirmColor="colorTheme" @cancel="showAgreeModal=false">
+			:showCancelButton="true" confirmText="同意" :confirmColor="colorTheme" @cancel="showAgreeModal = false">
 			<view class="slot-content">
 				<!-- <rich-text :nodes="content"></rich-text> -->
 				<view class="protocol-txt">
@@ -140,11 +138,11 @@
 </template>
 
 <script>
-	import TelCodesPopup from "@/components/tel-codes/index.vue";
-	import SetCodesPopup from "./component/code-popup.vue";
+	import TelCodesPopup from '@/components/tel-codes/index.vue';
+	import SetCodesPopup from './component/code-popup.vue';
 	import {
 		login
-	} from '@/apis/login.js'
+	} from '@/apis/login.js';
 	export default {
 		components: {
 			TelCodesPopup,
@@ -155,20 +153,20 @@
 				// 公共
 				colorTheme: '#008474',
 				showAgreeModal: false,
-				swiperList: [
-					require('@/static/image/demo/swiper1.png'),
-				],
+				swiperList: [require('@/static/image/demo/swiper1.png')],
 				loginMethod: 'phone',
 				currentTab: '0',
 				tabsList: [{
-					name: '手机号',
-					value: 'phone'
-				}, {
-					name: '密码登录',
-					value: 'pwd'
-				}],
+						name: '手机号',
+						value: 'phone'
+					},
+					{
+						name: '密码登录',
+						value: 'pwd'
+					}
+				],
 				// 手机号登录
-				telCode: "86",
+				telCode: '86',
 				// 验证码
 				codeTips: '',
 				codeDisabled: false,
@@ -183,7 +181,7 @@
 					password: '123456',
 					isRemember: [], //记住我
 					phoneNumber: '13960081319',
-					isAgree: [], //同意协议
+					isAgree: [] //同意协议
 					// wechatCode: '',
 				},
 				formRules: {
@@ -198,7 +196,7 @@
 						required: true,
 						message: '请输入密码',
 						trigger: 'blur'
-					},
+					}
 					// phoneNumber: [{
 					// 		required: true,
 					// 		message: '请输入手机号',
@@ -222,65 +220,65 @@
 			this.$nextTick(() => {
 				// 需要兼容微信小程序，并且校验规则中含有方法等，只能通过setRules方法设置规则。
 				this.$refs[this.formRef]?.setRules(this.formRules);
-			})
+			});
 		},
 		onLoad() {},
 		methods: {
 			// 公共-登录方式切换
 			tabClick(item) {
-				this.loginMethod = item.value
-				this.currentTab = item.index
+				this.loginMethod = item.value;
+				this.currentTab = item.index;
 				console.log('item', item);
 			},
 			// 公共-验证是否同意授权
 			validAgree() {
 				if (!this.formData.isAgree[0]) {
-					this.showAgreeModal = true
-					return false
+					this.showAgreeModal = true;
+					return false;
 				} else {
-					return true
+					return true;
 				}
 			},
 			// 公共-同意
 			handleAgree() {
 				// console.log('handleAgree', this.formData.isAgree[0]);
-				this.formData.isAgree = [true]
-				this.showAgreeModal = false
+				this.formData.isAgree = [true];
+				this.showAgreeModal = false;
 			},
 			// 手机号登录-获取手机号区码
 			getTelCodesInfo(info) {
-				this.telCode = info.value
+				this.telCode = info.value;
 			},
 			// 手机号登录-发送验证码
 			setVerificationCode() {
 				if (!uni.$u.test.mobile(this.formData.phoneNumber)) {
 					uni.$u.toast('手机号格式不正确');
-					return
+					return;
 				}
 				if (!this.validAgree()) {
-					return
+					return;
 				}
-				this.codeLoading = true
+				this.codeLoading = true;
 				// 模拟调接口
 				setTimeout(() => {
-					this.codeLoading = false
-					this.setCodesPopup = true
+					this.codeLoading = false;
+					this.setCodesPopup = true;
 				}, 2000);
 			},
 			// 手机号登录-获取验证码
 			getVerificationCode(code) {
-				this.getCommonInfo()
+				this.getCommonInfo();
 			},
 			// 密码登录
 			loginByPwd() {
 				this.$refs[this.formRef]?.validate().then(res => {
 					if (!this.validAgree()) {
-						return
+						return;
 					}
 					// 调接口
 					//   login(this.formData).then(res => {
 					//     console.log('【 login-success 】-30', res);
-					this.getCommonInfo()
+					this.getCommonInfo();
 					//   }).catch((err) => {
 					//       uni.showToast({
 					//         icon: 'none',
@@ -293,23 +291,23 @@
 			// APP端-微信登录
 			loginOnAppByWechat() {
 				if (!this.validAgree()) {
-					return
+					return;
 				}
 				uni.login({
-					"provider": "weixin",
-					"onlyAuthorize": true, // 微信登录仅请求授权认证
+					provider: 'weixin',
+					onlyAuthorize: true, // 微信登录仅请求授权认证
 					success: function(event) {
 						const {
 							code
-						} = event
+						} = event;
 						console.log('登录成功，获取登录凭证', code);
 					},
 					fail: function(err) {
 						console.log('登录授权失败', err);
-						// 登录授权失败  
+						// 登录授权失败
 						// err.code是错误码
 					}
-				})
+				});
 			},
 			// APP端-钉钉登录
 			loginOnAppByDDing() {
@@ -329,23 +327,23 @@
 			// 小程序-微信授权登录
 			loginByWeChat() {
 				if (!this.validAgree()) {
-					return
+					return;
 				}
 			},
 			// 小程序-手机授权登录
 			getPhoneNumber(e) {
-				console.log('手机授权登录')
+				console.log('手机授权登录');
 				if (!this.validAgree()) {
-					return
+					return;
 				}
 				if (e.detail.errMsg === 'getPhoneNumber:ok') {
-					console.log(e.detail, '手机授权')
+					console.log(e.detail, '手机授权');
 					// login({
 					// 	...this.formData,
 					// 	wechatCode: e.detail.code // 授权码
 					// }).then(res => {
 					// 	console.log('【 login-success 】-30', res);
-					this.getCommonInfo()
+					this.getCommonInfo();
 					// }).catch((err) => {
 					// 	uni.showToast({
 					// 		icon: 'none',
@@ -360,12 +358,12 @@
 			getCommonInfo() {
 				this.$store.dispatch('user/setActiveTab', 'home'); //设置激活的tab，默认首页
 				this.$store.dispatch('user/setUserInfo', this.formData); //设置激活的tab，默认首页
-				this.$store.dispatch('dictionary/setDicts') // 获取字典
+				this.$store.dispatch('dictionary/setDicts'); // 获取字典
 				// 跳转
 				uni.switchTab({
 					url: '/pages/home/index'
 				});
-			},
+			}
 		}
 	};
 </script>
@@ -392,7 +390,6 @@
 	// 	height: 32rpx !important;
 	// }
 
-
 	//
 	.login-page {
 		position: relative;
@@ -406,7 +403,7 @@
 			// height: 80vh;
 			padding: 70rpx 40rpx 30rpx 40rpx;
 			border-radius: 50rpx 50rpx 0 0;
-			background: #FFFFFF;
+			background: #ffffff;
 			overflow: hidden;
 
 			.title {
@@ -414,7 +411,7 @@
 				font-size: 52rpx;
 				font-family: PingFang SC-Medium, PingFang SC;
 				font-weight: 500;
-				color: #1D2129;
+				color: #1d2129;
 			}
 
 			.tabs-wrap {
@@ -429,7 +426,7 @@
 			align-items: flex-start;
 			font-size: 28rpx;
 			font-weight: 400;
-			color: #4E5969;
+			color: #4e5969;
 			line-height: 44rpx;
 		}
 
@@ -441,7 +438,7 @@
 				width: 48%;
 				height: 90rpx;
 				border-radius: 12rpx;
-				border: 2rpx solid #D9DCE1;
+				border: 2rpx solid #d9dce1;
 
 				.btn-item {
 					width: 100%;
@@ -466,7 +463,7 @@
 			display: flex;
 			font-size: 32rpx;
 			font-weight: 400;
-			color: #1D2129;
+			color: #1d2129;
 			line-height: 48rpx;
 
 			.num {
@@ -474,7 +471,7 @@
 			}
 
 			.line {
-				color: #D9DCE1;
+				color: #d9dce1;
 				padding: 0 10rpx;
 			}
 		}

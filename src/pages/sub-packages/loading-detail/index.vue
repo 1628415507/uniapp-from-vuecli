@@ -46,7 +46,7 @@
 					<view class="list-item__footer flex-sb">
 						<view class="btn-item" @click="reportAbnormal(item)">异常上报</view>
 						<view class="btn-item" @click="goUrl(item)">任务详情</view>
-						<view v-if="item.nextTaskStatus==='SIGNED'" class="btn-item highlight"
+						<view v-if="item.taskStatus !== 'SIGNED'" class="btn-item highlight"
 							@click="handleItemClick(item)">
 							{{item.nextTaskStatusName}}
 						</view>
@@ -139,7 +139,7 @@
 				loadInfo: {}
 			}
 		},
-	  onLoad(opt) {
+		onLoad(opt) {
 			// console.log('opt', opt)
 			this.loadInfo = opt
 			// this.getDataList()
@@ -152,7 +152,7 @@
 			getDataList() {
 				// this.dataList = tempData
 				this.isRequired = false
-				this.loadInfo?.id &&getDetailList({
+				this.loadInfo?.id && getDetailList({
 					mtsDispatchId: this.loadInfo?.id
 				}).then(res => {
 					this.dataList = res.data.taskList.map(item => {

@@ -27,8 +27,8 @@ const http = ({
 		const isWeb = ['windows', 'web'].includes(uni.getSystemInfoSync().platform);
 		console.log('【 isWeb 】-11', isWeb, uni.getSystemInfoSync().platform)
 		uni.request({
-			// url, 
-			url: isWeb ? url : (baseUrl || baseConfig.baseUrl || '') + url,
+			url,
+			// url: isWeb ? url : (baseUrl || baseConfig.baseUrl || '') + url,
 			method,
 			data,
 			// ContentType: 'application/json;charset-utf-8',

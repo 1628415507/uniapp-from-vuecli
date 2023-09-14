@@ -142,7 +142,7 @@
 		},
 		onReady() {
 			//onReady 为uni-app支持的生命周期之一
-			this.$refs.formRef.setRules(this.formRules)
+			// this.$refs.formRef.setRules(this.formRules)
 		},
 		onLoad(opt) {
 			this.loadInfo = opt
