@@ -1,7 +1,7 @@
 <!--
  * @Description: 首页
  * @Date: 2023-08-04 09:27:20
- * @LastEditTime: 2023-08-30 17:37:19
+ * @LastEditTime: 2023-10-08 10:16:35
 -->
 <template>
 	<view class="home-page">
@@ -26,25 +26,23 @@
 				activeColor="#fff" fontSize="28rpx"></u-subsection>
 		</view> -->
 		<!-- 列表 -->
-		<scroll-view :scroll-y="true" :style="{height: 'calc(100vh - 300rpx)'}" @scroll="scroll"
+		<scroll-view :scroll-y="true" :style="{ height: 'calc(100vh - 300rpx)' }" @scroll="scroll"
 			@scrolltolower="scrollToLower" :scroll-top="scrollTop">
 			<view class="list-wrap">
-				<view class="list-item" v-for="(item,index) in dataList" :key="item.scctQuotationId">
-					<view class="list-item__content" @click="goUrl(index,'detail')">
+				<view class="list-item" v-for="(item, index) in dataList" :key="item.scctQuotationId">
+					<view class="list-item__content" @click="goUrl(index, 'detail')">
 						<view class="content-top flex-sb">
 							<view class="content-top__left flex-col-sb">
-								<text class="title ellipsis">{{item.inquiryTitle}}</text>
-								<view class="label">
-									截止时间 {{item.quotationDeadline||'-'}}
+								<text class="title ellipsis">{{ item.inquiryTitle }}</text>
+								<view class="label"> 截止时间 {{ item.quotationDeadline || '-' }} </view>
+							</view>
+							<view v-if="tabStatus === 'QUOTATION_STATUS_END'" class="content-top__right flex-c">
+								<view class="tag" :class="item.quoteStatus == 30 ? 'tag--active' : ''">
+									{{ QUOTATION_STATUS[item.quoteStatus] || '-' }}
 								</view>
 							</view>
-							<view v-if="tabStatus==='QUOTATION_STATUS_END'" class="content-top__right flex-c">
-								<view class="tag" :class="item.quotationStatus==30?'tag--active':''">
-									{{QUOTATION_STATUS[item.quotationStatus]||'-'}}
-								</view>
-							</view>
-							<view v-if="tabStatus==='HAVE_QUOTATION_NOT_END'" class="content-top__right">
-								<view class="num">{{item.ranking||' '}}</view>
+							<view v-if="tabStatus === 'HAVE_QUOTATION_NOT_END'" class="content-top__right">
+								<view class="num">{{ item.ranking || ' ' }}</view>
 								<view class="label">当前排名</view>
 							</view>
 						</view>
@@ -52,36 +50,34 @@
 							<view class="content-middle__item flex">
 								<u-image class="img-icon" :src="require('@/static/image/icons/compass.svg')"
 									width="37rpx" height="37rpx"></u-image>
-								<text class="cm-txt">总里程 {{item.totalMileage}}</text>
+								<text class="cm-txt">总里程 {{ item.totalMileage }}</text>
 							</view>
 							<view class="content-middle__item flex">
 								<u-image class="img-icon" :src="require('@/static/image/icons/frame.svg')" width="37rpx"
 									height="37rpx"></u-image>
-								<text class="cm-txt">运输方式 {{TRANS_MODE[item.transMode]||'-'}}</text>
+								<text class="cm-txt">运输方式 {{ TRANS_MODE[item.transMode] || '-' }}</text>
 							</view>
 						</view>
 						<view class="content-bottom">
 							<view class="flex-sb">
 								<view class="content-bottom__item">
 									<view class="label">计划总数量</view>
-									<view class="value">{{item.planTotalQty ||'-'}} KG</view>
+									<view class="value">{{ item.planTotalQty || '-' }} KG</view>
 								</view>
 								<view class="content-bottom__item">
 									<view class="label">计划总体积</view>
-									<view class="value">{{item.planTotalVolume ||'-'}} CDM</view>
+									<view class="value">{{ item.planTotalVolume || '-' }} CDM</view>
 								</view>
 								<view class="content-bottom__item">
 									<view class="label">计划总重量</view>
-									<view class="value">{{item.planTotalWeight ||'-'}} CT</view>
+									<view class="value">{{ item.planTotalWeight || '-' }} CT</view>
 								</view>
 							</view>
 						</view>
 					</view>
-					<view v-if="tabStatus!=='QUOTATION_STATUS_END'" class="list-item__footer flex-sb">
+					<view v-if="tabStatus !== 'QUOTATION_STATUS_END'" class="list-item__footer flex-sb">
 						<view class="btn-item" @click="handleItemClick(index)">弃标</view>
-						<view class="btn-item highlight" @click="goUrl(index)">
-							去报价
-						</view>
+						<view class="btn-item highlight" @click="goUrl(index)"> 去报价 </view>
 					</view>
 				</view>
 				<!-- 	<u-empty v-if='isRequested && (dataList.length === 0)' text="暂无数据" mode="list" margin-top="200"
@@ -92,10 +88,10 @@
 				iconSize="35rpx" lineColor="#fff" />
 		</scroll-view>
 		<!-- 确认框 -->
-		<u-modal :show="confirmShow" :showCancelButton="true" :confirmColor="colorTheme" @cancel="confirmShow=false"
+		<u-modal :show="confirmShow" :showCancelButton="true" :confirmColor="colorTheme" @cancel="confirmShow = false"
 			@confirm="confirmModal">
-			<view style="width: 100%;">
-				<view style="margin:10rpx 0">弃标理由：</view>
+			<view style="width: 100%">
+				<view style="margin: 10rpx 0">弃标理由：</view>
 				<u--textarea v-model="reason" placeholder="请输入"></u--textarea>
 			</view>
 		</u-modal>
@@ -105,12 +101,12 @@
 </template>
 
 <script>
-	import pageMixin from '@/mixin/pageMixin.js'
+	import pageMixin from '@/mixin/pageMixin.js';
 	import {
 		getList,
 		abandoningBid
-	} from '@/apis/quoted-detail.js'
-	import TabBar from '@/components/tab-bar'
+	} from '@/apis/quoted-detail.js';
+	import TabBar from '@/components/tab-bar';
 	export default {
 		mixins: [pageMixin],
 		components: {
@@ -131,14 +127,15 @@
 				tabStatus: 'NOT_QUOTATION',
 				subsectionList: [{
 						name: '待报价',
-						value: 'NOT_QUOTATION',
+						value: 'NOT_QUOTATION'
 					},
 					{
 						name: '待开标',
-						value: 'HAVE_QUOTATION_NOT_END',
-					}, {
+						value: 'HAVE_QUOTATION_NOT_END'
+					},
+					{
 						name: '已完成',
-						value: 'QUOTATION_STATUS_END',
+						value: 'QUOTATION_STATUS_END'
 					}
 				],
 				// 列表
@@ -148,8 +145,8 @@
 				clickItem: {},
 				// 确认框
 				confirmShow: false,
-				reason: ""
-			}
+				reason: ''
+			};
 		},
 		computed: {
 			// 中标状态
@@ -157,34 +154,34 @@
 				return this.$dict.getDictsEnum('QUOTATION_STATUS', {
 					keyProp: 'value',
 					valueProp: 'text'
-				})
+				});
 			},
 			// 运输方式
 			TRANS_MODE() {
 				return this.$dict.getDictsEnum('TRANS_MODE', {
 					keyProp: 'value',
 					valueProp: 'text'
-				})
-			},
+				});
+			}
 		},
 		onLoad() {
-			uni.hideTabBar() //隐藏原生的导航栏
+			uni.hideTabBar(); //隐藏原生的导航栏
 			// this.getDataList(true)
 		},
 		onShow(opt) {
 			// console.log('onShow', opt); // 输出：value1
 			// if (opt.isInit) {
 			// 	this.getDataList(true)
-			this.getDataList(true)
+			this.getDataList(true);
 			// }
 		},
 		methods: {
 			// 完成状态切换
 			tabClick(item) {
-				console.log('【 item 】-177', item)
-				this.tabStatus = item.value
-				this.current = item.index
-				this.getDataList(true)
+				console.log('【 item 】-177', item);
+				this.tabStatus = item.value;
+				this.current = item.index;
+				this.getDataList(true);
 			},
 			// sectionChange(index) {
 			// 	this.current = index;
@@ -193,80 +190,84 @@
 			// },
 			// 获取列表数据
 			getDataList(isInit = false) {
-				this.isRequested = false
-				this.currentPage = isInit ? 1 : this.currentPage
-				this.loadStatus = 'loading'
+				this.isRequested = false;
+				this.currentPage = isInit ? 1 : this.currentPage;
+				this.loadStatus = 'loading';
 				getList({
-					currentPage: this.currentPage,
-					pageSize: this.pageSize,
-					tabStatus: this.tabStatus,
-					keyword: this.keyword
-				}).then(res => {
-					let newData = res.records.map(item => {
-						return {
-							...item,
-							planTotalWeight: item.planTotalWeight?.toFixed(2),
-							planTotalVolume: item.planTotalVolume?.toFixed(2),
-							planTotalQty: item.planTotalQty?.toFixed(2),
-						}
+						currentPage: this.currentPage,
+						pageSize: this.pageSize,
+						tabStatus: this.tabStatus,
+						keyword: this.keyword
 					})
-					this.dataList = isInit ? newData : this.dataList.concat(newData)
-					isInit && this.goTop() //回到顶部
-					console.log('【dataList】', this.dataList);
-					// 分页处理
-					this.pageStatus(newData.length, this.dataList.length)
-				}).catch(err => {
-					console.error(err)
-					if (isInit) {
-						this.dataList = []
-					}
-					this.loadStatus = "loadmore"
-					this.loadmoreText = "加载失败"
-				}).finally(() => {
-					this.isRequested = true
-				})
+					.then(res => {
+						let newData = res.records.map(item => {
+							return {
+								...item,
+								planTotalWeight: item.planTotalWeight?.toFixed(2),
+								planTotalVolume: item.planTotalVolume?.toFixed(2),
+								planTotalQty: item.planTotalQty?.toFixed(2)
+							};
+						});
+						this.dataList = isInit ? newData : this.dataList.concat(newData);
+						isInit && this.goTop(); //回到顶部
+						console.log('【dataList】', this.dataList);
+						// 分页处理
+						this.pageStatus(newData.length, this.dataList.length);
+					})
+					.catch(err => {
+						console.error(err);
+						if (isInit) {
+							this.dataList = [];
+						}
+						this.loadStatus = 'loadmore';
+						this.loadmoreText = '加载失败';
+					})
+					.finally(() => {
+						this.isRequested = true;
+					});
 			},
 			// 路径跳转
 			goUrl(index, type = '') {
-				const item = this.dataList[index] || {}
-				console.log('【 item 】-221', item)
+				const item = this.dataList[index] || {};
+				console.log('【 item 】-221', item);
 				const {
 					scctInquiryId,
 					scctQuotationId,
-					quotationStatus,
+					quoteStatus,
 					quotationDeadline,
 					quotationStartTime
-				} = item
+				} = item;
 				if (type === 'detail') {
 					if (this.tabStatus !== 'QUOTATION_STATUS_END') {
-						return
+						return;
 					}
 				} else {
-					if (new Date(quotationStartTime) > new Date() || new Date(quotationDeadline) < new Date()) {
+					// if (new Date(quotationStartTime) > new Date() || new Date(quotationDeadline) < new Date()) {
+					if (item.inquiryStatus?.toString() !== '30') {
 						uni.showToast({
 							icon: 'none',
 							title: '请在询价有效期间内进行报价！',
 							duration: 2000
-						})
-						return
+						});
+						return;
 					}
 				}
 				const info = {
 					scctInquiryId,
 					scctQuotationId,
-					quotationStatus: this.tabStatus === 'NOT_QUOTATION' ? 10 : quotationStatus,
+					quoteStatus: this.tabStatus === 'NOT_QUOTATION' ? 10 : quoteStatus,
 					quotationDeadline,
 					type
-				}
+				};
 				uni.navigateTo({
 					url: `/pages/sub-packages/quoted-detail/index?info=${JSON.stringify(info)}`
 				});
 			},
 			handleItemClick(index) {
-				const item = this.dataList[index]
-				this.reason = ''
-				this.confirmShow = true
-				this.clickItem = item
+				const item = this.dataList[index];
+				this.reason = '';
+				this.confirmShow = true;
+				this.clickItem = item;
 			},
 			// 确认弹框
 			confirmModal() {
@@ -275,28 +276,28 @@
 						icon: 'none',
 						title: '弃标理由必填',
 						duration: 2000
-					})
-					return
+					});
+					return;
 				}
 				abandoningBid({
 					scctInquiryId: this.clickItem.scctInquiryId, //询价管理主键
-					reason: this.reason,
+					reason: this.reason
 				}).then(res => {
-					console.log('【 abandoningBid-res 】-234', res)
-					const success = res
+					console.log('【 abandoningBid-res 】-234', res);
+					const success = res;
 					uni.showToast({
 						icon: 'none',
 						title: success ? '操作成功' : '操作失败',
 						duration: 2000
-					})
+					});
 					if (success) {
-						this.getDataList(true)
-						this.confirmShow = false
+						this.getDataList(true);
+						this.confirmShow = false;
 					}
-				})
-			},
+				});
+			}
 		}
-	}
+	};
 </script>
 
 <style lang="scss">
@@ -326,12 +327,12 @@
 			margin-bottom: 24rpx;
 			box-sizing: border-box;
 			width: 100%;
-			background: #FFFFFF;
+			background: #ffffff;
 			border-radius: 16rpx;
 
 			.label {
 				font-size: 24rpx;
-				color: #86909C;
+				color: #86909c;
 			}
 
 			.list-item__content {
@@ -372,10 +373,10 @@
 							height: 48rpx;
 							background: rgba(134, 144, 156, 0.08);
 							border-radius: 6rpx;
-							border: 2rpx solid #86909C;
+							border: 2rpx solid #86909c;
 							font-size: 24rpx;
 							font-weight: 400;
-							color: #86909C;
+							color: #86909c;
 							line-height: 48rpx;
 						}
 
@@ -391,7 +392,7 @@
 					margin: 24rpx auto;
 					font-size: 30rpx;
 					font-weight: 500;
-					color: #1D2129;
+					color: #1d2129;
 
 					.content-middle__item {
 						margin: 15rpx;
@@ -421,7 +422,7 @@
 				height: 96rpx;
 				line-height: 96rpx;
 				border-top: 2rpx solid $colorBorder;
-				color: #1D2129;
+				color: #1d2129;
 
 				.btn-item {
 					width: 100%;
@@ -460,7 +461,7 @@
 	}
 
 	.gradient--center:before {
-		content: "";
+		content: '';
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -471,7 +472,7 @@
 	}
 
 	.gradient--center:after {
-		content: "";
+		content: '';
 		position: absolute;
 		background-image: linear-gradient(to right, rgba(0, 132, 116, 1), rgba(0, 132, 116, 0.1)) !important;
 		top: 0;
@@ -480,8 +481,6 @@
 		height: $subsectionH;
 		border-radius: 0 72rpx 72rpx 0;
 	}
-
-
 
 	::v-deep .home-page .subsection-wrap {
 		margin: 20rpx auto 32rpx auto;

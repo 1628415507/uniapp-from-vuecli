@@ -1,7 +1,7 @@
 <!--
  * @Description: 选择控件-多选、单选
  * @Date: 2023-08-05 11:40:54
- * @LastEditTime: 2023-08-24 13:42:49
+ * @LastEditTime: 2023-10-08 10:03:03
 -->
 <template>
 	<u-popup :show="visible" mode="bottom" :round="25" :closeOnClickOverlay="false" @close="handlePopupClose"
@@ -9,15 +9,15 @@
 		<view class="select-popup">
 			<view class="content-top">
 				<view class="close" @click="handlePopupClose">取消</view>
-				<view v-if="title" class="title">{{title}}</view>
+				<view v-if="title" class="title">{{ title }}</view>
 				<view class="confirm" @click="confirm">确定</view>
 			</view>
-			<view class="select-list" :style="{height:'30vh'}">
-				<u-list @scrolltolower="scrollToLower" height="100%">
+			<view class="select-list" :style="{ height: '30vh' }">
+				<u-list v-if="dataList && dataList.length" @scrolltolower="scrollToLower" height="100%">
 					<u-list-item v-for="(item, index) in dataList" :key="index">
-						<view class="list-item" @click="clickItem(item,index)">
-							<view class="label" :class="item.disabled?'disabled':''">
-								{{item[labelProp]||'-'}}
+						<view class="list-item" @click="clickItem(item, index)">
+							<view class="label" :class="item.disabled ? 'disabled' : ''">
+								{{ item[labelProp] || '-' }}
 							</view>
 							<view v-if="checkArr.includes(item[valueProp])" class="">
 								<u-icon name="checkmark" color="#036564" size="40"></u-icon>
@@ -25,6 +25,7 @@
 						</view>
 					</u-list-item>
 				</u-list>
+				<view v-else class="empty"> 暂无数据 </view>
 			</view>
 		</view>
 	</u-popup>
@@ -42,29 +43,33 @@
 		{
 			label: '选项三',
 			value: 3
-		}, {
+		},
+		{
 			label: '禁用选项',
 			value: 4,
-			disabled: true,
+			disabled: true
 		},
 		{
 			label: '选项五',
 			value: 5
-		}, {
+		},
+		{
 			label: '选项六',
 			value: 6
-		}, {
+		},
+		{
 			label: '选项七',
 			value: 7
 		},
 		{
 			label: '选项五',
 			value: 8
-		}, {
+		},
+		{
 			label: '选项六',
 			value: 9
 		}
-	]
+	];
 	export default {
 		props: {
 			show: {
@@ -98,13 +103,13 @@
 			multiple: {
 				type: Boolean, //是否多选
 				default: false //默认单选
-			},
+			}
 		},
 		data() {
 			return {
 				// 公共
 				visible: false,
-				// 
+				//
 				dataList: [], // 列表
 				checkArr: [] //选中的值
 			};
@@ -120,7 +125,7 @@
 		computed: {},
 		methods: {
 			initList() {
-				this.dataList = this.list //tempData
+				this.dataList = this.list; //tempData
 			},
 			// 当前弹框-关闭
 			handlePopupClose() {
@@ -129,58 +134,57 @@
 			// 列表-点击列表项触发
 			clickItem(item) {
 				if (item.disabled) {
-					return false
+					return false;
 				}
 				// 单选
 				if (!this.multiple) {
-					this.checkArr = [item[this.valueProp]]
+					this.checkArr = [item[this.valueProp]];
 				} else {
-					const val = item[this.valueProp]
+					const val = item[this.valueProp];
 					const index = this.checkArr.indexOf(val);
 					if (index !== -1) {
 						this.checkArr.splice(index, 1);
 					} else {
-						this.checkArr.push(item[this.valueProp])
+						this.checkArr.push(item[this.valueProp]);
 					}
 				}
-				console.log('checkArr', this.checkArr)
+				console.log('checkArr', this.checkArr);
 			},
 			// 列表-触底
 			scrollToLower() {},
 			confirm() {
 				const checkItems = this.dataList.filter(item => {
-					return this.checkArr.includes(item[this.valueProp])
-				})
+					return this.checkArr.includes(item[this.valueProp]);
+				});
 				if (this.multiple) {
-					this.$emit('getInfo', checkItems) //TODO:只适合dataList是同步数据的场景
-					this.$emit('confirm', this.checkArr)
+					this.$emit('getInfo', checkItems); //TODO:只适合dataList是同步数据的场景
+					this.$emit('confirm', this.checkArr);
 				} else {
-					this.$emit('confirm', this.checkArr[0])
-					this.$emit('getInfo', checkItems[0]) //TODO:只适合dataList是同步数据的场景
+					this.$emit('confirm', this.checkArr[0]);
+					this.$emit('getInfo', checkItems[0]); //TODO:只适合dataList是同步数据的场景
 				}
-				this.handlePopupClose()
+				this.handlePopupClose();
 			}
 		},
 		onReady() {},
 		onLoad() {},
 		mounted() {
-			this.initList()
+			this.initList();
 			this.visible = this.show;
 			// 初始化默认值
 			if (this.defaultValue) {
 				if (this.multiple) {
 					if (!Array.isArray(this.defaultValue)) {
-						console.error('select-popup为多选，defaultValue须为Array类型')
+						console.error('select-popup为多选，defaultValue须为Array类型');
 					}
 				} else {
 					if (!['string', 'number'].includes(typeof this.defaultValue)) {
-						console.error('select-popup为单选，defaultValue须为string或number类型')
+						console.error('select-popup为单选，defaultValue须为string或number类型');
 					}
 				}
-				this.checkArr = Array.isArray(this.defaultValue) ? this.defaultValue : [this.defaultValue]
-				console.log('this.checkArr===,', this.checkArr)
+				this.checkArr = Array.isArray(this.defaultValue) ? this.defaultValue : [this.defaultValue];
+				console.log('this.checkArr===,', this.checkArr);
 			}
-
 		}
 	};
 </script>
@@ -189,7 +193,7 @@
 	.select-popup {
 		padding: 24rpx 32rpx;
 		max-height: 40vh;
-		color: #1D2129;
+		color: #1d2129;
 
 		.content-top {
 			display: flex;
@@ -199,7 +203,7 @@
 			font-weight: 400;
 
 			.close {
-				color: #4E5969;
+				color: #4e5969;
 			}
 
 			.confirm {
@@ -217,9 +221,16 @@
 				height: 70rpx;
 
 				.disabled {
-					color: #A9AEB8;
+					color: #a9aeb8;
 				}
 			}
+		}
+
+		.empty {
+			min-height: 100rpx;
+			line-height: 100rpx;
+			text-align: center;
+			color: #ccc;
 		}
 	}
 </style>

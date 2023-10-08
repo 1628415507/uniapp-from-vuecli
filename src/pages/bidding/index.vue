@@ -6,17 +6,17 @@
 <template>
 	<view class="bidding-page">
 		<!-- 列表 -->
-		<scroll-view :scroll-y="true" :style="{height: 'calc(100vh - 130rpx)'}" @scroll="scroll"
+		<scroll-view :scroll-y="true" :style="{ height: 'calc(100vh - 130rpx)' }" @scroll="scroll"
 			@scrolltolower="scrollToLower" :scroll-top="scrollTop">
 			<view class="list-wrap">
-				<view class="list-item" v-for="(item,index) in dataList" :key="index">
+				<view class="list-item" v-for="(item, index) in dataList" :key="index">
 					<view class="list-item__content">
 						<view class="content-top flex-sb">
 							<view class="content-top__left flex-col-sb">
-								<text class="title ellipsis">{{item.inquiryTitle}}</text>
+								<text class="title ellipsis">{{ item.inquiryTitle }}</text>
 								<view class="price">
 									<!-- TODO:字段 -->
-									中标价格 {{item.includingTaxPriceTotal||'-'}}
+									中标价格 {{ item.includingTaxTotal || '-' }}
 								</view>
 							</view>
 						</view>
@@ -24,27 +24,27 @@
 							<view class="content-middle__item flex">
 								<u-image class="img-icon" :src="require('@/static/image/icons/compass.svg')"
 									width="37rpx" height="37rpx"></u-image>
-								<text class="cm-txt">总里程 {{item.totalMileage}}</text>
+								<text class="cm-txt">总里程 {{ item.totalMileage }}</text>
 							</view>
 							<view class="content-middle__item flex">
 								<u-image class="img-icon" :src="require('@/static/image/icons/frame.svg')" width="37rpx"
 									height="37rpx"></u-image>
-								<text class="cm-txt">运输方式 {{TRANS_MODE[item.transMode]||'-'}}</text>
+								<text class="cm-txt">运输方式 {{ TRANS_MODE[item.transMode] || '-' }}</text>
 							</view>
 						</view>
 						<view class="content-bottom">
 							<view class="flex-sb">
 								<view class="content-bottom__item">
 									<view class="label">计划总数量</view>
-									<view class="value">{{item.planTotalQty ||'-'}} KG</view>
+									<view class="value">{{ item.planTotalQty || '-' }} KG</view>
 								</view>
 								<view class="content-bottom__item">
 									<view class="label">计划总体积</view>
-									<view class="value">{{item.planTotalVolume ||'-'}} CDM</view>
+									<view class="value">{{ item.planTotalVolume || '-' }} CDM</view>
 								</view>
 								<view class="content-bottom__item">
 									<view class="label">计划总重量</view>
-									<view class="value">{{item.planTotalWeight ||'-'}} CT</view>
+									<view class="value">{{ item.planTotalWeight || '-' }} CT</view>
 								</view>
 							</view>
 						</view>
@@ -61,16 +61,16 @@
 </template>
 
 <script>
-	import pageMixin from '@/mixin/pageMixin.js'
+	import pageMixin from '@/mixin/pageMixin.js';
 	import {
 		getList,
 		updateNode
-	} from '@/apis/quoted-detail.js'
-	import TabBar from '@/components/tab-bar'
+	} from '@/apis/quoted-detail.js';
+	import TabBar from '@/components/tab-bar';
 	export default {
 		mixins: [pageMixin],
 		components: {
-			TabBar,
+			TabBar
 		},
 		data() {
 			return {
@@ -79,7 +79,7 @@
 				// 列表
 				isRequested: false, //是否请求完
 				dataList: []
-			}
+			};
 		},
 		computed: {
 			// 运输方式
@@ -87,46 +87,49 @@
 				return this.$dict.getDictsEnum('TRANS_MODE', {
 					keyProp: 'value',
 					valueProp: 'text'
-				})
-			},
+				});
+			}
 		},
 		onLoad() {
-			uni.hideTabBar() //隐藏原生的导航栏
-			this.getDataList(true)
+			uni.hideTabBar(); //隐藏原生的导航栏
+			this.getDataList(true);
 		},
 		methods: {
 			// 获取列表数据
 			getDataList(isInit = false) {
-				this.isRequested = false
-				this.currentPage = isInit ? 1 : this.currentPage
-				this.loadStatus = 'loading'
+				this.isRequested = false;
+				this.currentPage = isInit ? 1 : this.currentPage;
+				this.loadStatus = 'loading';
 				getList({
-					currentPage: this.currentPage,
-					pageSize: this.pageSize,
-					tabStatus: 'WINNING_BIDDER'
-				}).then(res => {
-					let newData = res.records.map(item => {
-						return {
-							...item,
-							planTotalWeight: item.planTotalWeight.toFixed(2),
-							planTotalVolume: item.planTotalVolume.toFixed(2),
-							planTotalQty: item.planTotalQty.toFixed(2),
-						}
+						currentPage: this.currentPage,
+						pageSize: this.pageSize,
+						tabStatus: 'WINNING_BIDDER'
 					})
-					this.dataList = isInit ? newData : this.dataList.concat(newData)
-					console.log('【dataList】', this.dataList);
-					// 分页处理
-					this.pageStatus(newData.length, this.dataList.length)
-				}).catch(err => {
-					console.error(err)
-					if (isInit) {
-						this.dataList = []
-					}
-					this.loadStatus = "loadmore"
-					this.loadmoreText = "加载失败"
-				}).finally(() => {
-					this.isRequested = true
-				})
+					.then(res => {
+						let newData = res.records.map(item => {
+							return {
+								...item,
+								planTotalWeight: item.planTotalWeight.toFixed(2),
+								planTotalVolume: item.planTotalVolume.toFixed(2),
+								planTotalQty: item.planTotalQty.toFixed(2)
+							};
+						});
+						this.dataList = isInit ? newData : this.dataList.concat(newData);
+						console.log('【dataList】', this.dataList);
+						// 分页处理
+						this.pageStatus(newData.length, this.dataList.length);
+					})
+					.catch(err => {
+						console.error(err);
+						if (isInit) {
+							this.dataList = [];
+						}
+						this.loadStatus = 'loadmore';
+						this.loadmoreText = '加载失败';
+					})
+					.finally(() => {
+						this.isRequested = true;
+					});
 			},
 			// 路径跳转
 			goUrl(item, type) {
@@ -137,7 +140,7 @@
 				}
 			}
 		}
-	}
+	};
 </script>
 
 <style lang="scss">
@@ -156,12 +159,12 @@
 			margin-bottom: 24rpx;
 			box-sizing: border-box;
 			width: 100%;
-			background: #FFFFFF;
+			background: #ffffff;
 			border-radius: 16rpx;
 
 			.label {
 				font-size: 24rpx;
-				color: #86909C;
+				color: #86909c;
 			}
 
 			.list-item__content {
@@ -184,7 +187,7 @@
 							margin-top: 10rpx;
 							font-size: 30rpx;
 							font-weight: 400;
-							color: #4E5969;
+							color: #4e5969;
 						}
 					}
 				}
@@ -193,7 +196,7 @@
 					margin: 24rpx auto;
 					font-size: 30rpx;
 					font-weight: 500;
-					color: #1D2129;
+					color: #1d2129;
 
 					.content-middle__item {
 						margin: 15rpx;
