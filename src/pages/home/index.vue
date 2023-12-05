@@ -88,7 +88,7 @@
 				iconSize="35rpx" lineColor="#fff" />
 		</scroll-view>
 		<!-- 确认框 -->
-		<u-modal :show="confirmShow" :showCancelButton="true" :confirmColor="colorTheme" @cancel="confirmShow = false"
+		<u-modal :show="confirmShow" :showCancelButton="true" :confirmColor="colorTheme" @cancel="cancelModal"
 			@confirm="confirmModal">
 			<view style="width: 100%">
 				<view style="margin: 10rpx 0">弃标理由：</view>
@@ -126,11 +126,11 @@
 				},
 				tabStatus: 'NOT_QUOTATION',
 				subsectionList: [{
-						name: '待报价',
+						name: '报价',
 						value: 'NOT_QUOTATION'
 					},
 					{
-						name: '待开标',
+						name: '待评标',
 						value: 'HAVE_QUOTATION_NOT_END'
 					},
 					{
@@ -268,6 +268,10 @@
 				this.reason = '';
 				this.confirmShow = true;
 				this.clickItem = item;
+			},
+			cancelModal() {
+				this.reason = ''
+				this.confirmShow = false
 			},
 			// 确认弹框
 			confirmModal() {
