@@ -21,13 +21,12 @@
         "tabIndent": "insertSpaces",
         "tabSize": 4
     },
+    "miniprogramRoot": "dist/dev/mp-weixin/",
+    "srcMiniprogramRoot": "dist/dev/mp-weixin/",
     "appid": "wx88fe8071e6322860",
-    "libVersion": "3.0.0",
     "packOptions": {
         "ignore": [],
         "include": []
     },
-    "miniprogramRoot": "dist/dev/mp-weixin/",
-    "srcMiniprogramRoot": "dist/dev/mp-weixin/",
     "projectname": "uniapp-from-vuecli"
 }

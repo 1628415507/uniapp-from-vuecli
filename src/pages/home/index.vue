@@ -489,7 +489,8 @@
 	}
 
 	// 分段器-默认样式修改
-	::v-deep .home-page .subsection-wrap {
+	// ::v-deep 
+	 .home-page .subsection-wrap {
 		margin: 20rpx auto 32rpx auto;
 		// height: 70rpx;
 		box-sizing: border-box;
