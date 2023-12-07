@@ -44,6 +44,20 @@
                     "query": "id=14",
                     "launchMode": "default",
                     "scene": null
+                },
+                {
+                    "name": "入库计划查询",
+                    "pathName": "pages/sub-packages/in-storage/index",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
+                    "name": "入库计划信息",
+                    "pathName": "pages/sub-packages/in-storage/detail",
+                    "query": "id=undefined",
+                    "launchMode": "default",
+                    "scene": null
                 }
             ]
         }

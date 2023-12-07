@@ -273,6 +273,10 @@
 			},
 			// 密码登录
 			loginByPwd() {
+				uni.switchTab({
+					url: '/pages/home/index'
+				});
+				return
 				this.$refs[this.formRef]?.validate().then(res => {
 					if (!this.validAgree()) {
 						return

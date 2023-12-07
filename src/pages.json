@@ -2,112 +2,112 @@
 	"easycom": {
 		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
 	},
-	"tabBar": {
-		"color": "#7A7E83",
-		"custom": true,
-		"selectedColor": "#3cc51f",
-		"borderStyle": "black",
-		"backgroundColor": "#ffffff",
-		"list": [{
-				"pagePath": "pages/home/index",
-				"text": "首页"
-			},
-			{
-				"pagePath": "pages/demo/index",
-				"text": "Demo"
-			},
-			{
-				"pagePath": "pages/user/index",
-				"text": "我的"
-			}
-		]
-	},
+	// "tabBar": {
+	// 	"color": "#7A7E83",
+	// 	"custom": true,
+	// 	"selectedColor": "#3cc51f",
+	// 	"borderStyle": "black",
+	// 	"backgroundColor": "#ffffff",
+	// 	"list": [{
+	// 			"pagePath": "pages/home/index",
+	// 			"text": "仓储管理"
+	// 		}
+	// 		// {
+	// 		// 	"pagePath": "pages/demo/index",
+	// 		// 	"text": "Demo"
+	// 		// },
+	// 		// {
+	// 		// 	"pagePath": "pages/user/index",
+	// 		// 	"text": "我的"
+	// 		// }
+	// 	]
+	// },
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		{
-			"path": "pages/login/index",
-			"style": {
-				"navigationBarTitleText": "登录"
-			}
-		},
+		// {
+		// 	"path": "pages/login/index",
+		// 	"style": {
+		// 		"navigationBarTitleText": "登录"
+		// 	}
+		// },
 		{
 			"path": "pages/home/index",
 			"style": {
-				"navigationBarTitleText": "首页"
+				"navigationBarTitleText": "仓储管理"
 				// "enablePullDownRefresh": true
 				// "navigationStyle": "custom"
 			}
-		},
-		{
-			"path": "pages/demo/index",
-			"style": {
-				"navigationBarTitleText": "Demo"
-			}
-		},
-		{
-			"path": "pages/user/index",
-			"style": {
-				"navigationBarTitleText": "我的"
-			}
 		}
+		// {
+		// 	"path": "pages/demo/index",
+		// 	"style": {
+		// 		"navigationBarTitleText": "Demo"
+		// 	}
+		// },
+		// {
+		// 	"path": "pages/user/index",
+		// 	"style": {
+		// 		"navigationBarTitleText": "我的"
+		// 	}
+		// }
 	],
 	"subPackages": [{
-			"root": "pages/sub-packages/loading-detail",
+			"root": "pages/sub-packages/in-storage",
 			"pages": [{
 					"path": "index",
 					"style": {
-						"navigationBarTitleText": "装车详情",
+						"navigationBarTitleText": "入库计划查询",
 						"enablePullDownRefresh": false
 					}
 				},
 				{
 					"path": "detail",
 					"style": {
-						"navigationBarTitleText": "任务详情",
-						"enablePullDownRefresh": false
-					}
-				}
-			]
-		},
-		{
-			"root": "pages/sub-packages/sign-in",
-			"pages": [{
-				"path": "index",
-				"style": {
-					"navigationBarTitleText": "签收",
-					"enablePullDownRefresh": false
-				}
-			}]
-		},
-		{
-			"root": "pages/sub-packages/example",
-			"pages": [{
-					"path": "detail",
-					"style": {
-						"navigationBarTitleText": "详情",
-						"enablePullDownRefresh": false
-					}
-				},
-				{
-					"path": "amap",
-					"style": {
-						"navigationBarTitleText": "地图",
-						"enablePullDownRefresh": false
-					}
-				},
-				{
-					"path": "demo-detail",
-					"style": {
-						"navigationBarTitleText": "Demo详情",
+						"navigationBarTitleText": "入库计划信息",
 						"enablePullDownRefresh": false
 					}
 				}
 			]
 		}
+		// {
+		// 	"root": "pages/sub-packages/sign-in",
+		// 	"pages": [{
+		// 		"path": "index",
+		// 		"style": {
+		// 			"navigationBarTitleText": "签收",
+		// 			"enablePullDownRefresh": false
+		// 		}
+		// 	}]
+		// }
+		// {
+		// 	"root": "pages/sub-packages/example",
+		// 	"pages": [{
+		// 			"path": "detail",
+		// 			"style": {
+		// 				"navigationBarTitleText": "详情",
+		// 				"enablePullDownRefresh": false
+		// 			}
+		// 		},
+		// 		{
+		// 			"path": "amap",
+		// 			"style": {
+		// 				"navigationBarTitleText": "地图",
+		// 				"enablePullDownRefresh": false
+		// 			}
+		// 		},
+		// 		{
+		// 			"path": "demo-detail",
+		// 			"style": {
+		// 				"navigationBarTitleText": "Demo详情",
+		// 				"enablePullDownRefresh": false
+		// 			}
+		// 		}
+		// 	]
+		// }
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#e8f3f4",
-		"backgroundColor": "#F8F8F8"
+		"backgroundColor": "#fff"
 	}
 }

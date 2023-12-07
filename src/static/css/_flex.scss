@@ -37,3 +37,10 @@
   flex-direction: column;
   justify-content: space-between;
 }
+// flex纵向布局
+// flex纵向布局-居中
+.flex-col-sa {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}

@@ -4,28 +4,31 @@
  * @LastEditTime: 2023-08-05 14:44:33
 -->
 <template>
-	<view class="noData">
-		<view class="noData-icon">
+	<view class="noData" :style="{marginTop:marginTop+'rpx'}">
+		<view class="img-wrap">
 			<image :src="icon" mode="widthFix"></image>
 		</view>
-		<view>{{title}}</view>
+		<view class="empty-text">{{text}}</view>
 	</view>
 </template>
 
 <script>
 	export default {
 		// import引入的组件需要注入到对象中才能使用
-		components: {},
 		props: {
-			title: {
+			text: {
 				type: String,
 				default: ''
+			},
+			marginTop: {
+				type: Number,
+				default: 0
 			}
 		},
 		data() {
 			// 这里存放数据
 			return {
-				icon: '/static/image/noData.png'
+				icon: require('@/static/image/empty.png')
 			}
 		},
 
@@ -50,26 +53,35 @@
 	}
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 	.noData {
-		width: 100%;
-		height: 300rpx;
+		/* width: 100%; */
+		margin: 0 auto;
+		box-sizing: border-box;
+		width: 576rpx;
+		padding: 34rpx 72rpx;
+		height: 432rpx;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		font-size: 28rpx;
-		color: #8c8c8c;
-		font-weight: 400;
 
-		.noData-icon {
-			width: 160rpx;
-			height: 160rpx;
-			margin-bottom: 22rpx;
+		.img-wrap {
+			width: 100%;
+			height: 100%;
+			// margin-bottom: 22rpx;
 
 			image {
 				width: 100%;
 			}
+		}
+
+		.empty-text {
+			position: relative;
+			top: -45rpx;
+			color: #A9AEB8;
+			font-size: 24rpx;
+			font-weight: 400;
 		}
 	}
 </style>

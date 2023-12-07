@@ -16,3 +16,26 @@ export const formatterTime = (timestamp) => {
 	console.log('【 formattedTime 】-166', formattedTime)
 	return formattedTime
 }
+// 扫描
+export const getScanVal = () => {
+	console.log('getScanVal')
+	// 调用uni扫一扫的方法， 允许从相机和相册扫码
+	uni.scanCode({
+		scanType: ['qrCode'], //条形码
+		success: (res) => {
+
+			// console.log('scanCode', res)
+			// TODO:取值
+			// if (res.errMsg == "scanCode:ok") {
+			// 	const val = res.result
+			// 	//  this.$set(原数组, 索引值, 需要赋的值)
+			// 	uni.navigateTo({
+			// 		url: `/pages/sub-packages/sign-in/index`
+			// 	});
+			// } else {
+			// 	console.log("未识别到二维码，请重新尝试！")
+			// 	uni.$u.toast('未识别到二维码，请重新尝试！')
+			// }
+		}
+	});
+}
