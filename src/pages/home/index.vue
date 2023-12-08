@@ -65,6 +65,7 @@
 				background: #FFFFFF;
 				border-radius: 16rpx;
 				border: 2rpx solid #fff;
+				box-shadow: 0rpx 1rpx 6rpx 0rpx rgba(0, 0, 0, 0.07) !important;
 
 				.card-title {
 					font-size: 48rpx;
