@@ -65,6 +65,13 @@
 						"navigationBarTitleText": "入库计划信息",
 						"enablePullDownRefresh": false
 					}
+				},
+				{
+					"path": "register",
+					"style": {
+						"navigationBarTitleText": "入库登记",
+						"enablePullDownRefresh": false
+					}
 				}
 			]
 		}

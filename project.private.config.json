@@ -58,6 +58,13 @@
                     "query": "id=undefined",
                     "launchMode": "default",
                     "scene": null
+                },
+                {
+                    "name": "入库登记",
+                    "pathName": "pages/sub-packages/in-storage/register",
+                    "query": "id=undefined",
+                    "launchMode": "default",
+                    "scene": null
                 }
             ]
         }

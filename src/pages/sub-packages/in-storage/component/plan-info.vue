@@ -88,7 +88,7 @@
 				iconSize="35rpx" lineColor="#fff" /> -->
 		</scroll-view>
 		<view class="g-footer-btn flex-c" style="bottom:50rpx">
-			<u-button type="primary" @click="logout">入库登记</u-button>
+			<u-button type="primary" @click="handleRegister">入库登记</u-button>
 		</view>
 	</view>
 </template>
@@ -213,13 +213,10 @@
 					this.isRequested = true
 				})
 			},
-			goDetail(item, type) {
-				console.log('【 goDetail 】-168', type)
-				if (type === 'loading') {
-					uni.navigateTo({
-						url: `/pages/sub-packages/loading-detail/index?id=${item.mtsDispatchId}`
-					});
-				}
+			handleRegister(item = {}) {
+				uni.navigateTo({
+					url: `/pages/sub-packages/in-storage/register?id=${item.mtsDispatchId}`
+				});
 			},
 			// 展开收起
 			handleExpand(item) {

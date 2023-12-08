@@ -5,69 +5,54 @@
 			@scrolltolower="scrollToLower" :scroll-top="scrollTop">
 			<view class="list-wrap">
 				<view class="list-item" v-for="(item, index) in tempData" :key="index">
-					<view class="item-header-wrap">
-						<u-swipe-action class="swipe-action-wrap">
-							<u-swipe-action-item :options="optList">
-								<view class="item-header">
-									<view class="item-header__title flex-sb">
-										<view class="title">入库任务号:RTG1234567890</view>
-										<view class="status" :class="STATUS[item.status] || 'red'">登记中</view>
-									</view>
-									<view class="item-header__info">
-										<view class="flex-sb">
-											<text class="text">实际总数量:1234567</text>
-											<text class="text">明细行:5行</text>
-											<text class="text">操作人:张师傅</text>
-										</view>
-										<view class="text">实际完成时间:2023-12-12</view>
-										<view class="submit flex-c" @click="logout"> 提交登记 </view>
-									</view>
-									<view v-if="!item.isExpand" class="item-header-footer flex-c">
-										<view class="flex-c" style="width: 15%" @click="handleExpand(item)">
-											<view class="arrow-icon">
-												<u-icon :name="item.isExpand ? 'arrow-left' : 'arrow-right'"
-													color="#86909C" size="36"></u-icon>
-											</view>
-										</view>
-									</view>
-								</view>
-							</u-swipe-action-item>
-						</u-swipe-action>
+					<view class="item-header">
+						<view class="item-header__title flex-sb">
+							<view class="title">入库任务号:RTG1234567890</view>
+							<view class="status" :class="STATUS[item.status] || 'red'">登记中</view>
+						</view>
+						<view class="item-header__info">
+							<view class="flex-sb">
+								<text class="text">实际总数量:1234567</text>
+								<text class="text">明细行:5行</text>
+								<text class="text">操作人:张师傅</text>
+							</view>
+							<view class="text">实际完成时间:2023-12-12</view>
+						</view>
+						<view class="submit flex-c" @click="logout"> 提交登记 </view>
 					</view>
 					<view v-if="item.isExpand" class="item-content">
-						<u-swipe-action>
-							<u-swipe-action-item v-for="(subItem, subIndex) in 3" :key="subIndex" :options="optList">
-								<view class="sublist-item">
-									<!-- <view class="divider-row"></view> -->
-									<view class="content-top flex-sb">
-										<view class="content-top__left">
-											<u--image :src="require('@/static/image/out-store.png')" width="192rpx"
-												height="108rpx"></u--image>
-										</view>
-										<view class="content-top__right flex-col-sa">
-											<view class="desc ellipsis"> 货品名称货品名称货品名货品名称货品名称货品名称货品货称货品货 </view>
-											<view class="count"> 20个/箱 </view>
-										</view>
-									</view>
-									<view class="content-middle">
-										<view class="text ellipsis">货品编码:123456789012</view>
-										<view class="text ellipsis">已登记/计划数:100/1000个</view>
-										<view class="text ellipsis">生产日期:2023-12-12</view>
-										<view class="text ellipsis">失效日期:2023-12-12</view>
-										<view class="text ellipsis" v-for="item in 6" :key="item.key">
-											批次属性01:这里是批次属性 批次属性01:这里是批次属性
-										</view>
-										<view class="divider"></view>
-									</view>
+						<view v-for="(subItem, subIndex) in 3" :key="subIndex" class="sublist-item">
+							<view class="divider-row"></view>
+							<view class="content-top flex-sb">
+								<view class="content-top__left">
+									<u--image :src="require('@/static/image/out-store.png')" width="192rpx"
+										height="108rpx"></u--image>
 								</view>
-							</u-swipe-action-item>
-						</u-swipe-action>
+								<view class="content-top__right flex-col-sa">
+									<view class="desc ellipsis"> 货品名称货品名称货品名货品名称货品名称货品名称货品货称货品货 </view>
+									<view class="count"> 20个/箱 </view>
+								</view>
+							</view>
+							<view class="content-middle">
+								<view class="text ellipsis">货品编码:123456789012</view>
+								<view class="text ellipsis">已登记/计划数:100/1000个</view>
+								<view class="text ellipsis">生产日期:2023-12-12</view>
+								<view class="text ellipsis">失效日期:2023-12-12</view>
+								<view class="text ellipsis" v-for="item in 6" :key="item.key">
+									批次属性01:这里是批次属性 批次属性01:这里是批次属性
+								</view>
+								<view class="divider"></view>
+							</view>
+						</view>
 					</view>
-					<view v-if="item.isExpand" class="item-footer flex-c">
-						<view class="flex-c" style="width: 15%" @click="handleExpand(item)">
-							<view class="arrow-icon">
-								<u-icon :name="item.isExpand ? 'arrow-left' : 'arrow-right'" color="#86909C"
-									size="36"></u-icon>
+					<view class="item-footer">
+						<view class="divider-row"></view>
+						<view class="flex-c" @click="handleExpand(item)">
+							<view class="flex-c" style="width: 15%">
+								<view class="arrow-icon">
+									<u-icon :name="item.isExpand ? 'arrow-left' : 'arrow-right'" color="#86909C"
+										size="36"></u-icon>
+								</view>
 							</view>
 						</view>
 					</view>
@@ -158,17 +143,6 @@
 		components: {},
 		data() {
 			return {
-				optList: [{
-					disabled: false,
-					text: '删除',
-					style: {
-						backgroundColor: 'rgba(229,60,60,0.8)',
-						'border-radius': '16rpx 0rpx 0rpx 16rpx',
-						width: '144rpx',
-						'text-align': 'center',
-						'box-sizing': 'border-box'
-					}
-				}],
 				tempData,
 				STATUS: {
 					COMPLETE: 'green',
@@ -259,11 +233,7 @@
 		}
 	};
 </script>
-<style lang="scss">
-	::v-deep .u-swipe-action-item__right__button__wrapper {
-		background-color: #E53C3C !important;
-	}
-</style>
+
 <style lang="scss">
 	page {
 		background: linear-gradient(to bottom, #e7f3f4 0%, rgba(231, 243, 244, 0) 50%, #fefefe, #fdfdfd, #fff) !important;
@@ -278,23 +248,19 @@
 				box-sizing: border-box;
 				width: 100%;
 				background: #ffffff;
-				box-shadow: 0rpx 1rpx 6rpx 0rpx rgba(0, 0, 0, 0.07) !important;
-				// padding: 24rpx 0rpx 24rpx 24rpx;
-				box-sizing: border-box;
-				overflow: hidden;
 				border-radius: 16rpx;
-
-				.item-header-wrap {
-					border-radius: 16rpx;
-					overflow: hidden;
-				}
+				box-shadow: 0rpx 1rpx 6rpx 0rpx rgba(0, 0, 0, 0.07) !important;
+				padding: 24rpx;
+				box-sizing: border-box;
 
 				.item-header {
-					padding: 24rpx 24rpx 0 24rpx;
+					line-height: 56rpx;
+					position: relative;
 
 					.item-header__title {
 						color: #1d2129;
 						font-size: 28rpx;
+						line-height: 33rpx;
 						font-weight: 500;
 
 						.status {
@@ -309,118 +275,115 @@
 					}
 
 					.item-header__info {
-						position: relative;
 						margin: 24rpx auto;
 						font-size: 24rpx;
 						color: #4e5969;
 						font-weight: 400;
-						line-height: 56rpx;
-
-						.submit {
-							position: absolute;
-							right: 0rpx;
-							top: 64rpx;
-							box-sizing: border-box;
-							width: 160rpx;
-							height: 64rpx;
-							border-radius: 12rpx;
-							border: 2rpx solid #008474;
-							font-size: 28rpx;
-							font-weight: 500;
-							color: #008474;
-						}
 					}
 
-					.item-header-footer {
-						margin-top: 48rpx;
+					.submit {
+						box-sizing: border-box;
+						width: 160rpx;
+						position: absolute;
+						right: 0rpx;
+						bottom: -18rpx;
 						height: 64rpx;
-						border-top: 2rpx solid;
-						border-image: linear-gradient(90deg, rgba(229, 230, 235, 0), rgba(229, 230, 235, 0.8), rgba(229, 230, 235, 0)) 2 2;
-						width: 100%;
+						border-radius: 12rpx;
+						border: 2rpx solid #008474;
+						font-size: 28rpx;
+						font-weight: 500;
+						color: #008474;
 					}
 				}
 
+				.divider-row {
+					margin: 36rpx 0 24rpx 0;
+					width: 100%;
+					height: 0;
+					border-radius: 0rpx 0rpx 0rpx 0rpx;
+					opacity: 1;
+					border: 2rpx solid;
+					border-image: linear-gradient(90deg, rgba(229, 230, 235, 0), rgba(229, 230, 235, 0.8), rgba(229, 230, 235, 0)) 2 2;
+				}
 
-				.item-content {
-					margin-top: 24rpx;
+				.item-content .sublist-item {
+					.content-top {
+						height: 108rpx;
+						color: #4e5969;
+						font-size: 24rpx;
 
-					.sublist-item {
-						padding: 24rpx;
-						border-top: 2rpx solid;
-						border-image: linear-gradient(90deg, rgba(229, 230, 235, 0), rgba(229, 230, 235, 0.8), rgba(229, 230, 235, 0)) 2 2;
-
-						.content-top {
-							height: 108rpx;
-							color: #4e5969;
-							font-size: 24rpx;
-
-							.content-top__left {
-								width: 192rpx;
-								height: 100%;
-								background-color: #bcf;
-								border-radius: 8rpx;
-								overflow: hidden;
-							}
-
-							.content-top__right {
-								margin-left: 22rpx;
-								height: 100%;
-								width: calc(100% - 192rpx - 22rpx);
-								color: #86909c;
-
-								.desc {
-									width: 100%;
-									font-size: 28rpx;
-									color: #1d2129;
-								}
-							}
+						.content-top__left {
+							width: 192rpx;
+							height: 100%;
+							background-color: #bcf;
+							border-radius: 8rpx;
+							overflow: hidden;
 						}
 
-						.content-middle {
-							position: relative;
-							box-sizing: border-box;
-							margin-top: 24rpx;
-							display: grid;
-							grid-template-columns: 49% 49%;
-							grid-gap: 24rpx;
-							font-size: 24rpx;
-							color: #4e5969;
+						.content-top__right {
+							margin-left: 22rpx;
+							height: 100%;
+							width: calc(100% - 192rpx - 22rpx);
+							color: #86909c;
 
-							// line-height: 35rpx;
-							.text {
-								&:nth-child(odd) {
-									padding-right: 16rpx;
-								}
-
-								&:nth-child(even) {
-									padding-left: 16rpx;
-								}
-							}
-
-							.divider {
-								position: absolute;
-								top: 0;
-								right: 48.5%;
-								width: 0rpx;
-								height: 100%;
-								border: 2rpx solid;
-								border-image: linear-gradient(180deg, rgba(229, 230, 235, 0), rgba(229, 230, 235, 1), rgba(229, 230, 235, 0)) 2 2;
+							.desc {
+								width: 100%;
+								font-size: 28rpx;
+								color: #1d2129;
 							}
 						}
 					}
-				}
 
-				.arrow-icon {
-					transform-origin: center;
-					transform: rotate(90deg);
+					.content-middle {
+						position: relative;
+						box-sizing: border-box;
+						margin-top: 24rpx;
+						display: grid;
+						grid-template-columns: 49% 49%;
+						grid-gap: 24rpx;
+						font-size: 24rpx;
+						color: #4e5969;
+
+						// line-height: 35rpx;
+						.text {
+							&:nth-child(odd) {
+								padding-right: 16rpx;
+							}
+
+							&:nth-child(even) {
+								padding-left: 16rpx;
+							}
+						}
+
+						.divider {
+							position: absolute;
+							top: 0;
+							right: 48.5%;
+							width: 0rpx;
+							height: 100%;
+							border: 2rpx solid;
+							border-image: linear-gradient(180deg, rgba(229, 230, 235, 0), rgba(229, 230, 235, 1), rgba(229, 230, 235, 0)) 2 2;
+						}
+					}
 				}
 
 				.item-footer {
-					border-top: 2rpx solid;
-					border-image: linear-gradient(90deg, rgba(229, 230, 235, 0), rgba(229, 230, 235, 0.8), rgba(229, 230, 235, 0)) 2 2;
-					box-sizing: border-box;
-					height: 64rpx;
+					// .divider-row {
+					// 	margin: 36rpx 0 24rpx 0;
+					// }
+
+					font-size: 24rpx;
 					color: #86909c;
+
+					.flex-sb {
+						width: 20%;
+						// margin o auto;
+					}
+
+					.arrow-icon {
+						transform-origin: center;
+						transform: rotate(90deg);
+					}
 				}
 			}
 		}

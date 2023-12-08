@@ -44,6 +44,7 @@
   left: 0;
   bottom: 70rpx;
   padding: 0 32rpx;
+  z-index: 99999;
 }
 
 // 全局步骤条样式修改（修改的样式在steps-wrap下才生效,避免污染原有样式）
