@@ -41,6 +41,11 @@
 						url: `/pages/sub-packages/in-storage/index`
 					});
 				}
+				if (type === 'OUT') {
+					uni.navigateTo({
+						url: `/pages/sub-packages/out-storage/index`
+					});
+				}
 
 			}
 		}

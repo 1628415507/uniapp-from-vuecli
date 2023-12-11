@@ -95,3 +95,11 @@
     font-size: 24rpx !important;
   }
 }
+.divider-top{
+	border-top: 2rpx solid;
+	border-image: linear-gradient(90deg, rgba(229, 230, 235, 0), rgba(229, 230, 235, 0.8), rgba(229, 230, 235, 0)) 2 2;
+}
+.divider-bottom{
+	border-bottom: 2rpx solid;
+	border-image: linear-gradient(90deg, rgba(229, 230, 235, 0), rgba(229, 230, 235, 0.8), rgba(229, 230, 235, 0)) 2 2;
+}

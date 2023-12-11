@@ -74,6 +74,31 @@
 					}
 				}
 			]
+		},
+		{
+			"root": "pages/sub-packages/out-storage",
+			"pages": [{
+					"path": "index",
+					"style": {
+						"navigationBarTitleText": "出库计划查询",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "detail",
+					"style": {
+						"navigationBarTitleText": "出库计划信息",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "register",
+					"style": {
+						"navigationBarTitleText": "出库登记",
+						"enablePullDownRefresh": false
+					}
+				}
+			]
 		}
 		// {
 		// 	"root": "pages/sub-packages/sign-in",
