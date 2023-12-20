@@ -156,16 +156,16 @@
 	.booking-page {
 		position: relative;
 		background: #e8f3f5 !important;
+		height: 100vh;
+		background: #FFFFFF;
 
 		.login-content {
 			position: relative;
 			z-index: 99999;
 			box-sizing: border-box;
 			width: 100%;
-			// height: 80vh;
 			padding: 48rpx 32rpx 30rpx 32rpx;
 			border-radius: 50rpx 50rpx 0 0;
-			background: #FFFFFF;
 			overflow: hidden;
 
 			.title {
