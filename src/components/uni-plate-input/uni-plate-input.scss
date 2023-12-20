@@ -1,0 +1,134 @@
+.main-plate {
+	box-sizing: border-box;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	left: 0;
+	background: #fff;
+	padding: 25rpx 25rpx 0 25rpx;
+
+	&-type {			
+		width: 55%;
+		display: flex;
+	}
+	&-body {
+		box-sizing: border-box;
+		margin-top: 36rpx;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+	&-word {
+		box-sizing: border-box;
+		width: 80rpx;
+        height: 80rpx;
+	    border: 1rpx solid #D9DCE1;
+		border-radius: 8rpx;
+	    padding: 20rpx;
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		// width: calc((100% - 70rpx) / 7);
+		&.active {
+			border-color: #008474;
+		}
+		text {
+			font-weight: 400;
+			font-size: 40rpx;
+		}
+	}
+	&-divide {
+		width: 0rpx;
+		border-left: 2px solid #BFC2CA;
+		height: 48rpx;
+		// background:#BFC2CA;
+		// margin: 0 16rpx;
+	}
+	&-keyboard {
+		margin-top: 40rpx;
+		background: #F7F8FA;
+		box-sizing: border-box;
+		transition: all .3s;
+		.key-wrap{
+			// min-height: 350rpx;
+			display: grid;
+			grid-template-columns: repeat(9,11.3%);
+			row-gap: 20rpx;
+			align-items: flex-start;
+		}
+	}
+	// 按键
+	&-key {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		// margin: 16rpx 7rpx;
+		text-align: center;
+		box-sizing: border-box;
+		width: 64rpx;
+		height: 64rpx;
+		background: #FFFFFF;
+		border-radius: 8rpx;
+		border: 2rpx solid #BFC2CA;
+		font-size: 28rpx;
+		color: #000000;
+		&.hover {
+			background: #efefef;
+		}
+		&.fill-block {
+			width: 64rpx;
+			height: 64rpx;
+			background: none;
+			border: none;
+		}
+	}
+	&-btn {
+		display: inline-block;
+		background: #fff;
+		border-radius: 10rpx;
+		box-shadow: 0 0 10rpx 0 #bbb;
+		font-size: 28rpx;
+		text-align: center;
+		margin:0 0 0 10rpx;
+		padding:0 25rpx;
+		&-group{
+			display: flex;
+			justify-content: space-between;
+			background: #eee;
+			margin-left: -25rpx;
+			margin-right: -25rpx;
+			box-sizing: border-box;
+			padding: 0 25rpx 10rpx 25rpx;
+		}
+		&--cancel{
+			margin:0;
+		}
+		&--submit{
+			background:#5773f9;
+			color:#fff;
+		}
+		&--delete{
+			color:#fd6b6d;
+		}
+	}
+}
+
+
+// .animation-scale-up {
+// 	animation-duration: .2s;
+// 	animation-timing-function: ease-out;
+// 	animation-fill-mode: both;
+//     animation-name: scale-up
+// }
+// @keyframes scale-up {
+//     0% {
+//         opacity: .8;
+//         transform: scale(.8)
+//     }
+//     100% {
+//         opacity: 1;
+//         transform: scale(1)
+//     }
+// }
