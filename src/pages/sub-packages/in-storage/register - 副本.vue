@@ -57,14 +57,11 @@
 					<u--form labelPosition="left" :model="formData" :rules="rules" ref="formRef" labelAlign="right"
 						:labelStyle="labelStyle">
 						<view class="dynamic-form">
-							<!-- 注意key需要唯一，否则绑定的值会有问题 -->
-							<u-form-item v-for="(item,index) in formItemData" :key="item.batchAttriNameEn"
-								:label="item.batchAttriName" labelPosition="top" prop="name" labelWidth="274rpx"
-								labelAlign="left">
+							<u-form-item v-for="item in formItemData" :key="item.key" :label="item.batchAttriName"
+								labelPosition="top" prop="name" labelWidth="274rpx" labelAlign="left">
 								<view class="form-item flex">
 									<view class="form-input-item">
-										<DynamicInputItem v-model="formData[item.batchAttriNameEn]"
-											:type="item.uiControlType">
+										<DynamicInputItem :type="item.uiControlType" :config="item">
 										</DynamicInputItem>
 										<!-- <u-input v-model="formData.name" :customStyle="formInputCustomStyle"></u-input> -->
 									</view>
@@ -158,20 +155,9 @@
 				inputCustomStyle,
 				// 表单
 				labelStyle,
-				formData: {
-					inbTaskNo: '',
-					numberNo: '',
-				},
+				formData: {},
 				rules: {},
 				hasRes: false
-			}
-		},
-		watch: {
-			formData: {
-				deep: true,
-				handler(newVal) {
-					console.log('=formData==', newVal)
-				}
 			}
 		},
 		onLoad() {},

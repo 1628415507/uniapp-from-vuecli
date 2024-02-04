@@ -19,7 +19,12 @@ import {
 const getDictOptions = (dicName, type = '', config = {}) => {
 	const dictsStorage = uni.getStorageSync('dicts') // 从缓存中获取字典数据
 	// console.log('【 dictsStorage 】-19', dictsStorage)
-	const dicts = JSON.parse(dictsStorage) || {}
+	let dicts = {}
+	try {
+		dicts = JSON.parse(dictsStorage) || {}
+	} catch (err) {
+		console.warn('【getDictOptions-解析字典数据错误', dicName, err)
+	}
 	let list = dicts[dicName] || []
 	// console.log('【 getDictOptions 】-17', dicName, list)
 	// 将key值转换成数字类型，默认字符串类型
@@ -52,8 +57,13 @@ const getDictOptions = (dicName, type = '', config = {}) => {
  * @example console.log("this.$dict.getDictNameByCode('YES_OR_NO','YES', 'nameEn') ", getDictNameByCode('YES_OR_NO', 'YES', 'nameEn'))
  */
 const getDictNameByCode = (dicName, code, prop = '', targetProp) => {
-	const dictsStorage = uni.getStorageSync('dicts')
-	const dicts = JSON.parse(dictsStorage) || {}
+	const dictsStorage = uni.getStorageSync('dicts') || {}
+	let dicts = {}
+	try {
+		dicts = JSON.parse(dictsStorage) || {}
+	} catch (err) {
+		console.warn('【getDictNameByCode-解析字典数据错误', dicName, err)
+	}
 	if (!code && code !== 0) {
 		return ''
 	}
@@ -82,8 +92,14 @@ const getDictsEnum = (dicName, config = {}) => {
 	const configKeyProp = config.keyProp || 'nameEn' // key的字段
 	const configValueProp = config.valueProp || dictsConfig.code // 值的字段
 	// 获取字典
+	// 获取字典
 	const dictsStorage = uni.getStorageSync('dicts')
-	const dicts = JSON.parse(dictsStorage) || {}
+	let dicts = {}
+	try {
+		dicts = JSON.parse(dictsStorage) || {}
+	} catch (err) {
+		console.warn('getDictsEnum-解析字典数据错误', dicName, err)
+	}
 	const dictItemList = dicts[dicName] || []
 	console.log('【 getDictsEnum-dictItemList 】-85', dictItemList)
 	if (!dictItemList.length) {

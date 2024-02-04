@@ -12,7 +12,6 @@
 			label-prop="addressCode" :fieldList="associateFieldList" :query-method="queryAssociateMethod"
 			@getData="getAssociateData">
 		</associate-popup>
-
 		<!-- 下拉 :defaultValue="associateDefaultValue" -->
 		<u-divider text="下拉" lineColor="#2979ff" textColor="#2979ff"></u-divider>
 		<u-button @click="showSelectPopup = true">打开下拉</u-button>
